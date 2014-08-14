@@ -9,8 +9,8 @@ from tornado.options import define, options, parse_command_line
 import tornado.options
 import tornado.web
 
-from Config import *, CURRENT_QUESTION
-from db import  *, CategoriesOfTopics
+from Config import *
+from db import  *
 from androidUtils import *
 
 
@@ -149,8 +149,8 @@ def updateUserRating(response , user=None):
 
 
 
-quizWaitingConnectionsPool = {}
-runningQuizes = {}
+quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
+runningQuizes = {} # all currently running quizes in this server
 
 def generateProgressiveQuiz(quizId , uids):
     quiz = dbUtils.getQuizDetails(quizId).get(0)
@@ -221,7 +221,6 @@ class ProgressiveQuizHandler(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         userQuizUpdate = json.loads(message)
         messageType = userQuizUpdate[MESSAGE_TYPE]
-        
         if(messageType==USER_ANSWERED_QUESTION):
             questionId = userQuizUpdate[QUESTION_ID]
             userAnswer = userQuizUpdate[USER_ANSWER]
@@ -248,7 +247,12 @@ class ProgressiveQuizHandler(tornado.websocket.WebSocketHandler):
             
         elif(messageType==GET_NEXT_QUESTION):#user explicitly calls this function on if other doesn't responsd
             n_answered =self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]
-            if(not n_answered or len(n_answered) ==len(self.quizConnections)):#if everyone aswered
+            isFirstQuestion = False
+            if(self.runningQuiz[CURRENT_QUESTION]==-1):
+                isFirstQuestion = True
+                self.runningQuiz[CURRENT_QUESTION]==0
+                
+            if(isFirstQuestion or len(n_answered) ==len(self.quizConnections)):#if everyone aswered
                 self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
                 currentQuestionIndex = self.runningQuiz[CURRENT_QUESTION]
                 question = self.runningQuiz[QUESTIONS][currentQuestionIndex]
@@ -264,7 +268,8 @@ class ProgressiveQuizHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         broadcastToGroup(self,{"messageType":USER_DISCONNECTED,"payload1":self.user.uid},self.quizConnections)
         self.quizConnections.remove(self.quizConnections.index(self))#either waiting or something , we don't care
-        if(self.)
+        if(len(self.quizConnections)):
+            del runningQuizes[self.runningQuizId]
 
 #sample functionality
 serverFunc = {
