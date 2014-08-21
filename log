@@ -1,0 +1,892 @@
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 538.41ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 1181.65ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 279.87ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 314.11ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 269.51ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 319.80ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 279.01ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 268.31ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 271.18ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 430.64ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"GoogleApiClient must be connected.","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '473', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 218.03ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"GoogleApiClient must be connected.","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '473', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 210.86ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 277.64ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 708.65ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 321.46ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 276.72ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 289.21ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 290.92ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"NeedPermission","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '453', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 276.89ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZQCyF-6341xpyhwAAACaJ5oNqcUduiYimzjikcxoD_gE_xBe5BnU38a0Cl2Hrg","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '506', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 283.44ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"GoogleApiClient must be connected.","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '473', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 220.49ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZQCyF-6341xpyhwAAACaJ5oNqcUduiYimzjikcxoD_gE_xBe5BnU38a0Cl2Hrg","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '506', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 289.19ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZQCyF-6341xpyhwAAACaJ5oNqcUduiYimzjikcxoD_gE_xBe5BnU38a0Cl2Hrg","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '506', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 290.85ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZQCyF-6341xpyhwAAACaJ5oNqcUduiYimzjikcxoD_gE_xBe5BnU38a0Cl2Hrg","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '506', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 2017.42ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"INVALID_SCOPE","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '452', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 278.66ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"INVALID_SCOPE","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '452', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 532.94ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"INVALID_SCOPE","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '452', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 282.81ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"INVALID_SCOPE","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '452', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 283.97ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 270.42ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 344.48ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 282.69ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 676.51ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 280.19ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"Unknown","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '446', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 637.39ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"GoogleApiClient must be connected.","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '473', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 771.85ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgDuhsj58XjMGEsAAAA127JUq2DrE9If89BPRXIaV0d1Tjr8bXLf2-wUCm6DoSnXboT14N9qLAYY865qlOLwPx6VbVa_EkZF9tL5LsaUkcK1AUvQg2KfpebrxUpfrA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 661.17ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 14981.53ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data)
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 7337.40ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data.read())
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 299.24ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data.read())
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 927.99ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data.read())
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 317.23ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data.read())
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 833.44ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data.read())
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 358.16ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data.read())
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 309.75ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    temp =json.loads(data.read())
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 322.92ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 99, in newFunc
+    data = httpResponse.buffer
+  File "/usr/lib/python2.7/json/__init__.py", line 338, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python2.7/json/decoder.py", line 365, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+TypeError: expected string or buffer
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 27775.52ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"messageType": 3}
+INFO:tornado.access:200 POST /func?task=loginWithGoogle (192.168.0.2) 19408.56ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 107, in newFunc
+    user = dbUtils.registerUser(user["uid"], user["name"], user["deviceId"], user["emailId"], user["pictureUrl"],user["coverUrl"],user["birthday"],user["gender"],user["place"],user["facebook"],user["googlePlus"],True)
+UnboundLocalError: local variable 'user' referenced before assignment
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 14145.20ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 107, in newFunc
+    user = dbUtils.registerUser(user["uid"], user["name"], user["deviceId"], user["emailId"], user["pictureUrl"],user["coverUrl"],user["birthday"],user["gender"],user["place"],user["facebook"],user["googlePlus"],True)
+UnboundLocalError: local variable 'user' referenced before assignment
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 19900.16ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 107, in newFunc
+    else:
+UnboundLocalError: local variable 'user' referenced before assignment
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 8356.79ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"messageType": 3}
+INFO:tornado.access:200 POST /func?task=loginWithGoogle (192.168.0.2) 7963.16ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"messageType": 106}
+INFO:tornado.access:200 POST /func?task=loginWithGoogle (192.168.0.2) 9632.70ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 108, in newFunc
+    print user
+UnboundLocalError: local variable 'user' referenced before assignment
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 10364.82ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgBRHxHx9UTXDksAAAD6Psw_fjfZpbXRUJkXhzhFLKwKT71UpqYp3wIDlJHa-ZRFW18Pj6YAGPKO4-1-KWPMj45_c3Zlc54llT1qdVWOIYjRHmZ4aEPTtyDBAMhOuA","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 110, in newFunc
+    print user.get("uid",generateKey(9)), user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),user.get("facebook",None),user.get("googlePlus",None),True
+UnboundLocalError: local variable 'user' referenced before assignment
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 20019.85ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgCFJ_XeWJ5u9ksAAAAY2n6rTedR1B_AFSW3yfIs0B5j2WQLwty3W0X34IO1FNldCjxODJfcn1KDAcrOXVTKUdb82XBxs2Nu68I9fR5T-NsJh70CwIYZ14Kp5ulNzw","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+ERROR:tornado.application:Uncaught exception POST /func?task=loginWithGoogle (192.168.0.2)
+HTTPRequest(protocol='http', host='192.168.0.10:8084', method='POST', uri='/func?task=loginWithGoogle', version='HTTP/1.1', remote_ip='192.168.0.2', headers={'Content-Length': '570', 'Host': '192.168.0.10:8084', 'Content-Type': 'application/x-www-form-urlencoded', 'Connection': 'Keep-Alive', 'Accept-Encoding': 'gzip'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1125, in _stack_context_handle_exception
+    raise_exc_info((type, value, traceback))
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/stack_context.py", line 302, in wrapped
+    ret = fn(*args, **kwargs)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 110, in newFunc
+    print user.get("uid",generateKey(9)), user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),user.get("facebook",None),user.get("googlePlus",None),True
+UnboundLocalError: local variable 'user' referenced before assignment
+ERROR:tornado.access:500 POST /func?task=loginWithGoogle (192.168.0.2) 62040.49ms
+INFO:root:loginWithGoogle
+INFO:root:{'task': ['loginWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.ZgCFJ_XeWJ5u9ksAAAAY2n6rTedR1B_AFSW3yfIs0B5j2WQLwty3W0X34IO1FNldCjxODJfcn1KDAcrOXVTKUdb82XBxs2Nu68I9fR5T-NsJh70CwIYZ14Kp5ulNzw","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"messageType": 507}
+INFO:tornado.access:200 POST /func?task=loginWithGoogle (192.168.0.2) 16490.86ms
+INFO:root:registerWithGoogle
+INFO:root:{'task': ['registerWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.aACYqyIWDi39LksAAADNOtMCHgeTwAr1HzPWinCQtAq_6cjPmrtbqpwHnfwnK9GJDm4Df6I5_Bgwm8j_H7_m0czGX90AfjVtfPyvSbAp86y5y_DgUWffbXg_9RoF4g","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"payload": "MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408604621|0666da82186dca906477f65e6aab3d10adc15a40", "messageType": 507}
+INFO:tornado.access:200 POST /func?task=registerWithGoogle (192.168.0.2) 1371.59ms
+INFO:root:registerWithGoogle
+INFO:root:{'task': ['registerWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.aACYqyIWDi39LksAAADNOtMCHgeTwAr1HzPWinCQtAq_6cjPmrtbqpwHnfwnK9GJDm4Df6I5_Bgwm8j_H7_m0czGX90AfjVtfPyvSbAp86y5y_DgUWffbXg_9RoF4g","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"payload": "MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408604722|913d83e0e508e1120380584b7de1c8789947ab59", "messageType": 507}
+INFO:tornado.access:200 POST /func?task=registerWithGoogle (192.168.0.2) 17758.08ms
+INFO:root:registerWithGoogle
+INFO:root:{'task': ['registerWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.aACYqyIWDi39LksAAADNOtMCHgeTwAr1HzPWinCQtAq_6cjPmrtbqpwHnfwnK9GJDm4Df6I5_Bgwm8j_H7_m0czGX90AfjVtfPyvSbAp86y5y_DgUWffbXg_9RoF4g","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"payload": "MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408605145|5000dded8e3e3b51cbdab7775b62c3a04b09300a", "messageType": 507}
+INFO:tornado.access:200 POST /func?task=registerWithGoogle (192.168.0.2) 670.59ms
+INFO:root:registerWithGoogle
+INFO:root:{'task': ['registerWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.aACYqyIWDi39LksAAADNOtMCHgeTwAr1HzPWinCQtAq_6cjPmrtbqpwHnfwnK9GJDm4Df6I5_Bgwm8j_H7_m0czGX90AfjVtfPyvSbAp86y5y_DgUWffbXg_9RoF4g","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
+INFO:root:{"payload": "MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408605801|deec0bdb4b0813c613f11770b78fbc7b72e0ab60", "messageType": 507}
+INFO:tornado.access:200 POST /func?task=registerWithGoogle (192.168.0.2) 627.47ms

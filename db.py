@@ -13,33 +13,57 @@ db =connect('quizDoctor')
 
 class UserSolvedIds(Document):
     uid = StringField()
+    uid2 = StringField()
+    type = StringField()
     solvedId= StringField()
-
-class UserStats(EmbeddedDocument):
-    badges = ListField(StringField())
-    stats = DictField()#quizType to xp
-    winsLosses = DictField() #quizType to [wins , totals]
-
-class User(Document):
+    points = StringField()
+    questionIdToPointsMap = DictField()
+    
+class UserBadges():
     uid = StringField(unique=True)
+    badgeId = IntField()
+    createdTimeStamp = DateTimeField()
+
+class Users(Document):
+    uid = StringField(unique=True)
+    name = StringField()
+    status = StringField()
     deviceId = StringField(required = True)
     emailId = EmailField(required=True)
-    picture = StringField()#cdn link
+    pictureUrl = StringField()#cdn link
+    coverUrl = StringField()
+    birthday = FloatField()
+    gender = StringField()
+    place = StringField()
+    
     isActivated = BooleanField(default = False)
-    status = StringField()
+    stats = DictField()#quiz to xp
+    winsLosses = DictField() #quiz to [wins , totals]
+
+    activationKey = StringField()
     gcmRegId = StringField()
-    userStats = EmbeddedDocument(UserStats)
+    
+    badges = ListField(IntField())
+    
     googlePlus = StringField()
     facebook = StringField()
     activationCode = StringField()
     newDeviceId = StringField()
 
-class Tag():
+class Tags():
     tag = StringField(unique=True)
 
+class Badges():
+    badgeId = IntField()
+    name = StringField()
+    description = StringField()
+    modifiedTimeStamp = DateTimeField()
+    @staticmethod
+    def getNewBadges(userMaxTimeStamp):
+        return Badges.objects(modifiedTimeStamp__gte = userMaxTimeStamp)
 
 class Questions(Document):
-    questionId = StringField(unique=True)
+    questionId = IntField(unique=True)
     questionType = IntField(default = 0)
     questionDescription = StringField()# special formatted inside the description itself
     pictures = ListField(StringField())
@@ -95,11 +119,12 @@ class TopicMaxQuestions(Document):
             return c.max
 
 
-class CategoriesOfTopics(Document):
-    categoryId = StringField()
+class Categories(Document):
+    categoryId = StringField(unique=True)
     shortDescription = StringField()
     description = StringField()
-    quizList = ListField('Quiz')
+    quizList = ListField(ReferenceField('Quiz'))
+    type = StringField()
     modifiedTimestamp = DateTimeField()
 
 class Quiz(Document):
@@ -116,14 +141,12 @@ class DbUtils():
     def __init__(self):
         pass
 
-    
-
     def modifyCategory(self, categoryId, shortDescription, description , quizListNew):
-        c= CategoriesOfTopics.objects(categoryId = categoryId)
+        c= Categories.objects(categoryId = categoryId)
         if(c):
             c= c.get(0)
         else:
-            c = CategoriesOfTopics()
+            c = Categories()
             c.categoryId = categoryId
         c.shortDescription = shortDescription
         c.description = description
@@ -226,7 +249,7 @@ class DbUtils():
             questions.append(None)
 
     def getAllQuizzes(self,modifiedTimestamp):
-        return CategoriesOfTopics.objects(modifiedTimeStamp__gte = modifiedTimestamp)
+        return Categories.objects(modifiedTimeStamp__gte = modifiedTimestamp)
 
     def setUserGCMRegistationId(self, user , gcmRedId):
         user.gcmRegId = gcmRedId
@@ -234,45 +257,39 @@ class DbUtils():
         return
 
 
-    def registerUserFromGooglePlus(self, uid, deviceId, emailId, picture):
-        user = User()
-        user.uid = uid
-        user.deviceId = deviceId
-        user.emailId = emailId
-        user.picture = picture
-        user.isActivated = True
-        user.userStats = stats= UserStats()
-        user.googlePlus ="google"
-        user.save()
-
-    def registerUserWithFacebook(self, uid, deviceId, emailId, picture):
-        user = User()
-        user.uid = uid
-        user.deviceId = deviceId
-        user.emailId = emailId
-        user.picture = picture
-        user.isActivated = True
-        user.userStats = stats= UserStats()
-        user.facebook ="facebook"
-        user.save()
-
-    def registerUser(self , uid, deviceId, emailId, picture):
-        user = User()
-        user.uid = uid
-        user.deviceId = deviceId
-        user.emailId = emailId
-        user.picture = picture
-        user.isActivated = False
-        user.userStats = stats= UserStats()
+    def registerUser(self, uid, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, facebookToken=None , gPlusToken=None, isActivated=False):
+        user = Users.objects(uid=uid)
+        if(user):
+            user = user.get(0)
+        else:
+            user = Users()
+            user.stats = {}
+            user.winsLosses = {}
+            user.activationKey = ""
+            user.badges = []
+        
         user.newDeviceId = deviceId
-        user.activationCode = generateKey(6)
+        user.uid = uid
+        user.name = name
+        user.deviceId = deviceId
+        user.emailId = emailId
+        user.pictureUrl = pictureUrl
+        user.coverUrl = coverUrl
+        user.birthday = birthday
+        user.gender = gender
+        user.place = place
+        user.facebook = facebookToken
+        user.googlePlus = gPlusToken
+        user.isActivated = isActivated
         user.save()
-
+        return user
+    
     def activateUser(self, user, activationCode, deviceId):
         if(user.activationCode == activationCode):
             user.isActivated = True
             user.newDeviceId = deviceId
-
+            user.deviceId = deviceId
+            
     def getQuizDetails(self,quizId):
         return Quiz.objects(quizId=quizId)
     

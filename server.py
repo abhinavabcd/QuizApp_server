@@ -15,6 +15,7 @@ from androidUtils import *
 
 
 import logging
+from tornado import websocket
 logging.basicConfig(filename='log',level=logging.INFO)
 
 
@@ -34,13 +35,13 @@ def sendGcmMessages():
         if(isinstance(phNumbers, list)):
             registrationIds = []
             for phNumber in phNumbers:
-                user =User.getUserByPhoneNumber(phNumber)
+                user =Users.getUserByPhoneNumber(phNumber)
                 if(user and user.gcmRegId):
                     registrationIds.append(user.gcmRegId)
             if(registrationIds):
                 addGcmToQueue(registrationIds, packetData)            
         else:
-            user =User.getUserByPhoneNumber(phNumbers)
+            user =Users.getUserByPhoneNumber(phNumbers)
             if(user and user.gcmRegId):
                 addGcmToQueue([user.gcmRegId], packetData)            
                                           
@@ -67,8 +68,7 @@ def userAuthRequired(func):
     def wrapper(response,*args,**kwargs):
         encodedValue = response.get_argument("auth")
         uid = tornado.web.decode_signed_value(secret_auth , "key", encodedValue)
-        if(decodedKey):
-            #TODO: validate
+        if(uid):
             pass
         user = Users.objects(uid=uid)
         if(not user):
@@ -79,17 +79,48 @@ def userAuthRequired(func):
         return func(response,*args,**kwargs)
     return wrapper
 
+@tornado.web.asynchronous 
+def registerWithGoogle(response):
+    user = json.loads(response.get_argument("userJson"))
+    userAccessToken = user['googlePlus']
+    callback = onRegisterWithSocialNetwork(response,user,GPLUS_USER_SAVED)
+    http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
+    http_client.fetch("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="+userAccessToken,callback) # here we try     
+
+@tornado.web.asynchronous
+def registerWithFacebook(response):
+    user = json.loads(response.get_argument("userJson"))
+    userAccessToken = user['facebook']
+    callback = onRegisterWithSocialNetwork(response,user,GPLUS_USER_SAVED)
+    http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
+    http_client.fetch("https://graph.facebook.com/me?access_token="+userAccessToken,callback) # here we try     
+
+def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAVED):
+    def newFunc(httpResponse):
+        data = httpResponse.buffer  
+        temp =json.loads(data.read())
+        if(not temp or temp.get("error",None)):
+            responseFinish(response, {"messageType":NOT_AUTHORIZED})
+        else:
+            try:
+                userObject = dbUtils.registerUser(user.get("uid",generateKey(9)), user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),user.get("facebook",None),user.get("googlePlus",None),True)
+                encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
+                responseFinish(response,{"messageType":responseCode , "payload":encodedKey})
+            except:
+                responseFinish(response, {"messageType":NOT_AUTHORIZED})
+    return newFunc
 
 @userAuthRequired
 def getAllCategoriesOfTopics(response, user=None):
     userMaxTimeStamp = response.get_argument("userMaxTimeStamp")
-    quizes = dbUtils.getAllQuizzes(userMaxTimeStamp)
-    resposeFinish(response, {"messageType":CATEGORIES_OK,"payload":quizzes.to_json()})
+    quizzes = dbUtils.getAllQuizzes(userMaxTimeStamp)
+    responseFinish(response, {"messageType":OK_CATEGORIES,"payload":quizzes.to_json()})
     
+     
 @userAuthRequired
 def getUserDetails(response, user=None):
     uid = response.get_argument("uid")
-    user = User.objects(uid = uid)
+    user = Users.objects(uid = uid)
     try:
         user = user.get(0)
         responseFinish(response, {"messageType":OK_DETAILS,"payload":user.to_json()}) 
@@ -111,8 +142,6 @@ def getQuestionById(response, user=None):
     else:
         response.finish({"messageType": NOT_FOUND})
 
-
-
 @userAuthRequired
 def getUserInfo(response, user =None):
     responseFinish(response,{"messageType": OK_USER_INFO, "payload":dbUtils.getUserInfo(user).to_json()})
@@ -120,6 +149,7 @@ def getUserInfo(response, user =None):
 def responseFinish(response,data):
     data = json.dumps(data)
     logging.info(data)
+    print data
     response.finish(data) 
 
 @userAuthRequired
@@ -133,8 +163,20 @@ def reloadConfiguration(response):
     pass
     
 
-def getEncodedKey(response, deviceId=None, phoneNumber=None, user =None):
-    pass
+def getEncodedKey(response,uid=None, deviceId = None):
+    uid = uid if uid else response.get_argument("uid")
+    deviceId = deviceId if deviceId else response.get_argument("deviceId")
+    user = Users.objects(uid=uid)
+    if(user):
+        user = user.get(0)
+    else:
+        return
+    if(not user.isActivated or user.deviceId !=deviceId):
+        responseFinish(response,{"statusCode":NOT_ACTIVATED,"payload":user.activationKey})#change to not activated 
+        return
+    
+    encodedValue = tornado.web.create_signed_value(secret_auth , "key",uid)
+    responseFinish(response,{"statusCode":ACTIVATED,"payload":encodedValue})#change to not activated 
 
 @userAuthRequired
 def initAppConfig(response , user=None):
@@ -165,11 +207,11 @@ def generateProgressiveQuiz(quizId , uids):
     for i in uids:
         userStates[i]={}
         
-    runningQuizes[id] = quizState = { QUESTIONS: questions,
-                                CURRENT_QUESTION :-1,
-                                N_CURRENT_QUESTION_ANSWERED:[]
-                                USERS:userStates
-                               }
+    runningQuizes[id] = quizState = {   QUESTIONS: questions,
+                                        CURRENT_QUESTION :-1,
+                                        N_CURRENT_QUESTION_ANSWERED:[],
+                                        USERS:userStates##{uid:something}
+                                    }
     return id , quizState
 
 
@@ -184,7 +226,7 @@ def broadcastToAll(client , message, allClients):
         client.write_message(message)
 
         
-class ProgressiveQuizHandler(tornado.websocket.WebSocketHandler):
+class ProgressiveQuizHandler(websocket.WebSocketHandler):
     quizPoolWaitId = None   
     uid = None
     quizConnections =None
@@ -273,7 +315,8 @@ class ProgressiveQuizHandler(tornado.websocket.WebSocketHandler):
 
 #sample functionality
 serverFunc = {
-              
+              "registerWithGoogle":registerWithGoogle,
+              "registerWithFacebook":registerWithFacebook
              }
 
 #server web request commands with json
@@ -282,18 +325,19 @@ class Func(tornado.web.RequestHandler):
         task = task if task!=None else self.get_argument("task",None)
         logging.info(task)
         logging.info(self.request.arguments)
-        
+        print self.request.arguments
         func = serverFunc.get(task,None)
         if(func):
             func(self)
             return
+        self.send_error(404)
         
         
     def post(self,*args,**kwargs):
         return self.get(*args,**kwargs)
 
 #create a mongo class that is a test document that is same as the Test class in testSampleGson project java file
-class QuizDoctorServer(tornado.web.Application):
+class QuizApp(tornado.web.Application):
     def __init__(self):
         settings = dict(
             static_path=os.path.join(os.path.dirname(__file__), "html/"),
@@ -311,7 +355,7 @@ class QuizDoctorServer(tornado.web.Application):
 
 
 def main():
-    http_server = tornado.httpserver.HTTPServer(ImmutableServer())
+    http_server = tornado.httpserver.HTTPServer(QuizApp())
     http_server.listen(HTTP_PORT)
     tornado.ioloop.PeriodicCallback(sendGcmMessages, 2000).start()
     tornado.ioloop.IOLoop.instance().start()

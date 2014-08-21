@@ -10,10 +10,10 @@ import datetime
 
 ####################config variables 
 HTTP_PORT=8084
-# status codes
-NOT_ACTIVATED = 1
-ACTIVATED = 2
-NOT_AUTHORIZED = 3
+# status codes for web requests
+NOT_ACTIVATED = 104
+ACTIVATED = 105
+NOT_AUTHORIZED = 106
 OK =200
 OK_AUTH=202
 USER_EXISTS=203
@@ -38,8 +38,19 @@ NOT_FOUND=404
 OK_QUESTIONS = 502
 OK_QUESTION = 503
 OK_SERVER_DETAILS = 504
-START_QUESTIONS = 505
-STATUS_WHAT_USER_GOT = 507
+OK_CATEGORIES = 505
+FACEBOOK_USER_SAVED = 506
+GPLUS_USER_SAVED = 507
+
+################################# dict values/commands for payload type definition
+USER_ANSWERED_QUESTION = 1
+GET_NEXT_QUESTION = 2
+STARTING_QUESTIONS = 3
+ANNOUNCING_WINNER = 4
+USER_DISCONNECTED = 5
+NEXT_QUESTION =6
+START_QUESTIONS = 7
+STATUS_WHAT_USER_GOT = 8
 
 #################################dict keys
 QUESTIONS = 1
@@ -50,12 +61,7 @@ WHAT_USER_HAS_GOT = 5
 N_CURRENT_QUESTION_ANSWERED = 6
 USER_ANSWER = 7
 USERS=8
-################################# dict values/commands
-USER_ANSWERED_QUESTION = 1
-GET_NEXT_QUESTION = 2
-STARTING_QUESTIONS = 3
-ANNOUNCING_WINNER = 4
-USER_DISCONNECTED = 5
+
 
 #preference strigns
 PREF_IMMUTABLES_COUNT = "immutables_count"
