@@ -63,7 +63,7 @@ class Badges():
         return Badges.objects(modifiedTimeStamp__gte = userMaxTimeStamp)
 
 class Questions(Document):
-    questionId = IntField(unique=True)
+    questionId = StringField(unique=True)
     questionType = IntField(default = 0)
     questionDescription = StringField()# special formatted inside the description itself
     pictures = ListField(StringField())
@@ -76,6 +76,8 @@ class Questions(Document):
     tagsAllSubjects = ListField(StringField()) #categorynameIndex , ....
     tagsAllIndex = ListField(StringField())
     tags=ListField(StringField())
+
+
 
 class TopicMaxQuestions(Document):
     categoryTag = StringField(unique=True)
@@ -100,12 +102,12 @@ class TopicMaxQuestions(Document):
             return c.max-1
 
     @staticmethod
-    def addToUnUsedId(tag, id):
+    def addToUnUsedId(tag, _id):
         c = TopicMaxQuestions.objects(categoryTag = tag).get(0)
         if(c.unused):
-            c.unused.append(id)
+            c.unused.append(_id)
         else:
-            c.unused = [id]
+            c.unused = [_id]
         c.save()
 
 
@@ -186,23 +188,17 @@ class DbUtils():
         q.save()
 
     def addQuestion(self,questionId, questionType ,questionDescription , pictures, options, answer, hint , explanation , time, xp , tags):
+        questionId = str(questionId)
         question = Questions.objects(questionId=questionId)
-        tags.sort()
+        isQuestionBeingModified = False
+        
         if(len(question)>0):
-            return
-        tagsAll = []
-        tagsAll2 = []
-        for L in range(1, len(tags)+1):
-            for subset in itertools.combinations(tags, L):
-                fullTag = "_".join(sorted(subset))
-                max = TopicMaxQuestions.getNewId(fullTag)
-                tagsAll.append(fullTag+"_"+str(max))
-                tagsAll2.append(fullTag)
-        print tagsAll
-        print tagsAll2
+            isQuestionBeingModified = True
+            q = question=question.get(0)
+        else:
+            q = Questions()
+            q.questionId = questionId
 
-        q = Questions()
-        q.questionId = questionId
         q.questionType = questionType
         q.questionDescription = questionDescription
         q.pictures = pictures
@@ -212,38 +208,48 @@ class DbUtils():
         q.explanation=explanation
         q.time=time
         q.xp = xp
-        q.tagsAllSubjects= tagsAll2
-        q.tagsAllIndex= tagsAll
         q.tags = tags
         q.save()
+        ##################### save tags after the question is saved and save again if there was an error it should help
+        if(isQuestionBeingModified):
+            oldTags =question.tags[:]
+            if(set(oldTags) != set(tags)):
+                for i in question.tagsAllIndex:
+                    tagSet= i.split("_")
+                    _id = tagSet.pop()
+                    tagSet.sort()
+                    tag = "_".join(tagSet)
+                    TopicMaxQuestions.addToUnUsedId(tag, _id)#remove old tags , add to unused list to reuse later
+                    
+                tags.sort()
+                tagsAll = []
+                tagsAll2 = []
+                for L in range(1, len(tags)+1):
+                    for subset in itertools.combinations(tags, L):
+                        fullTag = "_".join(sorted(subset))
+                        _max = TopicMaxQuestions.getNewId(fullTag)
+                        tagsAll.append(fullTag+"_"+str(_max))
+                        tagsAll2.append(fullTag)
+                print tagsAll
+                print tagsAll2
+        
+                q.tagsAllSubjects= tagsAll2
+                q.tagsAllIndex= tagsAll
+                q.save()
+            
+        
 
-    def modifyQuestion(self,questionId,  newTags):
-        question = Questions.objects(questionId=questionId).get(0)
-        #TODO add all others
-        tags =question.tags[:]
-        if(set(tags) != set(newTags)):
-            newTags.sort()
-            for i in question.tagsAllIndex:
-                tagSet= i.split("_")
-                id = tagSet.pop()
-                tagSet.sort()
-                tag = "_".join(tagSet)
-                TopicMaxQuestions.addToUnUsedId(tag, id)
+    def addOrModifyQuestion(self,questionId, questionType=0 , questionDescription=None, pictures=None, options=None, answer=None, hint=None, explanation=None, time=None, xp=None, tags=None ,isDirty=1):
+        if(isinstance(tags,str)):
+            tags=tags.split(",")
+            tags = map(lambda x:x.strip(), tags)
+        if(isinstance(pictures,str)):
+            pictures=map(lambda x:x.strip(), pictures.split(","))
+        answer = str(answer)
+        print questionId, questionType , questionDescription, pictures, options, answer, hint, explanation, time, xp, tags
+        self.addQuestion(questionId, questionType ,questionDescription , pictures, options, answer, hint , explanation , time, xp , tags)
 
-            tagsAll = []
-            tagsAll2 = []
-            tags= newTags
-            for L in range(1, len(tags)+1):
-                for subset in itertools.combinations(tags, L):
-                    fullTag = "_".join(sorted(subset))
-                    max = TopicMaxQuestions.getNewId(fullTag)
-                    tagsAll.append(fullTag+"_"+str(max))
-                    tagsAll2.append(fullTag)
-
-            question.tagsAllSubjects = tagsAll2
-            question.tagsAllIndex = tagsAll
-            question.tags = newTags
-            question.save()
+        
 
     def getRandomQuestions(self,quizType):
         questions = []
@@ -304,9 +310,8 @@ dbUtils = DbUtils()
 
 #save user testing
 if __name__ == "__main__":
-    dbUtils.addQuestion("question1","What is c++ first program" , None, "abcd", "a", "asdasd" , "hello world dude!" , 10, 10 , ["c","c++","computerScience"])
-    dbUtils.modifyQuestion("question1", ["c","c++","computerScience"])
-    dbUtils.modifyQuestion("question1", ["c","hello","computerScience"])
+    #dbUtils.addQuestion("question1","What is c++ first program" , None, "abcd", "a", "asdasd" , "hello world dude!" , 10, 10 , ["c","c++","computerScience"])
+    dbUtils.addOrModifyQuestion(**{'questionType': 0, 'questionId': "1_8", 'hint': '', 'pictures': '', 'explanation': '', 'tags': 'movies, puri-jagannath,pokiri, illeayana', 'isDirty': 1, 'questionDescription': 'how many movies did puri jagannath made in year 2007?', 'time': 10, 'answer': 4, 'xp': 10, 'options': '4 , 7 , 1 , 3 , 2'})
     pass
 
 
