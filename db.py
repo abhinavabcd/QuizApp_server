@@ -125,8 +125,8 @@ class Categories(Document):
     categoryId = StringField(unique=True)
     shortDescription = StringField()
     description = StringField()
-    assetPath = StringField()
     quizList = ListField(StringField())
+    assetPath = StringField()
     type = StringField()
     modifiedTimestamp = DateTimeField()
 
