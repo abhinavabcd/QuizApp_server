@@ -7,7 +7,7 @@ import bson
 from Config import *
 import itertools
 
-db =connect('quizDoctor')
+db =connect('quizApp')
 #db.dropDatabase('ideaVault')
 
 
@@ -50,7 +50,7 @@ class Users(Document):
     activationCode = StringField()
     newDeviceId = StringField()
 
-class Tags():
+class Tags(Document):
     tag = StringField(unique=True)
 
 class Badges():
@@ -132,7 +132,7 @@ class Categories(Document):
 
 class Quiz(Document):
     quizId = StringField(unique= True)
-    quizType = StringField()
+    quizType = IntField()
     name = StringField()
     shortDescription = StringField()
     assetPath = StringField()
@@ -142,13 +142,30 @@ class Quiz(Document):
     modifiedTimestamp = DateTimeField()
 
 
-def getListFromString(s):
+def getTagsFromString(s,toLower=True):
     ret = []
     a = s.split("\n")
     for i in a:
         for j in i.split(","):
-            ret.append(j.strip())
-            
+            t = j.strip()
+            t.replace(" ","-")
+            t.replace("_","-")
+            if(toLower):
+                t = t.lower()
+            ret.append(t)
+    return ret
+
+
+def getListFromString(s,toLower=False):
+    ret = []
+    a = s.split("\n")
+    for i in a:
+        for j in i.split(","):
+            t = j.strip()
+            if(toLower):
+                t = t.lower()
+            ret.append(t)
+    return ret
 
 class DbUtils():
 
@@ -184,8 +201,9 @@ class DbUtils():
         c.save()
 
     def addOrModifyQuiz(self, quizId=None,quizType=None, name=None, tags=None, nQuestions=None,nPeople=None,isDirty=1):
+        quizId = str(quizId)
         if(isinstance(tags,str)):
-            tags = getListFromString(tags)
+            tags = getTagsFromString(tags)
         
         q = Quiz.objects(quizId = quizId)
         if(q):
@@ -254,12 +272,15 @@ class DbUtils():
 
     def addOrModifyQuestion(self,questionId=None, questionType=0 , questionDescription=None, pictures=None, options=None, answer=None, hint=None, explanation=None, time=None, xp=None, tags=None ,isDirty=1):
         if(isinstance(tags,str)):
-            tags=getListFromString(tags)
+            tags=getTagsFromString(tags)
             for tag in tags:
-                tag =  Tags.objects(tag=tag)
-                if(not tag or len(tag)==0):
-                    print "Tags Not found in Db"
-                    return False
+#                 tag =  Tags.objects(tag=tag)
+#                 if(not tag or len(tag)==0):
+#                     print "Tags Not found in Db"
+#                     return False
+                ############FOR NOW INITIAL PHASE
+                self.addOrModifyTag(tag)
+
                
         if(isinstance(pictures,str)):
             pictures=getListFromString(pictures)
@@ -328,12 +349,12 @@ class DbUtils():
         if(not tag):
             return None
         
-        tag = Tags.objects(tag)
-        if(not tag):
-            tag = Tags()
-            tag.tag = tag
-            tag.save()
-        return tag
+        tagObj = Tags.objects(tag=tag)
+        if(not tagObj):
+            tagObj = Tags()
+            tagObj.tag = tag.lower()
+            tagObj.save()
+        return tagObj
             
 
 dbUtils = DbUtils()
