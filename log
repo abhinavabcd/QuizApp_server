@@ -890,3 +890,1682 @@ INFO:root:registerWithGoogle
 INFO:root:{'task': ['registerWithGoogle'], 'userJson': ['{"deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.aACYqyIWDi39LksAAADNOtMCHgeTwAr1HzPWinCQtAq_6cjPmrtbqpwHnfwnK9GJDm4Df6I5_Bgwm8j_H7_m0czGX90AfjVtfPyvSbAp86y5y_DgUWffbXg_9RoF4g","uid":"110040773460941325994","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","birthday":0.0,"isActivated":false}']}
 INFO:root:{"payload": "MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408605801|deec0bdb4b0813c613f11770b78fbc7b72e0ab60", "messageType": 507}
 INFO:tornado.access:200 POST /func?task=registerWithGoogle (192.168.0.2) 627.47ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 334, in get
+    func(self)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 12619.42ms
+WARNING:tornado.access:404 GET /favicon.ico (127.0.0.1) 2.90ms
+WARNING:tornado.access:404 GET /favicon.ico (127.0.0.1) 3.56ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 334, in get
+    func(self)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 8.15ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 334, in get
+    func(self)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 20.59ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 334, in get
+    func(self)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 26.93ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 334, in get
+    func(self)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 19.97ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 13.90ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 4.82ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 4.35ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 4.38ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2.30ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2.93ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 3.50ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 324.62ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2.43ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 1.90ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 1.67ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2.14ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2.43ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 1.69ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 1.53ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 1.44ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 1.47ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 1.57ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 3.14ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2.94ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2.80ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 3.68ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Cache-Control': 'max-age=0', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "server.py", line 334, in get
+    func(self)
+  File "server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 3.09ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+ERROR:tornado.application:Uncaught exception GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1)
+HTTPRequest(protocol='http', host='localhost:8084', method='GET', uri='/func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Connection': 'keep-alive', 'Accept-Language': 'en-US,en;q=0.5', 'Accept-Encoding': 'gzip, deflate', 'Host': 'localhost:8084', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0'})
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1151, in _when_complete
+    callback()
+  File "/usr/local/lib/python2.7/dist-packages/tornado-3.2.dev1-py2.7.egg/tornado/web.py", line 1172, in _execute_method
+    self._when_complete(method(*self.path_args, **self.path_kwargs),
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 334, in get
+    func(self)
+  File "/media/mountpoint1/abhinav_lap_backup/abhinav/workspace/quiz_server/server.py", line 119, in getAllCategoriesAndQuizzes
+    responseFinish(response, {"messageType":OK_QUIZZES_CATEGORIES,"payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" , "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]"})
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 42, in query
+    indices = [(i, p) for i, p in enumerate(parts) if p.isdigit()]
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 47, in __len__
+    list(self._iter_results())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 81, in _iter_results
+    self._populate_cache()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/queryset.py", line 93, in _populate_cache
+    self._result_cache.append(self.next())
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1137, in next
+    raw_doc = self._cursor.next()
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1182, in _cursor
+    self._cursor_obj = self._collection.find(self._query,
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/base.py", line 1215, in _query
+    self._mongo_query = self._query_obj.to_query(self._document)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 92, in to_query
+    query = query.accept(QueryCompilerVisitor(document))
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 157, in accept
+    return visitor.visit_query(self)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/visitor.py", line 80, in visit_query
+    return transform.query(self.document, **query.query)
+  File "/usr/local/lib/python2.7/dist-packages/mongoengine-0.8.7-py2.7.egg/mongoengine/queryset/transform.py", line 59, in query
+    raise InvalidQueryError(e)
+InvalidQueryError: Cannot resolve field "modifiedTimeStamp"
+ERROR:tornado.access:500 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 20.28ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+INFO:root:{"payload": "[]", "messageType": 505, "payload1": "[]"}
+INFO:tornado.access:200 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 2338.25ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": [\"actress\", \"identify\"], \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": [\"yeto-vellipoyindi-manusu\"], \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938}]", "messageType": 505, "payload1": "[]"}
+INFO:tornado.access:200 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 174.49ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": [\"actress\", \"identify\"], \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": [\"yeto-vellipoyindi-manusu\"], \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938}]", "messageType": 505, "payload1": "[]"}
+INFO:tornado.access:304 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 28.20ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": [\"actress\", \"identify\"], \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": [\"yeto-vellipoyindi-manusu\"], \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938}]", "messageType": 505, "payload1": "[]"}
+INFO:tornado.access:304 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 20.70ms
+INFO:root:getAllCategoriesAndQuizzes
+INFO:root:{'task': ['getAllCategoriesAndQuizzes'], 'userMaxTimeStamp': ['0']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": \"[\\\"actress\\\", \\\"identify\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": \"[\\\"yeto-vellipoyindi-manusu\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938}]", "messageType": 505, "payload1": "[]"}
+INFO:tornado.access:200 GET /func?task=getAllCategoriesAndQuizzes&userMaxTimeStamp=0 (127.0.0.1) 58.33ms
+INFO:root:registerWithGoogle
+INFO:root:{'task': ['registerWithGoogle'], 'userJson': ['{"uid":"110040773460941325994","deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.bAAds4HLHI_W1ksAAAADoOhkXXigRgRYHV0BftEeOiHW9OHsENMpSstwT2GiXL-d_jNOCbU9X389DYrzRhqBjqJLoJP5mLJ3xZoUD_W60xgRWbsgPoMhF8ufgrWm1A","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","isActivated":false,"createdAt":0.0,"birthday":0.0}']}
+INFO:root:{"payload": "MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca", "messageType": 507}
+INFO:tornado.access:200 POST /func?task=registerWithGoogle (192.168.0.2) 1112.04ms
+INFO:root:getNewCategories
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getNewCategories']}
+WARNING:tornado.access:404 GET /func?task=getNewCategories&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 55.51ms
+INFO:root:getNewCategories
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getNewCategories']}
+WARNING:tornado.access:404 GET /func?task=getNewCategories&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 2.09ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+WARNING:tornado.general:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2): Missing argument auth
+WARNING:tornado.access:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 87.27ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+WARNING:tornado.general:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2): Missing argument auth
+WARNING:tornado.access:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 21.72ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+WARNING:tornado.general:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2): Missing argument auth
+WARNING:tornado.access:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 4.25ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+WARNING:tornado.general:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2): Missing argument auth
+WARNING:tornado.access:400 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 3.95ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": \"[\\\"actress\\\", \\\"identify\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": \"[\\\"yeto-vellipoyindi-manusu\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938},{\"_id\": {\"$oid\": \"53f9e3c1c7d42d04d95960dd\"}, \"quizId\": \"3\", \"quizType\": 0, \"name\": \"yem maya chesave\", \"tags\": \"[\\\"movies\\\", \\\"\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905497.185},{\"_id\": {\"$oid\": \"53f9e3c2c7d42d04d95960de\"}, \"quizId\": \"4\", \"quizType\": 0, \"name\": \"nenithe\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905498.256},{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 6542.14ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": \"[\\\"actress\\\", \\\"identify\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": \"[\\\"yeto-vellipoyindi-manusu\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938},{\"_id\": {\"$oid\": \"53f9e3c1c7d42d04d95960dd\"}, \"quizId\": \"3\", \"quizType\": 0, \"name\": \"yem maya chesave\", \"tags\": \"[\\\"movies\\\", \\\"\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905497.185},{\"_id\": {\"$oid\": \"53f9e3c2c7d42d04d95960de\"}, \"quizId\": \"4\", \"quizType\": 0, \"name\": \"nenithe\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905498.256},{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 44.36ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": \"[\\\"actress\\\", \\\"identify\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": \"[\\\"yeto-vellipoyindi-manusu\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938},{\"_id\": {\"$oid\": \"53f9e3c1c7d42d04d95960dd\"}, \"quizId\": \"3\", \"quizType\": 0, \"name\": \"yem maya chesave\", \"tags\": \"[\\\"movies\\\", \\\"\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905497.185},{\"_id\": {\"$oid\": \"53f9e3c2c7d42d04d95960de\"}, \"quizId\": \"4\", \"quizType\": 0, \"name\": \"nenithe\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905498.256},{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 68.25ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['0.0'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9c25cc7d42d6ea7f44abd\"}, \"quizId\": \"1\", \"quizType\": 0, \"name\": \"Identify the actress\", \"tags\": \"[\\\"actress\\\", \\\"identify\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896948.273},{\"_id\": {\"$oid\": \"53f9c25dc7d42d6ea7f44abe\"}, \"quizId\": \"2\", \"quizType\": 0, \"name\": \"yeto vellipoyindi manasu\", \"tags\": \"[\\\"yeto-vellipoyindi-manusu\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408896949.938},{\"_id\": {\"$oid\": \"53f9e3c1c7d42d04d95960dd\"}, \"quizId\": \"3\", \"quizType\": 0, \"name\": \"yem maya chesave\", \"tags\": \"[\\\"movies\\\", \\\"\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905497.185},{\"_id\": {\"$oid\": \"53f9e3c2c7d42d04d95960de\"}, \"quizId\": \"4\", \"quizType\": 0, \"name\": \"nenithe\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905498.256},{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=0.0 (192.168.0.2) 51.50ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 434.84ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 329.34ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 28.69ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 31.69ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 63.35ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 42.14ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 30.24ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 37.53ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 38.94ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 31.85ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 44.13ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 28.70ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 337.10ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 32.18ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 43.99ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 37.85ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 42.81ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 125.07ms
+INFO:root:getAllUpdates
+INFO:root:{'maxQuizTimestamp': ['1.408905499342E9'], 'encodedKey': ['MTEwMDQwNzczNDYwOTQxMzI1OTk0|1408952376|9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca'], 'task': ['getAllUpdates']}
+INFO:root:{"payload": "[{\"_id\": {\"$oid\": \"53f9e3c3c7d42d04d95960df\"}, \"quizId\": \"5\", \"quizType\": 0, \"name\": \"yamadonga\", \"tags\": \"[\\\"movies\\\"]\", \"nQuestions\": 7, \"nPeople\": 2, \"modifiedTimestamp\": 1408905499.342}]", "messageType": 505, "payload1": "[{\"_id\": {\"$oid\": \"53f9e49bc7d42d05c9ec9bc8\"}, \"categoryId\": \"1\", \"shortDescription\": \"all movies in a go\", \"description\": \"Movies\", \"quizList\": \"[\\\"3\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\"]\", \"modifiedTimestamp\": 1408905715.216}]"}
+INFO:tornado.access:200 GET /func?task=getAllUpdates&encodedKey=MTEwMDQwNzczNDYwOTQxMzI1OTk0%7C1408952376%7C9cb5cac6e1b493c0c6ebd4ceb0f45f968a6f7fca&maxQuizTimestamp=1.408905499342E9 (192.168.0.2) 480.58ms
