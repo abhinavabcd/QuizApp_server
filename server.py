@@ -66,7 +66,7 @@ def addPhoneNumbersToQueue(phoneNumbers, packetData):
         
 def userAuthRequired(func):
     def wrapper(response,*args,**kwargs):
-        encodedValue = response.get_argument("auth")
+        encodedValue = response.get_argument("encodedKey")
         uid = tornado.web.decode_signed_value(secret_auth , "key", encodedValue)
         if(uid):
             pass
@@ -103,7 +103,8 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
             responseFinish(response, {"messageType":NOT_AUTHORIZED})
         else:
             try:
-                userObject = dbUtils.registerUser(user.get("uid",generateKey(9)), user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),user.get("facebook",None),user.get("googlePlus",None),True)
+                userIp = response.request.remote_ip
+                userObject = dbUtils.registerUser(user.get("uid",generateKey(9)), user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),userIp , user.get("facebook",None),user.get("googlePlus",None),True)
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
                 responseFinish(response,{"messageType":responseCode , "payload":encodedKey})
             except:
@@ -111,12 +112,21 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
     return newFunc
 
 @userAuthRequired
-def getAllCategoriesOfTopics(response, user=None):
-    userMaxTimeStamp = response.get_argument("userMaxTimeStamp")
+def getAllUpdates(response, user=None):
+    userMaxTimeStamp = datetime.datetime.utcfromtimestamp(float(response.get_argument("maxQuizTimestamp")))
     quizzes = dbUtils.getAllQuizzes(userMaxTimeStamp)
-    responseFinish(response, {"messageType":OK_CATEGORIES,"payload":quizzes.to_json()})
+    categories = dbUtils.getAllCategories(userMaxTimeStamp)
+    user.loginIndex+=1
+    user.save()
+    responseFinish(response, {"messageType":OK_UPDATES,
+                              "payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" ,
+                               "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]",
+#                                "payload2":"",
+#                                "payload3":"",
+#                                "payload4":""
+                              })
     
-     
+
 @userAuthRequired
 def getUserDetails(response, user=None):
     uid = response.get_argument("uid")
@@ -316,7 +326,8 @@ class ProgressiveQuizHandler(websocket.WebSocketHandler):
 #sample functionality
 serverFunc = {
               "registerWithGoogle":registerWithGoogle,
-              "registerWithFacebook":registerWithFacebook
+              "registerWithFacebook":registerWithFacebook,
+              "getAllUpdates":getAllUpdates
              }
 
 #server web request commands with json
