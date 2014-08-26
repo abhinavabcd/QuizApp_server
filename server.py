@@ -1,4 +1,3 @@
-import yajl as json
 import os
 import random
 import string
@@ -8,15 +7,25 @@ import tornado.ioloop
 from tornado.options import define, options, parse_command_line
 import tornado.options
 import tornado.web
-
-from Config import *
-from db import  *
-from androidUtils import *
-
-
-import logging
 from tornado import websocket
+
+import json
+from Constants import *
+import Db
+import AndroidUtils
+import MasterServerUtils
+import logging
+import HelperFunctions
+import Config 
+ 
+dbUtils = Db.DbUtils()#initialize Db
+masterSever = MasterServerUtils.MasterServerUtils(Config.WebServersMap)
+
 logging.basicConfig(filename='log',level=logging.INFO)
+
+
+
+
 
 
 
@@ -30,18 +39,18 @@ phoneNumberQueue = []
 GCM_BATCH_COUNT = 10
 def sendGcmMessages():
     while(len(phoneNumberQueue)>0):
-        phNumbers , packetData = phoneNumberQueue.pop()
+        uids , packetData = phoneNumberQueue.pop()
         registrationIds = None
-        if(isinstance(phNumbers, list)):
+        if(isinstance(uids, list)):
             registrationIds = []
-            for phNumber in phNumbers:
-                user =Users.getUserByPhoneNumber(phNumber)
+            for uid in uids:
+                user = dbUtils.getUserByUid(uid)
                 if(user and user.gcmRegId):
                     registrationIds.append(user.gcmRegId)
             if(registrationIds):
                 addGcmToQueue(registrationIds, packetData)            
         else:
-            user =Users.getUserByPhoneNumber(phNumbers)
+            user =dbUtils.getUserByUid(uid)
             if(user and user.gcmRegId):
                 addGcmToQueue([user.gcmRegId], packetData)            
                                           
@@ -52,16 +61,16 @@ def sendGcmMessages():
             data = json.dumps(data)
             logging.info("GCM:PUSH:")
             logging.info(data)
-            logging.info(get_data('https://android.googleapis.com/gcm/send',post= data,headers = GCM_HEADERS).read()) 
-            
+            logging.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = GCM_HEADERS).read()) 
+             
 def addGcmToQueue(registrationIds, packetData):
     gcmQueue.append({"registration_ids":registrationIds,"data":packetData })
 
-def addPhoneNumberToQueue(phoneNumber, packetData):
-    phoneNumberQueue.append([phoneNumber,packetData])
+def addUidToQueue(uid, packetData):
+    phoneNumberQueue.append([uid,packetData])
 
-def addPhoneNumbersToQueue(phoneNumbers, packetData):
-    phoneNumberQueue.append([phoneNumbers,packetData])
+def addUidsToQueue(uids, packetData):
+    phoneNumberQueue.append([uids,packetData])
 
         
 def userAuthRequired(func):
@@ -70,11 +79,10 @@ def userAuthRequired(func):
         uid = tornado.web.decode_signed_value(secret_auth , "key", encodedValue)
         if(uid):
             pass
-        user = Users.objects(uid=uid)
+        user = dbUtils.getUserByUid(uid)
         if(not user):
             responseFinish(response,{"messageType":NOT_AUTHORIZED})
             return
-        user = user.get(0)
         kwargs.update({"user":user})
         return func(response,*args,**kwargs)
     return wrapper
@@ -127,21 +135,29 @@ def getAllUpdates(response, user=None):
                               })
     
 
+# TYPE for requests to getServerDetails
 @userAuthRequired
-def getUserDetails(response, user=None):
-    uid = response.get_argument("uid")
-    user = Users.objects(uid = uid)
-    try:
-        user = user.get(0)
-        responseFinish(response, {"messageType":OK_DETAILS,"payload":user.to_json()}) 
-    except:
-        responseFinish(response, {"messageType":NOT_FOUND})
+def getServerDetails(response, quizId,user=None):
+    type = int(response.get_argument("type",0))
+    if(type==PROGRESSIVE_QUIZ): 
+        quiz = dbUtils.getQuizDetails(quizId)
+        responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1":masterSever.getQuizWebSocketServer(quiz, user) })
+        return
+
     
+def addWebServer(response):
+    serveraddr = response.get_argument("serveraddr")
+    sid = response.get_argument("sid")
+    masterSever.addServer(sid, serveraddr)
     
-@userAuthRequired
-def getServerAddress(response, quizId,user=None):
-    #round robin routes appropriately , this appears in our main loadbalancer/main server
-    responseFinish(response, {"messageType":OK_SERVER_DETAILS,"payload1":"127.0.0.1:8084"})
+def removeWebServer(response):
+    sid = response.get_argument("sid")
+    masterSever.removeServer(sid)
+    
+def updateWebServerMap(response):
+    webServerMap  = json.loads(response.get_argument("webServerMap"))
+    masterSever.updateWebServerMap(webServerMap)
+
 
 @userAuthRequired
 def getQuestionById(response, user=None):
@@ -176,7 +192,7 @@ def reloadConfiguration(response):
 def getEncodedKey(response,uid=None, deviceId = None):
     uid = uid if uid else response.get_argument("uid")
     deviceId = deviceId if deviceId else response.get_argument("deviceId")
-    user = Users.objects(uid=uid)
+    user = dbUtils.getUserById(uid)
     if(user):
         user = user.get(0)
     else:
@@ -190,7 +206,7 @@ def getEncodedKey(response,uid=None, deviceId = None):
 
 @userAuthRequired
 def initAppConfig(response , user=None):
-    responseFinish(response,{"messageType":OK, "payload1":json.dumps({"serverTime":toUtcTimestamp(datetime.datetime.now())})})
+    responseFinish(response,{"messageType":OK, "payload1":json.dumps({"serverTime":HelperFunctions.toUtcTimestamp(datetime.datetime.now())})})
 
 @userAuthRequired
 def updateUserRating(response , user=None):
@@ -198,8 +214,6 @@ def updateUserRating(response , user=None):
     user.save()
     responseFinish(response,{"messageType":RATING_OK})
     return
-
-
 
 quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
 runningQuizes = {} # all currently running quizes in this server
@@ -288,7 +302,7 @@ class ProgressiveQuizHandler(websocket.WebSocketHandler):
                                            "payload":json.dumps(self.runningQuiz[USERS])
                                         },
                                      self.quizConnections)
-                    #TODO: calculate winner and save in db
+                    #TODO: calculate winner and save in Db
                     return
                 currentQuestionIndex = self.runningQuiz[CURRENT_QUESTION]
                 question = self.runningQuiz[QUESTIONS][currentQuestionIndex]
