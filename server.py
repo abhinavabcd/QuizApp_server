@@ -112,7 +112,7 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
         else:
             try:
                 userIp = response.request.remote_ip
-                userObject = dbUtils.registerUser(user.get("uid",generateKey(9)), user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),userIp , user.get("facebook",None),user.get("googlePlus",None),True)
+                userObject = dbUtils.registerUser( user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),userIp , user.get("facebook",None),user.get("googlePlus",None),True)
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
                 responseFinish(response,{"messageType":responseCode , "payload":encodedKey})
             except:
@@ -121,20 +121,21 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
 
 @userAuthRequired
 def getAllUpdates(response, user=None):
-    userMaxTimeStamp = datetime.datetime.utcfromtimestamp(float(response.get_argument("maxQuizTimestamp")))
-    quizzes = dbUtils.getAllQuizzes(userMaxTimeStamp)
-    categories = dbUtils.getAllCategories(userMaxTimeStamp)
-    user.loginIndex+=1
-    user.save()
+    userMaxTimestamp = datetime.datetime.utcfromtimestamp(float(response.get_argument("maxQuizTimestamp")))
+    lastSeenTimestamp = datetime.datetime.utcfromtimestamp(float(response.get_argument("lastSeenTimestamp")))
+    
+    quizzes = dbUtils.getAllQuizzes(userMaxTimestamp)
+    categories = dbUtils.getAllCategories(userMaxTimestamp)
+    
     responseFinish(response, {"messageType":OK_UPDATES,
                               "payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" ,
                                "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]",
-#                                "payload2":"",
-#                                "payload3":"",
-#                                "payload4":""
-                              })
-    
-
+                               "payload2":dbUtils.getRecentUserFeed(user),
+                               "payload3":dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp),
+#                               "payload4":dbUtils.getRecentChallenges()
+                              }
+                   )
+    dbUtils.incrementLoginIndex(user)
 # TYPE for requests to getServerDetails
 @userAuthRequired
 def getServerDetails(response, quizId,user=None):
@@ -144,7 +145,6 @@ def getServerDetails(response, quizId,user=None):
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1":masterSever.getQuizWebSocketServer(quiz, user) })
         return
 
-    
 def addWebServer(response):
     serveraddr = response.get_argument("serveraddr")
     sid = response.get_argument("sid")
@@ -214,6 +214,8 @@ def updateUserRating(response , user=None):
     user.save()
     responseFinish(response,{"messageType":RATING_OK})
     return
+
+
 
 quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
 runningQuizes = {} # all currently running quizes in this server
@@ -373,7 +375,8 @@ class QuizApp(tornado.web.Application):
         static_path = dict(path=settings['static_path'], default_filename='index.html')
            
         handlers = [                    
-            (r"/func", Func),    
+            (r"/func", Func),
+            (r"/pQuiz", ProgressiveQuizHandler),
             (r"/(.*)", tornado.web.StaticFileHandler,static_path)               
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
