@@ -39,6 +39,8 @@ OK_SERVER_DETAILS = 504
 OK_UPDATES = 505
 FACEBOOK_USER_SAVED = 506
 GPLUS_USER_SAVED = 507
+OK_PREVIOUS_MESSAGES = 508
+OK_PREVIOUS_FEED = 509
 
 ################################# dict values/commands for payload type definition
 USER_ANSWERED_QUESTION = 1

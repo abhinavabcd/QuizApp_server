@@ -4,6 +4,7 @@ import string
 import datetime
 import time
 import bson
+import json
 import itertools
 from Constants import *
 import HelperFunctions
@@ -11,7 +12,10 @@ import Config
 
 
 
-
+def reorderUids(uid1, uid2):
+    if(user1.uid < user2.uid):#swap maintain same order always
+        return uid2, uid1
+    return uid1, uid2
 
 def reorder(user1, user2):
     if(user1.uid < user2.uid):#swap maintain same order always
@@ -60,6 +64,14 @@ class UserInboxMessages(Document):
     fromUid_LoginIndex = StringField() #uid1_LOGININDEX
     toUid_LoginIndex = StringField() #uid2_LOGININDEX
     
+    def toJson(self):
+        son = self.to_mongo()
+        del son["fromUid_toUid_index"]
+        del son["fromUid_LoginIndex"]
+        del son["toUid_LoginIndex"]
+        return bson.json_util.dumps(son)
+        
+        
 class UserFeedIndex(EmbeddedDocument):
     uid = StringField()
     index = IntField(default = 0)
@@ -70,7 +82,21 @@ class UserFeedIndex(EmbeddedDocument):
             self.save()
         return self
         
-
+class OfflineChallenge(Document):
+    fromUid = StringField()
+    toUid = StringField() 
+    challengeTye = IntField(default=0)
+    challengeData = StringField() #{questionIds:[] , pointsGained:[]}
+    challengeData2 = StringField()
+    wonUid = StringField()
+    
+    def toJson(self):
+        sonObj = self.to_mongo()
+        sonObj["challengeId"] =self._id
+        del sonObj["_id"]
+        return bson.json_util.dumps(sonObj)
+        
+        
 class UserFeed(Document):
     uidFeedIndex = StringField()#uid_LOGININDEX
     feedMessage = ReferenceField('Feed')
@@ -93,11 +119,6 @@ class UserSolvedIds(Document):
     questionIdToPointsMap = DictField()
 
 
-    
-class UserBadges():
-    uid = StringField(unique=True)
-    badgeId = IntField()
-    createdTimeStamp = DateTimeField()
 
 class Users(Document):
     uid = StringField(unique=True)
@@ -126,9 +147,9 @@ class Users(Document):
     activationCode = StringField()
     newDeviceId = StringField()
     createdAt = DateTimeField()
-    friends = ListField(StringField())
     subscribers = ListField(StringField())
     userFeedIndex = EmbeddedDocumentField(UserFeedIndex)
+    offlineChallenges = ListField(ReferenceField(OfflineChallenge))
     
 class Tags(Document):
     tag = StringField(unique=True)
@@ -401,7 +422,33 @@ class DbUtils():
         self.addQuestion(questionId, questionType ,questionDescription , pictures, options, answer, hint , explanation , time, xp , tags)
         return True
         
-
+    def addOfflineChallenege(self , fromUser, toUid , challengeData):
+        toUser = self.getUserByUid(toUid)
+        
+        offlineChallenge = OfflineChallenge()
+        offlineChallenge.fromUid = fromUser.uid
+        offlineChallenge.fromUid = toUid
+        offlineChallenge.challengeData = challengeData
+        offlineChallenge.save()
+        toUser.update(push__offlineChalleneges = offlineChallenge)
+        
+    def  userCompletedChallege(self, user ,challengeId,challengeData2):
+        offlineChallenge = OfflineChallenge.objects(pk=challengeId)
+        offlineChallenge.challengeData2 = challengeData2
+        
+        if(offlineChallenge.challengeType==0):
+            a = sum(json.loads(offlineChallenge.challengeData)["points"])
+            b = sum(json.loads(offlineChallenge.challengeData2)["points"])
+            if(a==b):
+                offlineChallenge.whoWon = ""
+            elif(a>b):
+                offlineChallenge.whoWon = offlineChallenge.fromUid
+            else:
+                offlineChallenge.whoWon = offlineChallenge.toUid
+        
+        user.update(pull__offlineChallenges = offlineChallenge) # remove that challenge
+    
+    
     def getRandomQuestions(self,quiz):
         questions = []
         count = 0
@@ -444,6 +491,7 @@ class DbUtils():
             user.winsLosses = {}
             user.activationKey = ""
             user.badges = []
+            user.offlineChallenges = []
             #user feed index , # few changes to the way lets see s
             user.userFeedIndex = userFeedIndex = UserFeedIndex()
             userFeedIndex.uid = user.uid
@@ -475,9 +523,8 @@ class DbUtils():
         user.save()
 
     def addsubscriber(self, toUser, user):
-        print dir(toUser)
-        subscriber = toUser.find(subscribers=user.uid)
-        if(not subscriber):
+        subscriber = Users.objects(uid= toUser.uid , subscribers__in=[user.uid])
+        if(len(subscriber)==0):
             toUser.update(push__subscribers = user.uid)
         
     def removeSubScriber(self , fromUser , user):
@@ -506,13 +553,13 @@ class DbUtils():
             tagObj.save()
         return tagObj
     
-    def getRecentUserFeed(self, user, fromIndex=-1):
+    def getRecentUserFeed(self, user, toIndex=-1):
         userFeedIndex= user.userFeedIndex
-        index = fromIndex if fromIndex>0 else userFeedIndex.index
-        count =20
+        index = toIndex if toIndex>0 else userFeedIndex.index
+        count =50
         userFeedMessages = []
         while(index>0):
-            for i in UserFeed.objects(uidFeedIndex = user.uid+"_"+str(userFeedIndex.index)):
+            for i in UserFeed.objects(uidFeedIndex = user.uid+"_"+str(index)):
                 userFeedMessages.append(i.feedMessage)#getting from reference field
                 count-=1
             if(count<=0):
@@ -549,15 +596,16 @@ class DbUtils():
         
  
  
+        #experimental only
     def getRecentMessagesIfAny(self, user , afterTimestamp):
         messagesAfterTimestamp = UserInboxMessages.objects(toUid_LoginIndex = user.uid+"_"+user.lastLoginIndex , timestamp__gte = afterTimestamp)
         return messagesAfterTimestamp
         
-    #experimental only
-    def getMessagesBetween(self,user1, user2 , toIndex=-1):
-        user1 , user2 = reorder(user1, user2)
+
+    def getMessagesBetween(self,uid1, uid2 , toIndex=-1):
+        user1 , user2 = reorderUids(uid1, uid2)
         if(toIndex == -1):
-            r = Uid1Uid2Index.objects(uid1_uid2 = user1.uid+"_"+user2.uid)
+            r = Uid1Uid2Index.objects(uid1_uid2 = uid1+"_"+uid2)
             if(not r):
                 return None
             r = r.get(0)
@@ -566,13 +614,13 @@ class DbUtils():
         i=toIndex+1
         count =0 
         while(i>0):
-            tag = user1.uid+"_"+user2.uid+"_"+str(i)
+            tag = uid1+"_"+uid2+"_"+str(i)
             for message in UserInboxMessages.objects(fromUid_toUid_index = tag):
                 messages.append(message)
                 count+=1
             i-=1
             if(count>20):
-                break
+                break 
             
         return messages
 
@@ -606,8 +654,8 @@ if __name__ == "__main__":
     dbUtils.addsubscriber(user1, user2)
     dbUtils.incrementLoginIndex(user1)
     dbUtils.incrementLoginIndex(user2)
-    
     test_insertFeed(dbUtils , user1)
+    
 #    test_insertInboxMessages(dbUtils)
     
     pass
