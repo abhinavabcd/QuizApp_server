@@ -17,21 +17,13 @@ import MasterServerUtils
 import logging
 import HelperFunctions
 import Config 
- 
+import ProgressiveQuizHandler
+
 dbUtils = Db.DbUtils()#initialize Db
 masterSever = MasterServerUtils.MasterServerUtils(Config.WebServersMap)
 
 logging.basicConfig(filename='log',level=logging.INFO)
 
-
-
-
-
-
-
-
-def generateKey(N=8):
-    ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
 
 
 gcmQueue = []
@@ -72,7 +64,9 @@ def addUidToQueue(uid, packetData):
 def addUidsToQueue(uids, packetData):
     phoneNumberQueue.append([uids,packetData])
 
-        
+
+_userCache= {}
+
 def userAuthRequired(func):
     def wrapper(response,*args,**kwargs):
         encodedValue = response.get_argument("encodedKey")
@@ -119,19 +113,45 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
                 responseFinish(response, {"messageType":NOT_AUTHORIZED})
     return newFunc
 
+
+@userAuthRequired
+def getPreviousMessages(response ,user=None):
+    uid2 = dbUtils.getUserByUid(response.get_argument("uid2"))
+    toIndex = int(response.get_argument("toIndex",-1))
+    responseFinish(response, {"messageTye":OK_PREVIOUS_MESSAGES,
+                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex)  ))+"]",
+                               })
+    
+@userAuthRequired
+def getPreviousFeed(response, user=None):
+    toIndex = int(response.get_argument("toIndex",-1))
+    responseFinish(response, {"messageTye":OK_PREVIOUS_FEED, 
+                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getRecentUserFeed(user, toIndex) ))+"]",
+                               })
+    
+@userAuthRequired
+def getPreviousChallenges(response, user=None):
+    
+    
+
 @userAuthRequired
 def getAllUpdates(response, user=None):
     userMaxTimestamp = datetime.datetime.utcfromtimestamp(float(response.get_argument("maxQuizTimestamp")))
-    lastSeenTimestamp = datetime.datetime.utcfromtimestamp(float(response.get_argument("lastSeenTimestamp")))
     
+    lastSeenTimestamp = response.get_argument("lastSeenTimestamp",None)
+    payload3 = None
+    if(lastSeenTimestamp):
+        lastSeenTimestamp = datetime.datetime.utcfromtimestamp(float(lastSeenTimestamp))
+        payload3 = "["+','.join(map(lambda x:x.toJson(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
+        
     quizzes = dbUtils.getAllQuizzes(userMaxTimestamp)
     categories = dbUtils.getAllCategories(userMaxTimestamp)
     
     responseFinish(response, {"messageType":OK_UPDATES,
-                              "payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]" ,
+                              "payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]",
                                "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]",
-                               "payload2":dbUtils.getRecentUserFeed(user),
-                               "payload3":dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp),
+                               "payload2":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
+                               "payload3":payload3 #unseen messages if any
 #                               "payload4":dbUtils.getRecentChallenges()
                               }
                    )
@@ -216,129 +236,6 @@ def updateUserRating(response , user=None):
     return
 
 
-
-quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
-runningQuizes = {} # all currently running quizes in this server
-
-def generateProgressiveQuiz(quizId , uids):
-    quiz = dbUtils.getQuizDetails(quizId).get(0)
-    if(quizId):
-        n_questions = quiz.n_questions
-    else:
-        n_questions = 7
-    
-    questions = dbUtils.getRandomQuestions(quiz)
-    id = generateKey(10)
-    userStates={}
-    for i in uids:
-        userStates[i]={}
-        
-    runningQuizes[id] = quizState = {   QUESTIONS: questions,
-                                        CURRENT_QUESTION :-1,
-                                        N_CURRENT_QUESTION_ANSWERED:[],
-                                        USERS:userStates##{uid:something}
-                                    }
-    return id , quizState
-
-
-
-def broadcastToGroup(client , message, allClients):
-    for i in allClients:
-        if(i!=client):
-            client.write_message(message)
-
-def broadcastToAll(client , message, allClients):
-    for i in allClients:
-        client.write_message(message)
-
-        
-class ProgressiveQuizHandler(websocket.WebSocketHandler):
-    quizPoolWaitId = None   
-    uid = None
-    quizConnections =None
-    runningQuizId= None
-    runningQuiz = None
-    @userAuthRequired
-    def open(self,quizId , user = None):
-        runningQuizId = self.get_argument("isRunningQuiz",None)
-        if(runningQuizId):
-            pass
-        
-        quiz = dbUtils.getQuizDetails(quizId)
-        self.quizPoolWaitId =  quizPoolWaitId = "_".join(quiz.tags)+"_"+quiz.n_people
-        self.user = user
-        quizConnections = quizWaitingConnectionsPool.get(quizPoolWaitId,None)
-        if(quizConnections):
-            quizConnections.append(self)
-        else:
-            quizWaitingConnectionsPool[quizPoolWaitId] = [self]
-        
-        self.quizConnections = quizConnections
-        if(len(quizConnections)>=int(quiz.n_people)):# we have enough people
-            self.quizConnections = [quizConnections.pop() for i in range(0, quiz.n_people)]#n_people into current quiz
-            uids = map(lambda x:x.user.to_short_json() , quizConnections)
-            self.runningQuizId , self.runningQuiz = generateProgressiveQuiz(quiz, uids)
-            #question_one = self.runningQuiz[QUESTIONS][0]
-            broadcastToAll(self,{"messageType":STARTING_QUESTIONS,
-                                               "payload":self.runningQuizId,
-                                               "payload1":uids
-                                              },
-                            quizConnections
-                           )
-    # the client sent the message
-    def on_message(self, message):
-        userQuizUpdate = json.loads(message)
-        messageType = userQuizUpdate[MESSAGE_TYPE]
-        if(messageType==USER_ANSWERED_QUESTION):
-            questionId = userQuizUpdate[QUESTION_ID]
-            userAnswer = userQuizUpdate[USER_ANSWER]
-            whatUserGot = userQuizUpdate[WHAT_USER_HAS_GOT]
-            broadcastToAll(self,{"messageType":USER_ANSWERED_QUESTION,"payload":whatUserGot,"payload1":questionId},self.quizConnections)
-            self.runningQuiz[N_CURRENT_QUESTION_ANSWERED].append(self.uid)
-            if(len(self.runningQuiz[N_CURRENT_QUESTION_ANSWERED])==len(self.quizConnections)):#if everyone aswered
-                self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
-                currentQuestion = self.runningQuiz[CURRENT_QUESTION]
-                self.runningQuiz[CURRENT_QUESTION]=currentQuestion+1
-                if(currentQuestion>=self.quiz.n_questions):
-                    broadcastToAll(self,{"messageType":ANNOUNCING_WINNER,
-                                           "payload":json.dumps(self.runningQuiz[USERS])
-                                        },
-                                     self.quizConnections)
-                    #TODO: calculate winner and save in Db
-                    return
-                currentQuestionIndex = self.runningQuiz[CURRENT_QUESTION]
-                question = self.runningQuiz[QUESTIONS][currentQuestionIndex]
-                broadcastToAll(self,{"messageType":NEXT_QUESTION,
-                                       "payload":question.to_json(),
-                                      },
-                                 self.quizConnections)
-            
-        elif(messageType==GET_NEXT_QUESTION):#user explicitly calls this function on if other doesn't responsd
-            n_answered =self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]
-            isFirstQuestion = False
-            if(self.runningQuiz[CURRENT_QUESTION]==-1):
-                isFirstQuestion = True
-                self.runningQuiz[CURRENT_QUESTION]==0
-                
-            if(isFirstQuestion or len(n_answered) ==len(self.quizConnections)):#if everyone aswered
-                self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
-                currentQuestionIndex = self.runningQuiz[CURRENT_QUESTION]
-                question = self.runningQuiz[QUESTIONS][currentQuestionIndex]
-                broadcastToAll(self,{"messageType":NEXT_QUESTION,
-                                       "payload":question.to_json(),
-                                      },
-                                 self.quizConnections
-                              )
-            else:
-                #some state to clean TODO
-                pass
-            # client disconnected
-    def on_close(self):
-        broadcastToGroup(self,{"messageType":USER_DISCONNECTED,"payload1":self.user.uid},self.quizConnections)
-        self.quizConnections.remove(self.quizConnections.index(self))#either waiting or something , we don't care
-        if(len(self.quizConnections)):
-            del runningQuizes[self.runningQuizId]
-
 #sample functionality
 serverFunc = {
               "registerWithGoogle":registerWithGoogle,
@@ -376,7 +273,7 @@ class QuizApp(tornado.web.Application):
            
         handlers = [                    
             (r"/func", Func),
-            (r"/pQuiz", ProgressiveQuizHandler),
+            (r"/pQuiz", ProgressiveQuizHandler.GenerateProgressiveQuizClass(dbUtils, responseFinish, userAuthRequired)),
             (r"/(.*)", tornado.web.StaticFileHandler,static_path)               
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
