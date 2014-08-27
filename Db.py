@@ -7,9 +7,10 @@ import bson
 import itertools
 from Constants import *
 import HelperFunctions
+import Config
 
-db =connect('quizApp')
-#db.dropDatabase('ideaVault')
+
+
 
 
 def reorder(user1, user2):
@@ -22,8 +23,8 @@ def reorder(user1, user2):
 class Uid1Uid2Index(Document):
     uid1_uid2 = StringField(unique=True)
     index = IntField(default=0)
-    uid1Login = IntField()
-    uid2Login = IntField()
+    uid1LoginIndex = IntField()
+    uid2LoginIndex = IntField()
     @staticmethod 
     def getAndIncrementIndex(user1, user2):
         if(user1.uid < user2.uid):#swap maintain same order always
@@ -39,10 +40,10 @@ class Uid1Uid2Index(Document):
             saveObj = True
         else:
             obj = obj.get(0)
-        if(obj.uid1Login!=user1.loginIndex or obj.uid2Login!=user2.loginIndex): # totally new sessions
+        if(obj.uid1LoginIndex!=user1.loginIndex or obj.uid2LoginIndex!=user2.loginIndex): # totally new sessions
             obj.index+=1
-            obj.uid1Login = user1.loginIndex
-            obj.uid2Login = user2.loginIndex
+            obj.uid1LoginIndex = user1.loginIndex
+            obj.uid2LoginIndex = user2.loginIndex
             saveObj = True
             
         if(saveObj):
@@ -59,58 +60,25 @@ class UserInboxMessages(Document):
     fromUid_LoginIndex = StringField() #uid1_LOGININDEX
     toUid_LoginIndex = StringField() #uid2_LOGININDEX
     
-    @staticmethod
-    def insertMessage(fromUser, toUser , message):
-        inboxMessage = UserInboxMessages()
-        inboxMessage.fromUid = fromUser.uid
-        inboxMessage.toUid = toUser.uid
-        inboxMessage.message = message
-        inboxMessage.timestamp = datetime.datetime.now()
-        inboxMessage.fromUid_LoginIndex = fromUser.uid +"_"+str(fromUser.loginIndex)
-        inboxMessage.toUid_LoginIndex = toUser.uid+"_"+str(toUser.loginIndex)
-        user1 , user2 = reorder(fromUser, toUser)
-        inboxMessage.fromUid_toUid_index = user1.uid+"_"+user2.uid+"_"+str(Uid1Uid2Index.getAndIncrementIndex(fromUser, toUser))
-        inboxMessage.save()
-        #if user is logged in , send him some notification
+class UserFeedIndex(EmbeddedDocument):
+    uid = StringField()
+    index = IntField(default = 0)
+    userLoginIndex = IntField()
+    def getAndIncrement(self, user):
+        if(self.userLoginIndex!= user.loginIndex):
+            self.index+=1
+            self.save()
+        return self
         
- 
-    @staticmethod
-    def getNewMessagesBetween(user1, user2 , index1, index2):
-        user1 , user2 = reorder(user1, user2)
-        if(index2 == -1):
-            r = Uid1Uid2Index.objects(uid1_uid2 = user1.uid+"_"+user2.uid)
-            if(not r):
-                return None
-            r = r.get(0)
-            index2 = r.index
-        messages = []
-        for i in range(index1+1 , index2+1):
-            tag = user1.uid+"_"+user2.uid+"_"+str(i)
-            for i in UserInboxMessages.objects(fromUid_toUid_index = tag):
-                messages.append(i)
-        return messages
 
 class UserFeed(Document):
-    uidLoginIndex = StringField()#uid_LOGININDEX
+    uidFeedIndex = StringField()#uid_LOGININDEX
     feedMessage = ReferenceField('Feed')
     
-        
+    
 class Feed(Document):
     fromUid = StringField()
     message = StringField()
-        
-    @staticmethod
-    def publishFeed(user , message):
-        f = Feed()
-        f.fromUid = user.uid
-        f.message = message
-        f.save()
-        #### move to tasks other server if possible
-        for fuser in user.subscribers:
-            userFeed = UserFeed()
-            userFeed.uidLoginIndex = fuser.uid+"_"+fuser.loginIndex
-            userFeed.feedMessage = f
-            userFeed.save()
     
     
     
@@ -160,7 +128,7 @@ class Users(Document):
     createdAt = DateTimeField()
     friends = ListField(StringField())
     subscribers = ListField(StringField())
-    
+    userFeedIndex = EmbeddedDocumentField(UserFeedIndex)
     
 class Tags(Document):
     tag = StringField(unique=True)
@@ -292,8 +260,22 @@ def getListFromString(s,toLower=False):
 
 class DbUtils():
 
-    def __init__(self):
-        pass
+    dbServer = []
+    rrCount = 0
+    rrPriorities = 0
+    def __init__(self , dbServer):
+#         dbServerAliases =dbServers.keys()
+#         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
+        print dbServer
+        connect('quizApp',host= dbServer[0], port = dbServer[1])
+            
+#         for i in dbServerAliases:
+#             if(i!=DEFAULT_SERVER_ALIAS):
+#                 db =connect('quizApp', alias=i, host=dbServers[i][0], port = dbServers[i][1])
+
+        self.dbServer = dbServer
+#         self.dbServerAliases = dbServers.keys()
+#         self.rrPriorities = datetime.date.today()
     
     def getUserByUid(self, uid):
         users =Users.objects(uid=uid)
@@ -432,16 +414,28 @@ class DbUtils():
     
     def getAllQuizzes(self,modifiedTimestamp):
         return Quiz.objects(modifiedTimestamp__gte = modifiedTimestamp)
-    
-
+   
     def setUserGCMRegistationId(self, user , gcmRedId):
         user.gcmRegId = gcmRedId
         user.save()
         return
-
-
-    def registerUser(self, uid, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False):
-        user = Users.objects(uid=uid)
+    
+    
+#     
+#     def getDbAliasFromUid(self, uid):
+#         alias =  uid[0:4]
+#         if(alias==DEFAULT_SERVER_ALIAS):
+#             return "default"
+#         return alias
+#         
+#     
+#     def getRRDbAliasForUid(self):
+#         #arrange by priority here
+#         self.dbServerAliases[self.rrCount]
+#         self.rrCount+=1
+        
+    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False):
+        user = Users.objects(emailId=emailId)
         if(user):
             user = user.get(0)
         else:
@@ -450,12 +444,20 @@ class DbUtils():
             user.winsLosses = {}
             user.activationKey = ""
             user.badges = []
-        
+            #user feed index , # few changes to the way lets see s
+            user.userFeedIndex = userFeedIndex = UserFeedIndex()
+            userFeedIndex.uid = user.uid
+            userFeedIndex.index = 1
+            userFeedIndex.userLoginIndex = 0
+            user.subscribers = []
+            user.uid = HelperFunctions.generateKey(10)
+            user.emailId = emailId
+            user.createdAt = datetime.datetime.now()
+            user.loginIndex = 0
+            
         user.newDeviceId = deviceId
-        user.uid = uid
         user.name = name
         user.deviceId = deviceId
-        user.emailId = emailId
         user.pictureUrl = pictureUrl
         user.coverUrl = coverUrl
         user.birthday = birthday
@@ -463,13 +465,24 @@ class DbUtils():
         user.place = place
         user.ipAddress = ipAddress
         user.facebook = facebookToken
-        user.loginIndex = 0
         user.googlePlus = gPlusToken
         user.isActivated = isActivated
-        user.createdAt = datetime.datetime.now()
         user.save()
         return user
     
+    def incrementLoginIndex(self, user):
+        user.loginIndex+=1
+        user.save()
+
+    def addsubscriber(self, toUser, user):
+        print dir(toUser)
+        subscriber = toUser.find(subscribers=user.uid)
+        if(not subscriber):
+            toUser.update(push__subscribers = user.uid)
+        
+    def removeSubScriber(self , fromUser , user):
+        fromUser.update(pull__subscribers =user.uid)
+        
     def activateUser(self, user, activationCode, deviceId):
         if(user.activationCode == activationCode):
             user.isActivated = True
@@ -492,41 +505,114 @@ class DbUtils():
             tagObj.tag = tag.lower()
             tagObj.save()
         return tagObj
+    
+    def getRecentUserFeed(self, user, fromIndex=-1):
+        userFeedIndex= user.userFeedIndex
+        index = fromIndex if fromIndex>0 else userFeedIndex.index
+        count =20
+        userFeedMessages = []
+        while(index>0):
+            for i in UserFeed.objects(uidFeedIndex = user.uid+"_"+str(userFeedIndex.index)):
+                userFeedMessages.append(i.feedMessage)#getting from reference field
+                count-=1
+            if(count<=0):
+                break
+            index-=1
+        return userFeedMessages
+    
+    def publishFeed(self, user, message):
+        f = Feed()
+        f.fromUid = user.uid
+        f.message = message
+        f.save()
+        #### move to tasks other server if possible
+        for uid in user.subscribers:
+            user = self.getUserByUid(uid)
+            userFeed = UserFeed()
+            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.index)
+            userFeed.feedMessage = f
+            userFeed.save()
             
+    def insertInboxMessage(self,fromUser, toUser , message):
+        inboxMessage = UserInboxMessages()
+        inboxMessage.fromUid = fromUser.uid
+        inboxMessage.toUid = toUser.uid
+        inboxMessage.message = message
+        inboxMessage.timestamp = datetime.datetime.now()
+        inboxMessage.fromUid_LoginIndex = fromUser.uid +"_"+str(fromUser.loginIndex)
+        inboxMessage.toUid_LoginIndex = toUser.uid+"_"+str(toUser.loginIndex)
+        user1 , user2 = reorder(fromUser, toUser)
+        #experimental only
+        inboxMessage.fromUid_toUid_index = user1.uid+"_"+user2.uid+"_"+str(Uid1Uid2Index.getAndIncrementIndex(fromUser, toUser))
+        inboxMessage.save()
+        #if user is logged in , send him some notification
+        
+ 
+ 
+    def getRecentMessagesIfAny(self, user , afterTimestamp):
+        messagesAfterTimestamp = UserInboxMessages.objects(toUid_LoginIndex = user.uid+"_"+user.lastLoginIndex , timestamp__gte = afterTimestamp)
+        return messagesAfterTimestamp
+        
+    #experimental only
+    def getMessagesBetween(self,user1, user2 , toIndex=-1):
+        user1 , user2 = reorder(user1, user2)
+        if(toIndex == -1):
+            r = Uid1Uid2Index.objects(uid1_uid2 = user1.uid+"_"+user2.uid)
+            if(not r):
+                return None
+            r = r.get(0)
+            toIndex = r.index
+        messages = []
+        i=toIndex+1
+        count =0 
+        while(i>0):
+            tag = user1.uid+"_"+user2.uid+"_"+str(i)
+            for message in UserInboxMessages.objects(fromUid_toUid_index = tag):
+                messages.append(message)
+                count+=1
+            i-=1
+            if(count>20):
+                break
+            
+        return messages
 
-def test_insertInboxMessages():
-    user1 , user2 = Users.objects(uid="qa1").get(0),Users.objects(uid="qa2").get(0)
-    UserInboxMessages.insertMessage(user1, user2, "how are you doing")
-    for i in UserInboxMessages.getNewMessagesBetween(user1, user2, 0, -1):
+        
+def test_insertInboxMessages(dbUtils , user1, user2):
+    dbUtils.insertInboxMessage(user2, user1, "hello 1 ")
+    dbUtils.insertInboxMessage(user1, user2, "hello 12 ")
+    dbUtils.insertInboxMessage(user2, user1, "hello 123 ")
+    dbUtils.insertInboxMessage(user2, user1, "hello 1234 ")
+    dbUtils.insertInboxMessage(user1, user2, "hello 1345 ")
+    dbUtils.insertInboxMessage(user1, user2, "hello 1346 ")
+    
+    for i in dbUtils.getMessagesBetween(user1, user2, -1):
         print i.to_json()
     
-def test_insetFeed():
-    user1 , user2 = Users.objects(uid="qa1").get(0),Users.objects(uid="qa2").get(0)
-    UserInboxMessages.insertMessage(user1, user2, "how are you doing")
-    for i in UserInboxMessages.getNewMessagesBetween(user1, user2, 0, -1):
-        print i.to_json()
+
+def test_insertFeed(dbUtils , user1):
+    dbUtils.publishFeed(user1, "hello man , how are you doing ? ")
+    print dbUtils.getRecentUserFeed(user2)
     
-
-
+    
+        
 #save user testing
 if __name__ == "__main__":
+    import Config
+    dbUtils = DbUtils(Config.dbServer) 
     #dbUtils.addQuestion("question1","What is c++ first program" , None, "abcd", "a", "asdasd" , "hello world dude!" , 10, 10 , ["c","c++","computerScience"])
     #dbUtils.addOrModifyQuestion(**{'questionType': 0, 'questionId': "1_8", 'hint': '', 'pictures': '', 'explanation': '', 'tags': 'movies, puri-jagannath,pokiri', 'isDirty': 1, 'questionDescription': 'how many movies did puri jagannath made in year 2007?', 'time': 10, 'answer': 4, 'xp': 10, 'options': '4 , 7 , 1 , 3 , 2'})
-#     dbUtils.registerUser("qa1", "Abhinav reddy", "1234567", "abhinavabcd@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal1.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
-#     dbUtils.registerUser("qa2", "vinay reddy", "1234547", "vinaybhargavreddy@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal2.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
-#    test_insertInboxMessages()
-    dbUtils = DbUtils()
+    user1 = dbUtils.registerUser("Abhinav reddy", "1234567", "abhinavabcd@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal1.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
+    user2 = dbUtils.registerUser("vinay reddy", "1234547", "vinaybhargavreddy@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal2.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
+    dbUtils.addsubscriber(user1, user2)
+    dbUtils.incrementLoginIndex(user1)
+    dbUtils.incrementLoginIndex(user2)
+    
+    test_insertFeed(dbUtils , user1)
+#    test_insertInboxMessages(dbUtils)
+    
     pass
 
 #edit user
 
 #add message of user
-
-
-
-
-
-
-
-
 

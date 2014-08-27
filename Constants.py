@@ -88,3 +88,10 @@ GCM_HEADERS ={'Content-Type':'application/json',
 
 ### get server
 PROGRESSIVE_QUIZ =0
+
+
+
+
+
+##### db server
+DEFAULT_SERVER_ALIAS ="0000"
