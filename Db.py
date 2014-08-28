@@ -13,7 +13,7 @@ import Config
 
 
 def reorderUids(uid1, uid2):
-    if(user1.uid < user2.uid):#swap maintain same order always
+    if(uid1 < uid2):#swap maintain same order always
         return uid2, uid1
     return uid1, uid2
 
@@ -170,10 +170,9 @@ class Badges():
     badgeId = IntField()
     name = StringField()
     description = StringField()
+    assetPath = StringField()
+    shortAssetPath = StringField()
     modifiedTimeStamp = DateTimeField()
-    @staticmethod
-    def getNewBadges(userMaxTimeStamp):
-        return Badges.objects(modifiedTimeStamp__gte = userMaxTimeStamp)
 
 class Questions(Document):
     questionId = StringField(unique=True)
@@ -652,8 +651,9 @@ class DbUtils():
         inboxMessage.save()
         #if user is logged in , send him some notification
         
- 
- 
+    def getNewBadges(self,userMaxTimeStamp):
+        return Badges.objects(modifiedTimeStamp__gte = userMaxTimeStamp)
+
         #experimental only
     def getRecentMessagesIfAny(self, user , afterTimestamp):
         messagesAfterTimestamp = UserInboxMessages.objects(toUid_LoginIndex = user.uid+"_"+user.lastLoginIndex , timestamp__gte = afterTimestamp)
@@ -698,7 +698,7 @@ def test_insertInboxMessages(dbUtils , user1, user2):
         print i.to_json()
     
 
-def test_insertFeed(dbUtils , user1):
+def test_insertFeed(dbUtils , user1 , user2):
     dbUtils.publishFeed(user1, "hello man , how are you doing ? ")
     print dbUtils.getRecentUserFeed(user2)
     
@@ -722,7 +722,7 @@ if __name__ == "__main__":
 #     dbUtils.addsubscriber(user1, user2)
 #     dbUtils.incrementLoginIndex(user1)
 #     dbUtils.incrementLoginIndex(user2)
-#     test_insertFeed(dbUtils , user1)
+#     test_insertFeed(dbUtils , user1, user2)
     
 #    test_insertInboxMessages(dbUtils)
     
