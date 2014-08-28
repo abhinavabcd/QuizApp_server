@@ -31,28 +31,74 @@ db =connect('movieDB')
 url_loader=urllib2.build_opener(urllib2.HTTPCookieProcessor(),urllib2.ProxyHandler())
 urllib2.install_opener(url_loader)
 
+g_movie_count = 0
+g_director_count = 0
+g_music_director_count = 0
+g_cast_count = 0
+
 class director(Document):
-    uid = StringField()
+    uid = StringField(unique=True)
     name = StringField()
     link = StringField()
+    islinkValid = BooleanField(default=True)
     
 class cast(Document):
-    uid = StringField()
+    uid = StringField(unique=True)
     name = StringField()
     link = StringField()
+    islinkValid = BooleanField(default=True)
     
 class musicDirector(Document):
-    uid = StringField()
+    uid = StringField(unique=True)
     name = StringField()
     link = StringField()
+    islinkValid = BooleanField(default=True)
 
 class movieData(Document):
-    uid = StringField()
+    uid = StringField(unique=True)
     name = StringField()
     link = StringField()
+    islinkValid = BooleanField(default=True)
     director = ListField(ReferenceField('director'))
     musicDirector = ListField(ReferenceField('musicDirector'))
     cast = ListField(ReferenceField('cast'))
+    note = StringField()
+
+def createOrUpdateMovie(name,link=None,islinkvalid=False,director=None,cast=None,musicDirector=None,genre=None,note=None):
+    mRow = movieData()
+    mRow.uid = g_movie_count
+    mRow.name = textList[0]
+    mRow.link = link
+    mRow.islinkValid = islinkvalid
+    mRow.director = director
+    mRow.musicDirector = musicDirector
+    mRow.cast = cast
+    mRow.note = note
+    return mRow
+
+def createOrUpdateDirector(name,link):
+    global g_director_count
+    res = director.objects(link=link)
+    if res!=None:
+        return res.get(0)
+    dRow = director()
+    dRow.uid = g_director_count
+    g_director_count = g_director_count + 1
+    dRow.name = name
+    dRow.link = link
+    return dRow
+
+def createOrUpdateCast(name,link):
+    global g_cast_count
+    res = cast.objects(link=link)
+    if res!=None:
+        return res.get(0)
+    cRow = director()
+    cRow.uid = g_cast_count
+    g_cast_count = g_cast_count + 1
+    cRow.name = name
+    cRow.link = link
+    return cRow
 
 def get_data(url,post=None,headers={}):
     headers['Accept-encoding'] ='gzip'
@@ -91,6 +137,10 @@ def insertCombinations(catalog,listItem):
         listItem['unitFakePrice'] = listItem['unitPrice'] + 100
     return liobjs
 
+def init_globals():
+    pass 
+
+init_globals()
 PAGES = 99
 
 if os.path.isfile("links.json"):
@@ -117,10 +167,15 @@ for i in range(40,PAGES):
             break
         prevLength = len(match)
         textList = map(lambda x: x.text_content().strip().split(','),match)#etree.tostring(x)
+         
         alist = map(lambda x: x.cssselect('a'),match)
         lnk = alist[0].attrib['href']
+        islinkvalid = False
         if len(lnk)>4 and lnk[0:6]=="/wiki/":
             validLinks.append(lnk)
+            islinkvalid = True
+        # need to refine below line - incorrect
+        createOrUpdateMovie(textList[0], lnk, islinkvalid, createOrUpdateDirector(textList[1]), createOrUpdateCast(textList[2]), textList[3],textList[4])
     break
 
     for k in map(lambda x: 'http://en.wikipedia.org'+x, validLinks):
