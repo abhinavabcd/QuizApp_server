@@ -19,7 +19,7 @@ import HelperFunctions
 import Config 
 import ProgressiveQuizHandler
 
-dbUtils = Db.DbUtils()#initialize Db
+dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
 masterSever = MasterServerUtils.MasterServerUtils(Config.WebServersMap)
 
 logging.basicConfig(filename='log',level=logging.INFO)
@@ -114,25 +114,45 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
     return newFunc
 
 
+
+
+@userAuthRequired
+def getUserProfile(response, user=None):
+    uid2 = response.get_argument("uid2")
+    user2 = dbUtils.getUserByUid(uid2)
+    responseFinish(response, {"messageTye":OK_USER_INFO,
+                              "payload":user2.to_json(),
+                            }
+                  )
 @userAuthRequired
 def getPreviousMessages(response ,user=None):
     uid2 = dbUtils.getUserByUid(response.get_argument("uid2"))
     toIndex = int(response.get_argument("toIndex",-1))
-    responseFinish(response, {"messageTye":OK_PREVIOUS_MESSAGES,
-                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex)  ))+"]",
-                               })
+    fromIndex = int(response.get_argument("fromIndex",0))
+    
+    responseFinish(response, {"messageTye":OK_MESSAGES,
+                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex,fromIndex)  ))+"]",
+                            }
+                  )
     
 @userAuthRequired
 def getPreviousFeed(response, user=None):
     toIndex = int(response.get_argument("toIndex",-1))
-    responseFinish(response, {"messageTye":OK_PREVIOUS_FEED, 
-                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getRecentUserFeed(user, toIndex) ))+"]",
+    fromIndex = int(response.get_argument("fromIndex",0))
+    
+    responseFinish(response, {"messageTye":OK_FEED, 
+                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getRecentUserFeed(user, toIndex,fromIndex) ))+"]",
                                })
     
 @userAuthRequired
-def getPreviousChallenges(response, user=None):
+def getUserChallenges(response, user=None):
+    toIndex = int(response.get_argument("toIndex",-1))
+    fromIndex = int(response.get_argument("fromIndex",0))
     
-    
+    responseFinish(response, {"messageTye":OK_CHALLENGES, 
+                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getUserChallenges(user, toIndex, fromIndex) ))+"]",
+                           })
+
 
 @userAuthRequired
 def getAllUpdates(response, user=None):
@@ -143,7 +163,7 @@ def getAllUpdates(response, user=None):
     if(lastSeenTimestamp):
         lastSeenTimestamp = datetime.datetime.utcfromtimestamp(float(lastSeenTimestamp))
         payload3 = "["+','.join(map(lambda x:x.toJson(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
-        
+    
     quizzes = dbUtils.getAllQuizzes(userMaxTimestamp)
     categories = dbUtils.getAllCategories(userMaxTimestamp)
     
@@ -151,11 +171,12 @@ def getAllUpdates(response, user=None):
                               "payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]",
                                "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]",
                                "payload2":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
-                               "payload3":payload3 #unseen messages if any
-#                               "payload4":dbUtils.getRecentChallenges()
+                               "payload3":payload3, #unseen messages if any
+                               "payload4":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user)))+"]"
                               }
                    )
     dbUtils.incrementLoginIndex(user)
+
 # TYPE for requests to getServerDetails
 @userAuthRequired
 def getServerDetails(response, quizId,user=None):
@@ -236,11 +257,21 @@ def updateUserRating(response , user=None):
     return
 
 
+
+###################internal functions##############################
+def updateServerMap(response):
+    webServerMap = json.loads(response.get_argument("webServerMap"))
+    masterSever.updateWebServerMap(webServerMap)
+    response.finish("OK")
+
+
+
 #sample functionality
 serverFunc = {
               "registerWithGoogle":registerWithGoogle,
               "registerWithFacebook":registerWithFacebook,
-              "getAllUpdates":getAllUpdates
+              "getAllUpdates":getAllUpdates,
+              "updateServerMap":updateServerMap
              }
 
 #server web request commands with json

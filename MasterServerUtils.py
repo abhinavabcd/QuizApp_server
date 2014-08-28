@@ -1,6 +1,7 @@
 import AndroidUtils
 import urllib
 import json
+import sys
 ss = {}  #server state
 
 
@@ -13,10 +14,11 @@ class MasterServerUtils():
     webServerIds=[]
     def __init__(self,webServerMap):
         self.updateWebServerMap(webServerMap)
-        for i in webServerMap.values():
-            print AndroidUtils.get_data("http://"+i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap)}))
-            
-        
+        for i in webServerMap.values():#while starting inform all other servers to update this map
+            try:
+                print AndroidUtils.get_data("http://"+i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap)})).read()
+            except:
+                print sys.exc_info()[0]
     def addServer(self, sid , addr):
         self.webServerMap[sid]=addr
         self.updateWebServerMap(self.webServerMap)
