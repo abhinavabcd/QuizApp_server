@@ -64,12 +64,12 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             
             quiz = dbUtils.getQuizDetails(quizId)
             self.quizPoolWaitId =  quizPoolWaitId = "_".join(quiz.tags)+"_"+str(quiz.n_people)
+            self.user = user
             if(isChallenge!=None):
                 self.quizPoolWaitId+="_"+quizId+"_"+self.user.uid   
             elif(isChallenged!=None):
                 self.quizPoolWaitId+="_"+quizId+"_"+isChallenged
                 
-            self.user = user
             quizConnections = quizWaitingConnectionsPool.get(quizPoolWaitId,None)
             if(quizConnections):
                 quizConnections.append(self)

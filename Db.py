@@ -72,7 +72,7 @@ class UserInboxMessages(Document):
         return bson.json_util.dumps(son)
         
         
-class UserFeedIndex(EmbeddedDocument):
+class UserActivityStep(Document):
     uid = StringField()
     index = IntField(default = 0)
     userLoginIndex = IntField()
@@ -83,10 +83,10 @@ class UserFeedIndex(EmbeddedDocument):
         return self
         
 class OfflineChallenge(Document):
-    fromUid = StringField()
-    toUid = StringField() 
+    fromUid_userChallengeIndex = StringField()
+    toUid_userChallengeIndex = StringField()
     challengeTye = IntField(default=0)
-    challengeData = StringField() #{questionIds:[] , pointsGained:[]}
+    challengeData = StringField() #{quizId:asdasd ,questionIds:[] , pointsGained:[]}
     challengeData2 = StringField()
     wonUid = StringField()
     
@@ -148,9 +148,21 @@ class Users(Document):
     newDeviceId = StringField()
     createdAt = DateTimeField()
     subscribers = ListField(StringField())
-    userFeedIndex = EmbeddedDocumentField(UserFeedIndex)
-    offlineChallenges = ListField(ReferenceField(OfflineChallenge))
+    userFeedIndex = ReferenceField(UserActivityStep)
+    userChallengesIndex = ReferenceField(UserActivityStep)
     
+    def toJson(self):
+        return {"uid":self.uid,
+                "badges":self.badges,
+                "stats":self.stats,
+                "winsLosses":self.winsLosses,
+                "pictureUrl":self.pictureUrl,
+                "coverUrl":self.coverUrl,
+                "gender":self.gender,
+                "country":self.country,
+                "status":self.status,
+                }
+     
 class Tags(Document):
     tag = StringField(unique=True)
 
@@ -284,6 +296,7 @@ class DbUtils():
     dbServer = []
     rrCount = 0
     rrPriorities = 0
+    _users_cached_lru= 0
     def __init__(self , dbServer):
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
@@ -426,29 +439,66 @@ class DbUtils():
         toUser = self.getUserByUid(toUid)
         
         offlineChallenge = OfflineChallenge()
-        offlineChallenge.fromUid = fromUser.uid
-        offlineChallenge.fromUid = toUid
+        offlineChallenge.fromUid_userChallengeIndex = fromUser.uid+"_"+str(fromUser.userChallengesIndex.getAndIncrement())
+        offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.index)
         offlineChallenge.challengeData = challengeData
         offlineChallenge.save()
-        toUser.update(push__offlineChalleneges = offlineChallenge)
         
-    def  userCompletedChallege(self, user ,challengeId,challengeData2):
+    def  userCompletedChallenge(self, user ,challengeId,challengeData2):
         offlineChallenge = OfflineChallenge.objects(pk=challengeId)
         offlineChallenge.challengeData2 = challengeData2
+        fromUser = self.getUserByUid(offlineChallenge.fromUid_userChallengeIndex.split("_")[0])
         
         if(offlineChallenge.challengeType==0):
-            a = sum(json.loads(offlineChallenge.challengeData)["points"])
-            b = sum(json.loads(offlineChallenge.challengeData2)["points"])
+            challengeData1= json.loads(offlineChallenge.challengeData)
+            challengeData2= json.loads(offlineChallenge.challengeData2)
+            quizId = challengeData1["quizId"]
+            a = sum(challengeData1["points"])
+            b = sum(challengeData2["points"])
+            won , lost = 1 ,1 
             if(a==b):
                 offlineChallenge.whoWon = ""
+                won , lost = 1 ,1 
             elif(a>b):
-                offlineChallenge.whoWon = offlineChallenge.fromUid
+                offlineChallenge.whoWon = offlineChallenge.fromUid_userChallengeIndex
+                won , lost = 0 ,1 
             else:
-                offlineChallenge.whoWon = offlineChallenge.toUid
-        
-        user.update(pull__offlineChallenges = offlineChallenge) # remove that challenge
+                offlineChallenge.whoWon = offlineChallenge.toUid_userChallengeIndex
+                won , lost = 1 , 0 
+            
+            
+            self.onUserQuizWonLost(user, quizId, challengeData2.get("xp",0)+20*won, won, lost)
+            self.onUserQuizWonLost(fromUser, quizId, challengeData1.get("xp",0)+20*lost, lost, won)
+                
+    def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
+        index = toIndex
+        if(toIndex==-1):
+            index = user.userChallengesIndex.index
+        userChallenges = []
+        count =0
+        while(index>fromIndex):
+            for i in OfflineChallenge.objects(toUid_userChallengeIndex = user.uid+"_"+str(index)):
+                userChallenges.append(i)#getting from reference field
+                count+=1
+            if(count>20):
+                break
+            index-=1
+        return userChallenges
+            
+    def onUserQuizWonLost(self, user, quizId , xpGain , won , lost):
+        userStats = user.stats.get("quizId",None)
+        if(userStats==None):
+            user.stats["quizId"] = xpGain
+            user.winsLosses["quizId"]= str(won)+":"+str(lost)
+        else:
+            userStats["quizId"]+=xpGain
+            a = user.winsLosses["quizId"]
+            win , loss = a.split[":"]
+            user.winsLosses["quizId"] = str(int(win)+won)+":"+loss+lost
+            
+        user.save()
     
-    
+            
     def getRandomQuestions(self,quiz):
         questions = []
         count = 0
@@ -487,18 +537,26 @@ class DbUtils():
             user = user.get(0)
         else:
             user = Users()
+            user.uid = HelperFunctions.generateKey(10)
             user.stats = {}
             user.winsLosses = {}
             user.activationKey = ""
             user.badges = []
             user.offlineChallenges = []
             #user feed index , # few changes to the way lets see s
-            user.userFeedIndex = userFeedIndex = UserFeedIndex()
-            userFeedIndex.uid = user.uid
+            user.userFeedIndex = userFeedIndex = UserActivityStep()
+            userFeedIndex.uid = user.uid+"_feed"
             userFeedIndex.index = 1
             userFeedIndex.userLoginIndex = 0
+            userFeedIndex.save()
+            ###
+            user.userChallengesIndex = userChallengesIndex = UserActivityStep()
+            userChallengesIndex.uid = user.uid+"_challenges"
+            userChallengesIndex.index = 1
+            userChallengesIndex.userLoginIndex = 0
+            userChallengesIndex.save()
+            ###
             user.subscribers = []
-            user.uid = HelperFunctions.generateKey(10)
             user.emailId = emailId
             user.createdAt = datetime.datetime.now()
             user.loginIndex = 0
@@ -553,12 +611,12 @@ class DbUtils():
             tagObj.save()
         return tagObj
     
-    def getRecentUserFeed(self, user, toIndex=-1):
+    def getRecentUserFeed(self, user, toIndex=-1, fromIndex=0):
         userFeedIndex= user.userFeedIndex
         index = toIndex if toIndex>0 else userFeedIndex.index
         count =50
         userFeedMessages = []
-        while(index>0):
+        while(index>fromIndex):
             for i in UserFeed.objects(uidFeedIndex = user.uid+"_"+str(index)):
                 userFeedMessages.append(i.feedMessage)#getting from reference field
                 count-=1
@@ -576,7 +634,7 @@ class DbUtils():
         for uid in user.subscribers:
             user = self.getUserByUid(uid)
             userFeed = UserFeed()
-            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.index)
+            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.getAndIncrementIndex())
             userFeed.feedMessage = f
             userFeed.save()
             
@@ -601,8 +659,11 @@ class DbUtils():
         messagesAfterTimestamp = UserInboxMessages.objects(toUid_LoginIndex = user.uid+"_"+user.lastLoginIndex , timestamp__gte = afterTimestamp)
         return messagesAfterTimestamp
         
+    def userHasWon(self,user, quizId, xpGain):
+        user.stats
+        
 
-    def getMessagesBetween(self,uid1, uid2 , toIndex=-1):
+    def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         user1 , user2 = reorderUids(uid1, uid2)
         if(toIndex == -1):
             r = Uid1Uid2Index.objects(uid1_uid2 = uid1+"_"+uid2)
@@ -613,7 +674,7 @@ class DbUtils():
         messages = []
         i=toIndex+1
         count =0 
-        while(i>0):
+        while(i>fromIndex):
             tag = uid1+"_"+uid2+"_"+str(i)
             for message in UserInboxMessages.objects(fromUid_toUid_index = tag):
                 messages.append(message)
@@ -649,12 +710,19 @@ if __name__ == "__main__":
     dbUtils = DbUtils(Config.dbServer) 
     #dbUtils.addQuestion("question1","What is c++ first program" , None, "abcd", "a", "asdasd" , "hello world dude!" , 10, 10 , ["c","c++","computerScience"])
     #dbUtils.addOrModifyQuestion(**{'questionType': 0, 'questionId': "1_8", 'hint': '', 'pictures': '', 'explanation': '', 'tags': 'movies, puri-jagannath,pokiri', 'isDirty': 1, 'questionDescription': 'how many movies did puri jagannath made in year 2007?', 'time': 10, 'answer': 4, 'xp': 10, 'options': '4 , 7 , 1 , 3 , 2'})
-    user1 = dbUtils.registerUser("Abhinav reddy", "1234567", "abhinavabcd@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal1.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
-    user2 = dbUtils.registerUser("vinay reddy", "1234547", "vinaybhargavreddy@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal2.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
-    dbUtils.addsubscriber(user1, user2)
-    dbUtils.incrementLoginIndex(user1)
-    dbUtils.incrementLoginIndex(user2)
-    test_insertFeed(dbUtils , user1)
+    
+    
+    user = json.loads('{"uid":"110040773460941325994","deviceId":"31e7d9178c3ca41f","emailId":"ramasolipuram@gmail.com","gender":"female","googlePlus":"ya29.bwDeBz20zufq7EsAAABrdZMKlgQzN92fxmcJNfFfWITpqkWp1o28YO4ZjOsAzNSurK-2NPS-lZ2xXE1326uxKdtorm8wn7dh4m-G9NT1nYfIO1ebw8jcARYscDIi-g","name":"Rama Reddy","pictureUrl":"https://lh3.googleusercontent.com/-TyulralhJFw/AAAAAAAAAAI/AAAAAAAAA9o/8KyUnpS-j_Y/photo.jpg?sz\\u003d200","isActivated":false,"createdAt":0.0,"birthday":0.0}')
+    userIp = "192.168.0.10"
+    userObject = dbUtils.registerUser( user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),userIp , user.get("facebook",None),user.get("googlePlus",None),True)
+                
+    
+#     user1 = dbUtils.registerUser("Abhinav reddy", "1234567", "abhinavabcd@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal1.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
+#     user2 = dbUtils.registerUser("vinay reddy", "1234547", "vinaybhargavreddy@gmail.com", "http://192.168.0.10:8081/images/kajal/kajal2.jpg", "", 0.0, "male", "india", "192.168.0.10", "something else", None, True)
+#     dbUtils.addsubscriber(user1, user2)
+#     dbUtils.incrementLoginIndex(user1)
+#     dbUtils.incrementLoginIndex(user2)
+#     test_insertFeed(dbUtils , user1)
     
 #    test_insertInboxMessages(dbUtils)
     
