@@ -156,26 +156,39 @@ def getUserChallenges(response, user=None):
 
 @userAuthRequired
 def getAllUpdates(response, user=None):
-    userMaxTimestamp = datetime.datetime.utcfromtimestamp(float(response.get_argument("maxQuizTimestamp")))
-    
     lastSeenTimestamp = response.get_argument("lastSeenTimestamp",None)
+    isLogin = response.get_argument("isLogin",False)
+    
     payload3 = None
     if(lastSeenTimestamp):
         lastSeenTimestamp = datetime.datetime.utcfromtimestamp(float(lastSeenTimestamp))
         payload3 = "["+','.join(map(lambda x:x.toJson(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
-    
-    quizzes = dbUtils.getAllQuizzes(userMaxTimestamp)
-    categories = dbUtils.getAllCategories(userMaxTimestamp)
+
+    quizzes = None
+    categories= None
+    badges = None
+    userMaxQuizTimestamp = response.get_argument("maxQuizTimestamp",None)
+    if(userMaxQuizTimestamp):
+        userMaxQuizTimestamp = datetime.datetime.utcfromtimestamp(float(userMaxQuizTimestamp))
+        quizzes = dbUtils.getAllQuizzes(userMaxQuizTimestamp)
+        categories = dbUtils.getAllCategories(userMaxQuizTimestamp)
+        
+    userMaxBadgesTimestamp = response.get_argument("maxBadgesTimestamp",None)
+    if(userMaxBadgesTimestamp):
+        userMaxBadgesTimestamp = datetime.datetime.utcfromtimestamp(float(userMaxBadgesTimestamp))
+        badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
     
     responseFinish(response, {"messageType":OK_UPDATES,
                               "payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]",
                                "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]",
                                "payload2":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
                                "payload3":payload3, #unseen messages if any
-                               "payload4":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user)))+"]"
+                               "payload4":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user)))+"]",
+                               "payload5":"["+",".join(map(lambda x:x.to_json(),badges))+"]"
                               }
                    )
-    dbUtils.incrementLoginIndex(user)
+    if(isLogin):
+        dbUtils.incrementLoginIndex(user)
 
 # TYPE for requests to getServerDetails
 @userAuthRequired
