@@ -16,7 +16,6 @@ import time
 import urllib2
 import logging
 import zlib
-import json
 from StringIO import StringIO
 http_logger = urllib2.HTTPHandler(debuglevel = 1)
 url_loader=urllib2.build_opener(http_logger,urllib2.HTTPCookieProcessor(),urllib2.ProxyHandler(),http_logger)
@@ -67,4 +66,4 @@ def get_data(url,post=None,headers={}):
    
 
 # def insertUsers():
-#     from db import *
+#     from Db import *
