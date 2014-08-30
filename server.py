@@ -159,7 +159,7 @@ def getAllUpdates(response, user=None):
     isLogin = response.get_argument("isLogin",False)
     
     retObj = {"messageType":OK_UPDATES,
-                               "payload7":json.dumps(user.toJson()),
+                               "payload7":user.toJson(),
                                "payload3":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
                                "payload5":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user)))+"]"
                               }
@@ -239,6 +239,7 @@ def activatingBotPQuiz(response, user=None):
     quizId = response.get_argument("quizId")
     sid = response.get_argument("sid")
     masterSever.waitingUserBotOrCancelled(quizId, sid, user.uid)
+    responseFinish(response, {"messageType":OK})
 
 def responseFinish(response,data):
     data = json.dumps(data)
@@ -299,7 +300,8 @@ serverFunc = {
               "registerWithFacebook":registerWithFacebook,
               "getAllUpdates":getAllUpdates,
               "updateServerMap":updateServerMap,
-              "getServer":getServer
+              "getServer":getServer,
+              "activatingBotPQuiz":activatingBotPQuiz
              }
 
 #server web request commands with json
