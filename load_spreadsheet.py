@@ -1,7 +1,7 @@
 import gspread
 from Db import *
 
-def syncSpreadSheets(spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw',syncSpecific = ["tags"] , excludeSheets=[]):
+def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw',syncSpecific = ["tags"] , excludeSheets=[]):
     gc = gspread.login("iamthedisguised@gmail.com","abhinavabcd")
     wb = gc.open_by_key(spreadSheetKey)
     worksheets = wb.worksheets()
@@ -69,4 +69,8 @@ def syncSpreadSheets(spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5
                     if(dbUtils.addOrModifyQuestion(**row)):
                         questionsWorksheet.update_cell(i+2, len(row.keys()), 0)
 
-syncSpreadSheets(syncSpecific=[] , excludeSheets=["tags"])
+
+if __name__=="__main__":
+    import Config
+    dbUtils = DbUtils(Config.dbServer) 
+    syncSpreadSheets(dbUtils, syncSpecific=[] , excludeSheets=["tags"])

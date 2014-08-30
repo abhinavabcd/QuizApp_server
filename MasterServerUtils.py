@@ -16,7 +16,7 @@ class MasterServerUtils():
         self.updateWebServerMap(webServerMap)
         for i in webServerMap.values():#while starting inform all other servers to update this map
             try:
-                print AndroidUtils.get_data("http://"+i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap)})).read()
+                print AndroidUtils.get_data(i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap)})).read()
             except:
                 print sys.exc_info()[0]
     def addServer(self, sid , addr):
@@ -41,21 +41,21 @@ class MasterServerUtils():
         if(quizState):
             quizState[LI_N_PEOPLE_WAITING]-=1
             if(quizState[LI_N_PEOPLE_WAITING]<=0):
-                ss[quiz.quizId]= quizState = [quiz.nPeople , self.getRoundRobinServerId()]
+                ss[quiz.quizId]= quizState = [quiz.nPeople*3 , self.getRoundRobinServerId(),None]
         else:
-            ss[quiz.quizId]= quizState = [quiz.nPeople , self.getRoundRobinServerId()]
+            ss[quiz.quizId]= quizState = [quiz.nPeople*3 , self.getRoundRobinServerId(),None]
         
-        quizState[LI_N_PEOPLE_WAITING] = user.uid
-        return self.webServerMap[quizState[LI_USERS_WAITING_SERVERID]]
+        quizState[LI_LAST_WAITING_UID] = user.uid
+        return quizState[LI_USERS_WAITING_SERVERID] , self.webServerMap[quizState[LI_USERS_WAITING_SERVERID]]
     
-    def waitingUserBotOrCancelled(self, quizId, sid ,uid):
+    def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
         quizState = ss.get(quizId,None)
         if(quizState and quizState[LI_USERS_WAITING_SERVERID]== sid and quizState[LI_LAST_WAITING_UID]== uid):
             ss[quizId]=None
     
     def getRoundRobinServerId(self):
         self.rrCount+=1
-        self.rrCount%=len(self.webServersArray)
+        self.rrCount%=len(self.webServerIds)
         return self.webServerIds[self.rrCount]
 
 
