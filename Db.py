@@ -152,7 +152,7 @@ class Users(Document):
     userChallengesIndex = ReferenceField(UserActivityStep)
     
     def toJson(self):
-        return {"uid":self.uid,
+        return json.dumps({"uid":self.uid,
                 "name":self.name,
                 "badges":self.badges,
                 "stats":self.stats,
@@ -162,7 +162,7 @@ class Users(Document):
                 "gender":self.gender,
                 "country":self.country,
                 "status":self.status,
-                }
+                })
      
 class Tags(Document):
     tag = StringField(unique=True)
@@ -190,6 +190,17 @@ class Questions(Document):
     tagsAllIndex = ListField(StringField())
     tags=ListField(StringField())
 
+    def to_json(self):
+        return json.dumps({"questionId":self.questionId,
+                           "questionType":self.questionType,
+                           "questionDescription":self.questionDescription,
+                           "pictures":self.pictures,
+                           "options":self.options,
+                           "answer":self.answer,
+                           "explanation":self.explanation,
+                           "time":self.time,
+                           "xp":self.xp
+                           })
 
 
 class TopicMaxQuestions(Document):
@@ -200,7 +211,10 @@ class TopicMaxQuestions(Document):
     def getNewId(tag):
         c = TopicMaxQuestions.objects(mixedTag = tag)
         if(not c):
-            c = TopicMaxQuestions(mixedTag = tag, max=1)
+            c = TopicMaxQuestions()
+            c.mixedTag = tag
+            c.max=1
+            c.unused=[]
             c.save()
             return 0
         else:
@@ -231,7 +245,7 @@ class TopicMaxQuestions(Document):
         if(not c):
             return 0
         else:
-            return c.get(0)+max
+            return c.get(0).max
 
 
 class Categories(Document):

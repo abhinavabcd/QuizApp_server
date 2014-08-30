@@ -86,7 +86,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 self.broadcastToAll({"messageType":STARTING_QUESTIONS,
                                                    "payload":self.runningQuizId,
                                                    "payload1":"["+",".join(map(lambda uid:dbUtils.getUserByUid(uid).to_json() , uids))+"]",
-                                                   "payload2":dbUtils.getRandomQuestions(quiz)
+                                                   "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"
                                                   },
                                 quizConnections
                                )
@@ -140,8 +140,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     pass
                 # client disconnected
             elif(messageType==ACTIVATE_BOT):
-                self.write_message(json.dumps({"messageType":OK_ACTIVATING_BOT,"payload1": dbUtils.getBotUser().toJson(), 
-                                               "payload2":"["+",".join(dbUtils.getRandomQuestions(self.quiz))}))
+                self.write_message(json.dumps({"messageType":OK_ACTIVATING_BOT,"payload": dbUtils.getBotUser().toJson(), 
+                                               "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}))
                 #THEN CLIENT CLOSES CONNECTION
                 
         def on_close(self):
