@@ -153,6 +153,7 @@ class Users(Document):
     
     def toJson(self):
         return {"uid":self.uid,
+                "name":self.name,
                 "badges":self.badges,
                 "stats":self.stats,
                 "winsLosses":self.winsLosses,
@@ -166,13 +167,13 @@ class Users(Document):
 class Tags(Document):
     tag = StringField(unique=True)
 
-class Badges():
-    badgeId = IntField()
+class Badges(Document):
+    badgeId = IntField(unique=True)
     name = StringField()
     description = StringField()
     assetPath = StringField()
     shortAssetPath = StringField()
-    modifiedTimeStamp = DateTimeField()
+    modifiedTimestamp = DateTimeField()
 
 class Questions(Document):
     questionId = StringField(unique=True)
@@ -192,14 +193,14 @@ class Questions(Document):
 
 
 class TopicMaxQuestions(Document):
-    categoryTag = StringField(unique=True)
+    mixedTag = StringField(unique=True)
     max = IntField(default=0)
     unused = ListField(IntField())
     @staticmethod
     def getNewId(tag):
-        c = TopicMaxQuestions.objects(categoryTag = tag)
+        c = TopicMaxQuestions.objects(mixedTag = tag)
         if(not c):
-            c = TopicMaxQuestions(categoryTag = tag, max=1)
+            c = TopicMaxQuestions(mixedTag = tag, max=1)
             c.save()
             return 0
         else:
@@ -215,7 +216,7 @@ class TopicMaxQuestions(Document):
 
     @staticmethod
     def addToUnUsedId(tag, _id):
-        c = TopicMaxQuestions.objects(categoryTag = tag).get(0)
+        c = TopicMaxQuestions.objects(mixedTag = tag).get(0)
         if(c.unused):
             c.unused.append(_id)
         else:
@@ -226,11 +227,11 @@ class TopicMaxQuestions(Document):
 
     @staticmethod
     def getMax(tag):
-        c = TopicMaxQuestions.objects(categoryTag = tag)
+        c = TopicMaxQuestions.objects(mixedTag = tag)
         if(not c):
             return 0
         else:
-            return c.max
+            return c.get(0)+max
 
 
 class Categories(Document):
@@ -315,6 +316,10 @@ class DbUtils():
         if(users):
             return users.get(0)
         return None
+    
+    def getBotUser(self):
+        return Users.objects(uid="H9K0VU4TXZ").get(0)
+
 
     def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, quizList=None,isDirty=1):
         categoryId = str(categoryId)
@@ -330,8 +335,9 @@ class DbUtils():
         c.shortDescription = shortDescription
         c.description = description
         quizListTemp = []
+        ##TODO: below check if quiz is present in quizList
         for i in c.quizList:
-            quizListTemp.append(i.quizId)
+            quizListTemp.append(i)
         addQuizList = set(quizList)-set(quizListTemp)
         removeQuizList = set(quizListTemp)-set(quizList)
         for i in removeQuizList:
@@ -497,13 +503,50 @@ class DbUtils():
             
         user.save()
     
+    def getTopicMaxCount(self, fullTag):
+        return TopicMaxQuestions.getMax(fullTag)
             
-    def getRandomQuestions(self,quiz):
+    def getRandomQuestions(self , quiz):
+        fullTag = "_".join(sorted(quiz.tags))
+        questionsCount = quiz.nQuestions
+        
+        count =  self.getTopicMaxCount(fullTag)
         questions = []
-        count = 0
-        quiz.tags
-        while(count<quiz.nQuestions):
-            questions.append(None)
+        if(count <= questionsCount):
+            questions = [x for x in Questions.objects(tagsAllSubjects= fullTag)]
+            for i in range(questionsCount-count):
+                questions.append(questions[i])
+            return questions
+        questionIds= {}
+        c=0
+        maxIterations = 50
+        while(c<questionsCount):
+            if(maxIterations<0):
+                break
+            maxIterations-=1
+            numRand = random.randint(0,count)
+            if(questionIds.get(numRand,None)==None):
+                questionIds[numRand]=True
+                question = Questions.objects(tagsAllIndex=fullTag+"_"+numRand)
+                if(question):
+                    question = question.get(0)
+                    questions.append(question)
+                    c+=1
+        
+        for i in range(questionsCount-len(questions)):
+            questions.append(questions[i])# repeat them 
+                    
+        return questions
+            
+                
+                
+            
+                
+            
+            
+            
+            
+        
 
     def getAllCategories(self,modifiedTimestamp):
         return Categories.objects(modifiedTimestamp__gt = modifiedTimestamp)
@@ -651,8 +694,8 @@ class DbUtils():
         inboxMessage.save()
         #if user is logged in , send him some notification
         
-    def getNewBadges(self,userMaxTimeStamp):
-        return Badges.objects(modifiedTimeStamp__gte = userMaxTimeStamp)
+    def getNewBadges(self,userMaxTimestamp):
+        return Badges.objects(modifiedTimestamp__gte = userMaxTimestamp)
 
         #experimental only
     def getRecentMessagesIfAny(self, user , afterTimestamp):
