@@ -72,5 +72,5 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
 
 if __name__=="__main__":
     import Config
-    dbUtils = DbUtils(Config.dbServer) 
+    dbUtils = DbUtils(["127.0.0.1",27017,datetime.date(2014, 8 , 27) , 10] ) 
     syncSpreadSheets(dbUtils, syncSpecific=[] , excludeSheets=["tags"])
