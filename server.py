@@ -156,47 +156,54 @@ def getUserChallenges(response, user=None):
 
 @userAuthRequired
 def getAllUpdates(response, user=None):
-    lastSeenTimestamp = response.get_argument("lastSeenTimestamp",None)
     isLogin = response.get_argument("isLogin",False)
     
-    payload3 = None
+    retObj = {"messageType":OK_UPDATES,
+                               "payload7":json.dumps(user.toJson()),
+                               "payload3":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
+                               "payload5":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user)))+"]"
+                              }
+    if(isLogin):
+        quizzes = None
+        categories= None
+        badges = None
+        userMaxQuizTimestamp = response.get_argument("maxQuizTimestamp",None)
+        if(userMaxQuizTimestamp):
+            userMaxQuizTimestamp = datetime.datetime.utcfromtimestamp(float(userMaxQuizTimestamp))
+            quizzes = dbUtils.getAllQuizzes(userMaxQuizTimestamp)
+            categories = dbUtils.getAllCategories(userMaxQuizTimestamp)
+            retObj["payload"]="["+','.join(map(lambda x:x.toJson() , quizzes ))+"]"
+            retObj["payload1"] ="["+','.join(map(lambda x:x.toJson() , categories ))+"]"
+            
+        userMaxBadgesTimestamp = response.get_argument("maxBadgesTimestamp",None)
+        if(userMaxBadgesTimestamp):
+            userMaxBadgesTimestamp = datetime.datetime.utcfromtimestamp(max(0,float(userMaxBadgesTimestamp)))
+            badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
+            retObj["payload2"] = "["+",".join(map(lambda x:x.to_json(),badges))+"]"
+
+        retObj["payload6"]=json.dumps(Config.WebServersMap)
+        
+    recentMessages = None
+    lastSeenTimestamp = response.get_argument("lastSeenTimestamp",None)
     if(lastSeenTimestamp):
         lastSeenTimestamp = datetime.datetime.utcfromtimestamp(float(lastSeenTimestamp))
-        payload3 = "["+','.join(map(lambda x:x.toJson(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
-
-    quizzes = None
-    categories= None
-    badges = None
-    userMaxQuizTimestamp = response.get_argument("maxQuizTimestamp",None)
-    if(userMaxQuizTimestamp):
-        userMaxQuizTimestamp = datetime.datetime.utcfromtimestamp(float(userMaxQuizTimestamp))
-        quizzes = dbUtils.getAllQuizzes(userMaxQuizTimestamp)
-        categories = dbUtils.getAllCategories(userMaxQuizTimestamp)
+        recentMessages = "["+','.join(map(lambda x:x.toJson(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
+        retObj["payload4"] = recentMessages #unseen messages if any
         
-    userMaxBadgesTimestamp = response.get_argument("maxBadgesTimestamp",None)
-    if(userMaxBadgesTimestamp):
-        userMaxBadgesTimestamp = datetime.datetime.utcfromtimestamp(float(userMaxBadgesTimestamp))
-        badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
     
-    responseFinish(response, {"messageType":OK_UPDATES,
-                              "payload":"["+','.join(map(lambda x:x.toJson() , quizzes ))+"]",
-                               "payload1":"["+','.join(map(lambda x:x.toJson() , categories ))+"]",
-                               "payload2":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
-                               "payload3":payload3, #unseen messages if any
-                               "payload4":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user)))+"]",
-                               "payload5":"["+",".join(map(lambda x:x.to_json(),badges))+"]"
-                              }
-                   )
+    responseFinish(response, retObj)
     if(isLogin):
         dbUtils.incrementLoginIndex(user)
 
 # TYPE for requests to getServerDetails
 @userAuthRequired
-def getServerDetails(response, quizId,user=None):
+def getServer(response, user=None):
     type = int(response.get_argument("type",0))
     if(type==PROGRESSIVE_QUIZ): 
+        quizId = response.get_argument("quizId")
         quiz = dbUtils.getQuizDetails(quizId)
-        responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1":masterSever.getQuizWebSocketServer(quiz, user) })
+        sid , serverAddr = masterSever.getQuizWebSocketServer(quiz, user)
+        responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
 
 def addWebServer(response):
@@ -225,6 +232,13 @@ def getQuestionById(response, user=None):
 @userAuthRequired
 def getUserInfo(response, user =None):
     responseFinish(response,{"messageType": OK_USER_INFO, "payload":dbUtils.getUserInfo(user).to_json()})
+
+
+@userAuthRequired
+def activatingBotPQuiz(response, user=None):
+    quizId = response.get_argument("quizId")
+    sid = response.get_argument("sid")
+    masterSever.waitingUserBotOrCancelled(quizId, sid, user.uid)
 
 def responseFinish(response,data):
     data = json.dumps(data)
@@ -284,7 +298,8 @@ serverFunc = {
               "registerWithGoogle":registerWithGoogle,
               "registerWithFacebook":registerWithFacebook,
               "getAllUpdates":getAllUpdates,
-              "updateServerMap":updateServerMap
+              "updateServerMap":updateServerMap,
+              "getServer":getServer
              }
 
 #server web request commands with json
@@ -317,7 +332,7 @@ class QuizApp(tornado.web.Application):
            
         handlers = [                    
             (r"/func", Func),
-            (r"/pQuiz", ProgressiveQuizHandler.GenerateProgressiveQuizClass(dbUtils, responseFinish, userAuthRequired)),
+            (r"/progressiveQuiz", ProgressiveQuizHandler.GenerateProgressiveQuizClass(dbUtils, responseFinish, userAuthRequired)),
             (r"/(.*)", tornado.web.StaticFileHandler,static_path)               
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
