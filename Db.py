@@ -332,7 +332,7 @@ class DbUtils():
         return None
     
     def getBotUser(self):
-        return Users.objects(uid="H9K0VU4TXZ").get(0)
+        return Users.objects(uid="00VU4TXZ").get(0)
 
 
     def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, quizList=None,isDirty=1):
