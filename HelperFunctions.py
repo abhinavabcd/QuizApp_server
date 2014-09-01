@@ -7,9 +7,13 @@ Created on Jun 19, 2014
 import random
 import string
 from Constants import *
+import Config
+
+all_letters = string.ascii_uppercase + string.digits
 
 def generateKey(N=8):
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(N))
+    #may be later use dattime
+    return Config.SERVER_ID + ''.join(random.choice(all_letters) for x in range(N))
 
 def timedelta_to_int(td):
     return (td.seconds + td.days * 86400)
