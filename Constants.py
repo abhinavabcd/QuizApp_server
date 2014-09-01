@@ -42,6 +42,7 @@ OK_MESSAGES = 508
 OK_FEED = 509
 OK_CHALLENGES= 510
 OK_ACTIVATING_BOT = 511
+NO_REPLY_FROM_OTHER_USERS=512
 ################################# dict values/commands for payload type definition
 USER_ANSWERED_QUESTION = 1
 GET_NEXT_QUESTION = 2
@@ -61,7 +62,8 @@ WHAT_USER_HAS_GOT = '5'
 N_CURRENT_QUESTION_ANSWERED = '6'
 USER_ANSWER = '7'
 USERS='8'
-
+CREATED_AT='9'
+ELAPSED_TIME='10'
 
 #preference strigns
 PREF_IMMUTABLES_COUNT = "immutables_count"

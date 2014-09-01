@@ -28,7 +28,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
         runningQuizes[id] = quizState = {   QUESTIONS: questions,
                                             CURRENT_QUESTION :-1,
                                             N_CURRENT_QUESTION_ANSWERED:[],
-                                            USERS:userStates##{uid:something}
+                                            USERS:userStates,##{uid:something}
+                                            CREATED_AT:datetime.datetime.now()
                                         }
         return id , quizState
     
@@ -98,8 +99,10 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             if(messageType==USER_ANSWERED_QUESTION):
                 questionId = userQuizUpdate[QUESTION_ID]
                 userAnswer = userQuizUpdate[USER_ANSWER]
+                elapsedTime = userQuizUpdate[ELAPSED_TIME]
                 whatUserGot = userQuizUpdate[WHAT_USER_HAS_GOT]
-                self.broadcastToAll({"messageType":USER_ANSWERED_QUESTION,"payload":whatUserGot,"payload1":questionId},self.quizConnections)
+                self.broadcastToGroup({"messageType":USER_ANSWERED_QUESTION,"payload":json.dumps([questionId , self.uid, userAnswer,elapsedTime , whatUserGot])},self.quizConnections)
+                #whatUserGot = int(whatUserGot)
                 self.runningQuiz[N_CURRENT_QUESTION_ANSWERED].append(self.uid)
                 if(len(self.runningQuiz[N_CURRENT_QUESTION_ANSWERED])==len(self.quizConnections)):#if everyone aswered
                     self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
@@ -126,7 +129,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     isFirstQuestion = True
                     self.runningQuiz[CURRENT_QUESTION]==0
                     
-                if(isFirstQuestion or len(n_answered) ==len(self.quizConnections)):#if everyone aswered
+                if(isFirstQuestion or len(n_answered) ==len(self.quizConnections)==self.quiz.nPeople):#if everyone aswered
                     self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
                     currentQuestionIndex = self.runningQuiz[CURRENT_QUESTION]
                     question = self.runningQuiz[QUESTIONS][currentQuestionIndex]
@@ -136,7 +139,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                                      self.quizConnections
                                   )
                 else:
-                    #some state to clean TODO
+                    ### can calculate which user caused this error
+                    self.broadcastToAll(json.dumps({"messageType":NO_REPLY_FROM_OTHER_USERS}), self.quizConnections)
                     pass
                 # client disconnected
             elif(messageType==ACTIVATE_BOT):
