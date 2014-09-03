@@ -16,7 +16,7 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
             for i in range(0,count): #exclude heading
                 row = records[i]
                 #after updating
-                if(row.get("isDirty",False)):
+                if(IS_NEW_DB or row.get("isDirty",False)):
                     print row
                     if(dbUtils.addOrModifyTag(**row)):
                         tagWorksheet.update_cell(i+2, len(row.keys()), "0")
@@ -32,7 +32,7 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
             for i in range(0,count): #exclude heading
                 row = records[i]
                 #after updating
-                if(row.get("isDirty",False)):
+                if(IS_NEW_DB or row.get("isDirty",False)):
                     print row
                     if(dbUtils.addOrModifyQuiz(**row)):
                         quiz_worksheet.update_cell(i+2, len(row.keys()), 0)
@@ -47,7 +47,7 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
             for i in range(0,count): #exclude heading
                 row = records[i]
                 #after updating
-                if(row.get("isDirty",False)):
+                if(IS_NEW_DB or row.get("isDirty",False)):
                     print row
                     if(dbUtils.addOrModifyCategory(**row)):
                         categoryWorksheet.update_cell(i+2, len(row.keys()), 0)
@@ -64,11 +64,13 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
                 row = records[i]
                 row["questionId"] = "_".join(questionsWorksheet.title.lower().split("_")[1:])+"_"+str(row["questionId"])
                 #after updating
-                if(row.get("isDirty",False)):
+                if(IS_NEW_DB or row.get("isDirty",False)):
                     print row
                     if(dbUtils.addOrModifyQuestion(**row)):
                         questionsWorksheet.update_cell(i+2, len(row.keys()), 0)
 
+
+IS_NEW_DB = False
 
 if __name__=="__main__":
     import Config
