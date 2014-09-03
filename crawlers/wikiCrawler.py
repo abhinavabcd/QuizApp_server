@@ -1,5 +1,6 @@
 import urllib
 import re
+import copy
 import random
 from lxml.html import parse, tostring, clean,etree
 from lxml.etree import strip_tags
@@ -36,68 +37,97 @@ g_director_count = 0
 g_music_director_count = 0
 g_cast_count = 0
 
-class director(Document):
+class director(DynamicDocument):
     uid = StringField(unique=True)
     name = StringField()
     link = StringField()
     islinkValid = BooleanField(default=True)
     
-class cast(Document):
+class cast(DynamicDocument):
     uid = StringField(unique=True)
     name = StringField()
     link = StringField()
     islinkValid = BooleanField(default=True)
     
-class musicDirector(Document):
+class musicDirector(DynamicDocument):
     uid = StringField(unique=True)
     name = StringField()
     link = StringField()
     islinkValid = BooleanField(default=True)
 
-class movieData(Document):
+class movieData(DynamicDocument):
     uid = StringField(unique=True)
     name = StringField()
     link = StringField()
     islinkValid = BooleanField(default=True)
+    releaseDate = StringField() # dd-mm-yyyy format
+    genre = StringField()
     director = ListField(ReferenceField('director'))
     musicDirector = ListField(ReferenceField('musicDirector'))
     cast = ListField(ReferenceField('cast'))
     note = StringField()
 
-def createOrUpdateMovie(name,link=None,islinkvalid=False,director=None,cast=None,musicDirector=None,genre=None,note=None):
+#name,link=None,islinkvalid=False,director=None,cast=None,musicDirector=None,genre=None,note=None
+def createOrUpdateMovie(dataDict):
+    #TODO:check for existing data
     mRow = movieData()
-    mRow.uid = g_movie_count
-    mRow.name = textList[0]
-    mRow.link = link
-    mRow.islinkValid = islinkvalid
-    mRow.director = director
-    mRow.musicDirector = musicDirector
-    mRow.cast = cast
-    mRow.note = note
+    for field in dataDict:
+        mRow.__setattr__(field, dataDict[field])
+#    mRow.uid = g_movie_count
+#    mRow.name = textList[0]
+#    mRow.link = link
+#    mRow.islinkValid = islinkvalid
+#    mRow.director = director
+#    mRow.musicDirector = musicDirector
+#    mRow.cast = cast
+#    mRow.note = note
+    mRow.save()
     return mRow
 
-def createOrUpdateDirector(name,link):
+#name,link
+def createOrUpdateDirector(dataDict):
     global g_director_count
-    res = director.objects(link=link)
+    res = director.objects(link=dataDict['link'])
     if res!=None:
         return res.get(0)
     dRow = director()
-    dRow.uid = g_director_count
+    dRow['uid'] = g_director_count
     g_director_count = g_director_count + 1
-    dRow.name = name
-    dRow.link = link
+    for field in dataDict:
+        dRow.__setattr__(field, dataDict[field])
+#    dRow.name = name
+#    dRow.link = link
+    dRow.save()
     return dRow
 
-def createOrUpdateCast(name,link):
-    global g_cast_count
-    res = cast.objects(link=link)
+def createOrUpdateMusicDirector(dataDict):
+    global g_music_director_count
+    res = cast.objects(link=dataDict['link'])
     if res!=None:
         return res.get(0)
-    cRow = director()
-    cRow.uid = g_cast_count
+    cRow = musicDirector()
+    cRow['uid'] = g_music_director_count
+    g_music_director_count = g_music_director_count + 1
+    for field in dataDict:
+        cRow.__setattr__(field, dataDict[field])
+#    cRow.name = name
+#    cRow.link = link
+    cRow.save()
+    return cRow
+
+def createOrUpdateCast(dataDict):
+    global g_cast_count
+    res = cast.objects(link=dataDict['link'])
+    if res!=None:
+        return res.get(0)
+    cRow = cast()
+    cRow['uid'] = g_cast_count
     g_cast_count = g_cast_count + 1
-    cRow.name = name
-    cRow.link = link
+    for field in dataDict:
+        cRow.__setattr__(field, dataDict[field])
+#    cRow.name = name
+#    cRow.link = link
+    cRow.save()
     return cRow
 
 def get_data(url,post=None,headers={}):
@@ -140,6 +170,28 @@ def insertCombinations(catalog,listItem):
 def init_globals():
     pass 
 
+def isPageValid(page):
+    if page.find("Wikipedia does not have an article with this exact name")>=0:
+        return True
+    else:
+        return False
+
+def getValidPage(link):
+    root = parse(get_data(link)).getroot()
+    if isPageValid(root.text_content())<0:
+        return root
+#        root = parse(get_data(link+'s')).getroot()
+#        if isPageValid(root.text_content())<0:
+#            return None
+#        else:
+#            return root
+    else:
+        return root
+
+def getReleaseDate(dataDict):
+    if dataDict.hasKey('Opening'):
+        dataDict['releaseDate'] = ""
+
 init_globals()
 PAGES = 99
 
@@ -148,27 +200,46 @@ if os.path.isfile("links.json"):
         links = json.load(json_file)
 
 for i in range(40,PAGES):
-
-    root = parse(get_data('http://en.wikipedia.org/wiki/List_of_Telugu_films_of_19'+str(i))).getroot()
-    columns = root.cssselect("table.wikitable th")
-    print len(columns)
+    root = getValidPage('http://en.wikipedia.org/wiki/List_of_Telugu_films_of_19'+str(i))
+    if root==None:
+        continue
+    
+    columnNames = root.cssselect("table.wikitable th")
+    cspan = []
+    for col in columnNames:
+        span = col.attrib['colspan']
+        if span!=None:
+            span = 1
+        cspan.append(span)
+        
+    print len(columnNames)
     rows = root.cssselect("table.wikitable tr")
     rows.pop(0)
     
     matches = map(lambda x: x.cssselect("td"),rows)
-    prevLength = -1
+    matches_new = copy.deepcopy(matches)
+#    prevLength = -1
     validLinks = []
-    for match in matches:
-        l = len(match)
-        if l==0:
+    x = 0 
+    while x<len(matches):
+        i = 0
+        if len(matches[x])==0:
             continue
-        if l!=prevLength and prevLength!=-1:
-            print "Columns count problem in wikitable"
-            break
-        prevLength = len(match)
-        textList = map(lambda x: x.text_content().strip().split(','),match)#etree.tostring(x)
+        while i<len(matches[x]):
+            span = matches[x][i].attrib['rowspan']
+            if span!=None and span>1:
+                for j in range(0,span):
+                    matches[x].insert(i,copy.deepcopy(matches[x][i]))
+                i = i+span-1
+            i = i+1
+
+#        if l!=prevLength and prevLength!=-1:
+#            print "Columns count problem in wikitable"
+#            break
+#        prevLength = len(matches[x])
+        textList = map(lambda x: x.text_content().strip().split(','),matches[x])#etree.tostring(x)
          
-        alist = map(lambda x: x.cssselect('a'),match)
+        alist = map(lambda x: x.cssselect('a'),matches[x])
         lnk = alist[0].attrib['href']
         islinkvalid = False
         if len(lnk)>4 and lnk[0:6]=="/wiki/":
@@ -176,6 +247,7 @@ for i in range(40,PAGES):
             islinkvalid = True
         # need to refine below line - incorrect
         createOrUpdateMovie(textList[0], lnk, islinkvalid, createOrUpdateDirector(textList[1]), createOrUpdateCast(textList[2]), textList[3],textList[4])
+        x = x + 1
     break
 
     for k in map(lambda x: 'http://en.wikipedia.org'+x, validLinks):
