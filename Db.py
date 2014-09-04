@@ -150,6 +150,7 @@ class Users(Document):
     subscribers = ListField(StringField())
     userFeedIndex = ReferenceField(UserActivityStep)
     userChallengesIndex = ReferenceField(UserActivityStep)
+    userType = IntField(default=0)
     
     def toJson(self):
         return json.dumps({"uid":self.uid,
@@ -541,7 +542,7 @@ class DbUtils():
             numRand = random.randint(0,count)
             if(questionIds.get(numRand,None)==None):
                 questionIds[numRand]=True
-                question = Questions.objects(tagsAllIndex=fullTag+"_"+numRand)
+                question = Questions.objects(tagsAllIndex=fullTag+"_"+str(numRand))
                 if(question):
                     question = question.get(0)
                     questions.append(question)
@@ -589,7 +590,7 @@ class DbUtils():
         
     def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False):
         user = Users.objects(emailId=emailId)
-        if(user):
+        if(user or len(user)>0):
             user = user.get(0)
         else:
             user = Users()
