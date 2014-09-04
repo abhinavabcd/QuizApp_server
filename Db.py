@@ -539,9 +539,9 @@ class DbUtils():
                 break
             maxIterations-=1
             numRand = random.randint(0,count)
-            if(questionIds.get(numRand,None)==None):
+            if(questionIds.get(int(numRand),None)==None):
                 questionIds[numRand]=True
-                question = Questions.objects(tagsAllIndex=fullTag+"_"+numRand)
+                question = Questions.objects(tagsAllIndex=fullTag+"_"+str(numRand))
                 if(question):
                     question = question.get(0)
                     questions.append(question)
@@ -669,16 +669,16 @@ class DbUtils():
     
     def getRecentUserFeed(self, user, toIndex=-1, fromIndex=0):
         userFeedIndex= user.userFeedIndex
-        index = toIndex if toIndex>0 else userFeedIndex.index
-        count =50
+        ind = toIndex if toIndex>0 else userFeedIndex.index
+        cnt =50
         userFeedMessages = []
-        while(index>fromIndex):
-            for i in UserFeed.objects(uidFeedIndex = user.uid+"_"+str(index)):
+        while(ind>fromIndex):
+            for i in UserFeed.objects(uidFeedIndex = user.uid+"_"+str(ind)):
                 userFeedMessages.append(i.feedMessage)#getting from reference field
-                count-=1
-            if(count<=0):
+                cnt-=1
+            if(cnt<=0):
                 break
-            index-=1
+            ind-=1
         return userFeedMessages
     
     def publishFeed(self, user, message):
