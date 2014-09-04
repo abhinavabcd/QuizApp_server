@@ -529,8 +529,9 @@ class DbUtils():
         questions = []
         if(count <= questionsCount):
             questions = [x for x in Questions.objects(tagsAllSubjects= fullTag)]
-            for i in range(questionsCount-count):
-                questions.append(questions[i])
+            numQuestions = len(questions)
+            for i in range(questionsCount-count):#needed questions 
+                questions.append(questions[i%numQuestions])#repeat
             return questions
         questionIds= {}
         c=0
