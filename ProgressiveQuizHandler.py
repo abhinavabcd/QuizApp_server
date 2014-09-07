@@ -29,7 +29,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                                             CURRENT_QUESTION :-1,
                                             N_CURRENT_QUESTION_ANSWERED:[],
                                             USERS:userStates,##{uid:something}
-                                            CREATED_AT:datetime.datetime.now()
+                                            CREATED_AT:datetime.datetime.now(),
+                                            POINTS:{}
                                         }
         return id , quizState
     
@@ -43,6 +44,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
         quizConnections =None
         runningQuizId= None
         runningQuiz = None
+        quizPoolWaitId = None
+        user = None
         
         def broadcastToGroup(self, message, allClients):
             for i in allClients:
@@ -87,7 +90,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 self.broadcastToAll({"messageType":STARTING_QUESTIONS,
                                                    "payload":self.runningQuizId,
                                                    "payload1":"["+",".join(map(lambda uid:dbUtils.getUserByUid(uid).to_json() , uids))+"]",
-                                                   "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"
+                                                   "payload2":"["+",".join(map(lambda x:x.to_json() ,self.runningQuiz[QUESTIONS]))+"]"
                                                   },
                                 quizConnections
                                )
@@ -101,6 +104,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 userAnswer = userQuizUpdate[USER_ANSWER]
                 elapsedTime = userQuizUpdate[ELAPSED_TIME]
                 whatUserGot = userQuizUpdate[WHAT_USER_HAS_GOT]
+                self.runningQuiz[POINTS][self.uid]=whatUserGot
                 self.broadcastToGroup({"messageType":USER_ANSWERED_QUESTION,"payload":json.dumps([questionId , self.uid, userAnswer,elapsedTime , whatUserGot])},self.quizConnections)
                 #whatUserGot = int(whatUserGot)
                 self.runningQuiz[N_CURRENT_QUESTION_ANSWERED].append(self.uid)
@@ -109,11 +113,23 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     currentQuestion = self.runningQuiz[CURRENT_QUESTION]
                     self.runningQuiz[CURRENT_QUESTION]=currentQuestion+1
                     if(currentQuestion>=self.quiz.nQquestions):
+                        pointsMap = self.runningQuiz[POINTS]
+                        max = 0
+                        maxUid = None
+                        for uid in pointsMap.keys():
+                            if(pointsMap[uid]>max):
+                                maxUid = uid
+                                max = pointsMap[uid]
+                                
                         self.broadcastToAll({"messageType":ANNOUNCING_WINNER,
-                                               "payload":json.dumps(self.runningQuiz[USERS])
+                                               "payload":json.dumps(self.runningQuiz[USERS]),
+                                               "payload1":maxUid #winning user
                                             },
                                          self.quizConnections)
                         #TODO: calculate winner and save in Db
+                        for conn in self.quizConnections:
+                            currentUsersPoints =self.runningQuiz[POINTS]
+                            dbUtils.onUserQuizWonLost( conn.user, conn.quiz.quizId , currentUsersPoints[conn.uid] , currentUsersPoints[conn.uid]==max , currentUsersPoints[conn.uid]<max , currentUsersPoints[conn.uid]==max)
                         return
                     currentQuestionIndex = self.runningQuiz[CURRENT_QUESTION]
                     question = self.runningQuiz[QUESTIONS][currentQuestionIndex]
@@ -121,6 +137,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
 #                                            "payload":question.to_json(),
                                           },
                                      self.quizConnections)
+                    
                 
             elif(messageType==GET_NEXT_QUESTION):#user explicitly calls this function on if other doesn't responsd
                 n_answered =self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]
