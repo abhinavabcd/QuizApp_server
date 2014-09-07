@@ -27,11 +27,11 @@ logging.basicConfig(filename='log',level=logging.INFO)
 
 
 gcmQueue = []
-phoneNumberQueue = []
+userGcmMessageQueue = []
 GCM_BATCH_COUNT = 10
 def sendGcmMessages():
-    while(len(phoneNumberQueue)>0):
-        uids , packetData = phoneNumberQueue.pop()
+    while(len(userGcmMessageQueue)>0):
+        uids , packetData = userGcmMessageQueue.pop()
         registrationIds = None
         if(isinstance(uids, list)):
             registrationIds = []
@@ -59,10 +59,10 @@ def addGcmToQueue(registrationIds, packetData):
     gcmQueue.append({"registration_ids":registrationIds,"data":packetData })
 
 def addUidToQueue(uid, packetData):
-    phoneNumberQueue.append([uid,packetData])
+    userGcmMessageQueue.append([uid,packetData])
 
 def addUidsToQueue(uids, packetData):
-    phoneNumberQueue.append([uids,packetData])
+    userGcmMessageQueue.append([uids,packetData])
 
 
 _userCache= {}
@@ -120,27 +120,40 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
 def getUserProfile(response, user=None):
     uid2 = response.get_argument("uid2")
     user2 = dbUtils.getUserByUid(uid2)
-    responseFinish(response, {"messageTye":OK_USER_INFO,
+    responseFinish(response, {"messageType":OK_USER_INFO,
                               "payload":user2.to_json(),
                             }
                   )
 @userAuthRequired
 def getPreviousMessages(response ,user=None):
-    uid2 = dbUtils.getUserByUid(response.get_argument("uid2"))
+    uid2 = response.get_argument("uid2")
     toIndex = int(response.get_argument("toIndex",-1))
     fromIndex = int(response.get_argument("fromIndex",0))
     
-    responseFinish(response, {"messageTye":OK_MESSAGES,
+    responseFinish(response, {"messageType":OK_MESSAGES,
                               "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex,fromIndex)  ))+"]",
                             }
                   )
+
+
+@userAuthRequired
+def sendInboxMessages(response ,user=None):
+    toUser = dbUtils.getUserByUid(response.get_argument("toUser"))
+    textMessage = response.get_argument("textMessage")
+    dbUtils.insertInboxMessage(user, toUser, textMessage)
+    addUidToQueue(toUser.uid, {"fromUser":user.uid,
+                                "fromUserName":user.name,
+                                "textMessage":textMessage,
+                                "messsageType":NOTIFICATION_GCM_INBOX_MESSAGE 
+                                })
+    responseFinish(response, {"messageType":OK_SEND_MESSAGE})
     
 @userAuthRequired
 def getPreviousFeed(response, user=None):
     toIndex = int(response.get_argument("toIndex",-1))
     fromIndex = int(response.get_argument("fromIndex",0))
     
-    responseFinish(response, {"messageTye":OK_FEED, 
+    responseFinish(response, {"messageType":OK_FEED, 
                               "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getRecentUserFeed(user, toIndex,fromIndex) ))+"]",
                                })
     
@@ -149,7 +162,7 @@ def getUserChallenges(response, user=None):
     toIndex = int(response.get_argument("toIndex",-1))
     fromIndex = int(response.get_argument("fromIndex",0))
     
-    responseFinish(response, {"messageTye":OK_CHALLENGES, 
+    responseFinish(response, {"messageType":OK_CHALLENGES, 
                               "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getUserChallenges(user, toIndex, fromIndex) ))+"]",
                            })
 
@@ -301,7 +314,9 @@ serverFunc = {
               "getAllUpdates":getAllUpdates,
               "updateServerMap":updateServerMap,
               "getServer":getServer,
-              "activatingBotPQuiz":activatingBotPQuiz
+              "activatingBotPQuiz":activatingBotPQuiz,
+              "getPreviousMessages":getPreviousMessages,
+              "sendInboxMessages":sendInboxMessages
              }
 
 #server web request commands with json
