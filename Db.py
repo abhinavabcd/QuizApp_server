@@ -66,9 +66,9 @@ class UserInboxMessages(Document):
     
     def toJson(self):
         son = self.to_mongo()
-        del son["fromUid_toUid_index"]
         del son["fromUid_LoginIndex"]
         del son["toUid_LoginIndex"]
+        son["timestamp"] = HelperFunctions.toUtcTimestamp(self.timestamp)
         return bson.json_util.dumps(son)
         
         
@@ -118,8 +118,18 @@ class UserSolvedIds(Document):
     points = StringField()
     questionIdToPointsMap = DictField()
 
+class UserStats(Document):
+    uid  = StringField() # uid
+    quizId = StringField() # use double index here
+    xpPoints = IntField(default = 0)#rev index
 
-
+class UserWinsLosses(Document):
+    uid = StringField()
+    quizId = StringField()
+    wins = IntField(default = 0)
+    loss = IntField(default = 0)
+    ties = IntField(default = 0)
+    
 class Users(Document):
     uid = StringField(unique=True)
     name = StringField()
@@ -134,9 +144,9 @@ class Users(Document):
     country = StringField(default=None)
     ipAddress = StringField()
     isActivated = BooleanField(default = False)
-    stats = DictField()#quiz to xp
-    winsLosses = DictField() #quizId to [wins , totals]
-
+    #winsLosses = DictField() #quizId to [wins , totals]
+    stats = None
+    winsLosses= None
     activationKey = StringField()
     gcmRegId = StringField()
     
@@ -152,6 +162,66 @@ class Users(Document):
     userChallengesIndex = ReferenceField(UserActivityStep)
     userType = IntField(default=0)
     
+    
+    
+    def getStats(self, quizId=None):
+        ret = {}
+        stats = None
+        if(quizId==None):
+            stats = UserStats.objects(uid=self.uid)
+        else:
+            stats = UserStats.objects(uid=self.uid,quizId=quizId)
+            
+        for x in stats:
+            ret[x.quizId] = x.xpPoints
+        self.stats = ret
+        return ret
+    
+    def updateStats(self , quizId , addXpPoints):
+        stat = UserStats.objects(uid=self.uid, quizId = quizId)
+        if(stat):
+            stat = stat.get(0)
+        else:
+            stat = UserStats()
+            stat.uid = self.uid
+            stat.quizId = quizId
+        stat.xpPoints += addXpPoints
+        if(self.stats):
+            self.stats[quizId] = stat.xpPoints
+        stat.save()
+            
+    def getWinsLosses(self, quizId=None):
+        ret = {}
+        stats = None
+        if(quizId==None):
+            stats = UserWinsLosses.objects(uid=self.uid)
+        else:
+            stats = UserWinsLosses.objects(uid=self.uid,quizId=quizId)
+            
+        for x in stats:
+            ret[x.quizId] = [x.wins, x.loss , x.ties]
+        self.winsLosses = ret
+        return ret
+    
+    def updateWinsLosses(self, quizId , win , loss , tie):
+        wl = UserWinsLosses.objects(uid=self.uid, quizId = quizId)
+        if(wl):
+            wl = wl.get(0)
+        else:
+            wl = UserWinsLosses()
+            wl.uid = self.uid
+            wl.quizId = quizId
+        if((win or loss) and not tie):
+            wl.wins+=1 if win else 0
+            wl.loss+=1 if loss else 0
+        else:
+            wl.ties+=1
+        if(self.winsLosses): # update
+            self.winsLosses[quizId] = [wl.wins , wl.loss,wl.ties ]  
+        wl.save()
+
+        
+    
     def toJson(self):
         return json.dumps({"uid":self.uid,
                 "name":self.name,
@@ -165,6 +235,22 @@ class Users(Document):
                 "status":self.status,
                 })
      
+    def toJsonShort(self):
+        return json.dumps({"uid":self.uid,
+                "name":self.name,
+                "badges":self.badges,
+#                 "stats":self.getStats(),
+#                 "winsLosses":self.getWinsLosses(),
+                "pictureUrl":self.pictureUrl,
+                "coverUrl":self.coverUrl,
+                "gender":self.gender,
+                "country":self.country,
+                "status":self.status,
+                })
+    
+    userStats = property(getStats)
+    userWinsLosses = property(getWinsLosses)
+
 class Tags(Document):
     tag = StringField(unique=True)
 
@@ -237,8 +323,6 @@ class TopicMaxQuestions(Document):
         else:
             c.unused = [_id]
         c.save()
-
-
 
     @staticmethod
     def getMax(tag):
@@ -326,10 +410,14 @@ class DbUtils():
 #         self.dbServerAliases = dbServers.keys()
 #         self.rrPriorities = datetime.date.today()
     
-    def getUserByUid(self, uid):
+    def getUserByUid(self, uid , long = True):
         users =Users.objects(uid=uid)
         if(users):
-            return users.get(0)
+            user = users.get(0)
+            if(long):
+                user.getStats() # will update the values
+                user.getWinsLosses()#will update the values
+            return user
         return None
     
     def getBotUser(self):
@@ -475,20 +563,19 @@ class DbUtils():
             quizId = challengeData1["quizId"]
             a = sum(challengeData1["points"])
             b = sum(challengeData2["points"])
-            won , lost = 1 ,1 
+            won , lost , tie = 0 , 0, 0 
             if(a==b):
                 offlineChallenge.whoWon = ""
-                won , lost = 1 ,1 
+                won , lost,tie = 0 ,0 ,1
             elif(a>b):
                 offlineChallenge.whoWon = offlineChallenge.fromUid_userChallengeIndex
-                won , lost = 0 ,1 
+                won , lost , tie = 0 ,1 ,0 
             else:
                 offlineChallenge.whoWon = offlineChallenge.toUid_userChallengeIndex
-                won , lost = 1 , 0 
+                won , lost ,tie = 1 , 0 ,0
             
-            
-            self.onUserQuizWonLost(user, quizId, challengeData2.get("xp",0)+20*won, won, lost)
-            self.onUserQuizWonLost(fromUser, quizId, challengeData1.get("xp",0)+20*lost, lost, won)
+            self.onUserQuizWonLost(user, quizId, challengeData2.get("xp",0)+20*won, won, lost , tie)
+            self.onUserQuizWonLost(fromUser, quizId, challengeData1.get("xp",0)+20*lost, lost, won , tie)
                 
     def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
         index = toIndex
@@ -505,18 +592,9 @@ class DbUtils():
             index-=1
         return userChallenges
             
-    def onUserQuizWonLost(self, user, quizId , xpGain , won , lost):
-        userStats = user.stats.get("quizId",None)
-        if(userStats==None):
-            user.stats["quizId"] = xpGain
-            user.winsLosses["quizId"]= str(won)+":"+str(lost)
-        else:
-            userStats["quizId"]+=xpGain
-            a = user.winsLosses["quizId"]
-            win , loss = a.split[":"]
-            user.winsLosses["quizId"] = str(int(win)+won)+":"+loss+lost
-            
-        user.save()
+    def onUserQuizWonLost(self, user, quizId , xpGain , won , lost , tie):
+        user.updateStats(quizId, xpGain)
+        user.updateWinsLosses(quizId, won , lost , tie)
     
     def getTopicMaxCount(self, fullTag):
         return TopicMaxQuestions.getMax(fullTag)
@@ -727,7 +805,7 @@ class DbUtils():
         if(toIndex == -1):
             r = Uid1Uid2Index.objects(uid1_uid2 = uid1+"_"+uid2)
             if(not r):
-                return None
+                return []
             r = r.get(0)
             toIndex = r.index
         messages = []
