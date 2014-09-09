@@ -42,7 +42,7 @@ def sendGcmMessages():
             if(registrationIds):
                 addGcmToQueue(registrationIds, packetData)            
         else:
-            user =dbUtils.getUserByUid(uid)
+            user =dbUtils.getUserByUid(uids)
             if(user and user.gcmRegId):
                 addGcmToQueue([user.gcmRegId], packetData)            
                                           
@@ -131,7 +131,7 @@ def getPreviousMessages(response ,user=None):
     fromIndex = int(response.get_argument("fromIndex",0))
     
     responseFinish(response, {"messageType":OK_MESSAGES,
-                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex,fromIndex)  ))+"]",
+                              "payload":"["+','.join(map(lambda x:x.toJson() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex,fromIndex)  ))+"]",
                             }
                   )
 
@@ -147,7 +147,15 @@ def sendInboxMessages(response ,user=None):
                                 "messsageType":NOTIFICATION_GCM_INBOX_MESSAGE 
                                 })
     responseFinish(response, {"messageType":OK_SEND_MESSAGE})
-    
+
+@userAuthRequired
+def getUsersInfo(response , user=None):
+    uidList = json.loads(response.get_argument("uidList"))
+    responseFinish(response, {"messageType": OK_USERS_INFO, 
+                                "payload": map(lambda x:dbUtils.getUserById(x,long=False).toShortJson() , uidList)
+                              })
+
+
 @userAuthRequired
 def getPreviousFeed(response, user=None):
     toIndex = int(response.get_argument("toIndex",-1))
@@ -170,7 +178,7 @@ def getUserChallenges(response, user=None):
 @userAuthRequired
 def getAllUpdates(response, user=None):
     isLogin = response.get_argument("isLogin",False)
-    
+    isFistLogin =  response.get_argument("isFirstLogin",False)
     retObj = {"messageType":OK_UPDATES,
                                "payload7":user.toJson(),
                                "payload3":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
@@ -195,7 +203,11 @@ def getAllUpdates(response, user=None):
             retObj["payload2"] = "["+",".join(map(lambda x:x.to_json(),badges))+"]"
 
         retObj["payload6"]=json.dumps(Config.WebServersMap)
-        
+    
+    if(isFistLogin):
+        retObj["payload8"]= json.dumps(dbUtils.getPeopleWithWhomUserConversed(user))
+    
+    
     recentMessages = None
     lastSeenTimestamp = response.get_argument("lastSeenTimestamp",None)
     if(lastSeenTimestamp):
