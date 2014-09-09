@@ -7,7 +7,7 @@ import datetime
 
 
 ####################config variables 
-HTTP_PORT=8084
+HTTP_PORT=8085
 # status codes for web requests
 NOT_ACTIVATED = 104
 ACTIVATED = 105
