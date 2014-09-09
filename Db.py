@@ -27,6 +27,8 @@ def reorder(user1, user2):
 class Uid1Uid2Index(Document):
     uid1_uid2 = StringField(unique=True)
     index = IntField(default=0)
+    uid1 = StringField()
+    uid2 = StringField()
     uid1LoginIndex = IntField()
     uid2LoginIndex = IntField()
     @staticmethod 
@@ -41,6 +43,8 @@ class Uid1Uid2Index(Document):
         if(not obj):
             obj = Uid1Uid2Index()
             obj.uid1_uid2 = user1.uid+"_"+user2.uid
+            obj.uid1 = user1.uid
+            obj.uid2 = user2.uid
             saveObj = True
         else:
             obj = obj.get(0)
@@ -158,6 +162,7 @@ class Users(Document):
     newDeviceId = StringField()
     createdAt = DateTimeField()
     subscribers = ListField(StringField())
+    subscribedTo = ListField(StringField())
     userFeedIndex = ReferenceField(UserActivityStep)
     userChallengesIndex = ReferenceField(UserActivityStep)
     userType = IntField(default=0)
@@ -424,7 +429,7 @@ class DbUtils():
         return Users.objects(uid="00VU4TXZ").get(0)
 
 
-    def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, quizList=None,isDirty=1):
+    def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, assetPath=None, quizList=None,isDirty=1):
         categoryId = str(categoryId)
         if(isinstance(quizList,str)):
             quizList = getListFromString(quizList)
@@ -437,6 +442,7 @@ class DbUtils():
             c.categoryId = categoryId
         c.shortDescription = shortDescription
         c.description = description
+        c.assetPath = assetPath
         quizListTemp = []
         ##TODO: below check if quiz is present in quizList
         for i in c.quizList:
@@ -454,7 +460,7 @@ class DbUtils():
         c.modifiedTimestamp = datetime.datetime.now()
         c.save()
 
-    def addOrModifyQuiz(self, quizId=None,quizType=None, name=None, tags=None, nQuestions=None,nPeople=None,isDirty=1):
+    def addOrModifyQuiz(self, quizId=None,quizType=None, name=None, assetPath=None, tags=None, nQuestions=None,nPeople=None,isDirty=1):
         quizId = str(quizId)
         if(isinstance(tags,str)):
             tags = getTagsFromString(tags)
@@ -470,6 +476,7 @@ class DbUtils():
         q.name = name
         q.tags = tags
         q.nQuestions = nQuestions
+        q.assetPath = assetPath
         q.nPeople = nPeople
         q.modifiedTimestamp = datetime.datetime.now()
         q.save()
@@ -693,6 +700,7 @@ class DbUtils():
             userChallengesIndex.save()
             ###
             user.subscribers = []
+            user.subscribedTo = []
             user.emailId = emailId
             user.createdAt = datetime.datetime.now()
             user.loginIndex = 0
@@ -720,9 +728,11 @@ class DbUtils():
         subscriber = Users.objects(uid= toUser.uid , subscribers__in=[user.uid])
         if(len(subscriber)==0):
             toUser.update(push__subscribers = user.uid)
+            user.update(push__subscribedTo = toUser.uid)
         
     def removeSubScriber(self , fromUser , user):
         fromUser.update(pull__subscribers =user.uid)
+        user.update(pull__subscribedTo =fromUser.uid)
         
     def activateUser(self, user, activationCode, deviceId):
         if(user.activationCode == activationCode):
@@ -797,8 +807,18 @@ class DbUtils():
         return messagesAfterTimestamp
         
     def userHasWon(self,user, quizId, xpGain):
-        user.stats
+        user.updateStats(quizId, xpGain)
         
+    def getPeopleWithWhomUserConversed(self , user):
+        #TODO: OPTIMIZE
+        objs = Uid1Uid2Index.objects(uid1 = user.uid)
+        uidList = [] 
+        for i in objs:
+            uidList.append(i.uid2)
+        objs2 = Uid1Uid2Index.objects(uid2 = user.uid)
+        for i in objs2:
+            uidList.append(i.uid1)
+        return uidList
 
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         user1 , user2 = reorderUids(uid1, uid2)
