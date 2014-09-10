@@ -202,7 +202,7 @@ def getAllUpdates(response, user=None):
             badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
             retObj["payload2"] = "["+",".join(map(lambda x:x.to_json(),badges))+"]"
 
-        retObj["payload6"]=json.dumps(Config.WebServersMap)
+        retObj["payload6"]=json.dumps(Config.ExternalWebServersMap)
     
     if(isFistLogin):
         retObj["payload8"]= json.dumps(dbUtils.getPeopleWithWhomUserConversed(user))

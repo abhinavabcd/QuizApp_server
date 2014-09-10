@@ -2,7 +2,7 @@ import gspread
 from Db import *
 
 def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw',syncSpecific = ["tags"] , excludeSheets=[]):
-    gc = gspread.login("iamthedisguised@gmail.com","abhinavabcd")
+    gc = gspread.login("iamthedisguised@gmail.com","warrior3Within")
     wb = gc.open_by_key(spreadSheetKey)
     worksheets = wb.worksheets()
     
@@ -19,7 +19,7 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
                 if(IS_NEW_DB or row.get("isDirty",False)):
                     print row
                     if(dbUtils.addOrModifyTag(**row)):
-                        tagWorksheet.update_cell(i+2, len(row.keys()), "0")
+                        tagWorksheet.update_cell(i+2, len(row.keys()), 0)
                     
     
     'quiz'
