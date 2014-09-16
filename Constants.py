@@ -8,7 +8,7 @@ import datetime
 
 ####################config variables 
 HTTP_PORT=8085
-# status codes for web requests
+# status codes for web requests  , from server to user
 NOT_ACTIVATED = 104
 ACTIVATED = 105
 NOT_AUTHORIZED = 106
@@ -46,7 +46,9 @@ NO_REPLY_FROM_OTHER_USERS=512
 OK_SEND_MESSAGE = 513
 OK_USERS_INFO = 514
 OK_SCORE_BOARD = 515
-################################# dict values/commands for payload type definition
+OK_START_REMATCH = 516
+A_REMATCH_REQUEST = 517
+################################# dict values/commands for payload type definition , from user to server
 USER_ANSWERED_QUESTION = 1
 GET_NEXT_QUESTION = 2
 STARTING_QUESTIONS = 3
@@ -56,7 +58,8 @@ NEXT_QUESTION =6
 START_QUESTIONS = 7
 STATUS_WHAT_USER_GOT = 8
 ACTIVATE_BOT = 9
-#################################dict keys in socket connections on server
+REMATCH_REQUEST = 10
+#################################dict keys in socket connections on server sent from user to server
 MESSAGE_TYPE = '3'
 QUESTIONS = '1'
 CURRENT_QUESTION = '2'
@@ -68,6 +71,7 @@ USERS='8'
 CREATED_AT='9'
 ELAPSED_TIME='10'
 POINTS ='11'
+N_CURRENT_REMATCH_REQUEST='12'
 #preference strigns
 PREF_IMMUTABLES_COUNT = "immutables_count"
 ###########Notification types
