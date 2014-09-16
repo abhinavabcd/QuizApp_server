@@ -376,6 +376,8 @@ def getTagsFromString(s,toLower=True):
     for i in a:
         for j in i.split(","):
             t = j.strip()
+            if(not t):#empty not tolerated 
+                continue
             t.replace(" ","-")
             t.replace("_","-")
             if(toLower):
@@ -819,7 +821,32 @@ class DbUtils():
         for i in objs2:
             uidList.append(i.uid1)
         return uidList
+    
+    def getGlobalLeaderboards(self,quizId):
+        ret = {}
+        count = 0
+        for i in UserStats.objects(quizId= quizId).order_by("-xpPoints")[20]:
+            count+=1
+            ret[i.uid]=[count , i.xpPoints]
+        return ret
+    
+    def getLocalLeaderboards(self, quizId , user):
+        xpPoints = user.getStats(quizId)
+        ret = {}
+        results  = UserStats.objects(quizId= quizId , xpPoints__lt=xpPoints).order_by("-xpPoints")
+        count = len(results)-10
+        for i in results[10]:
+            count +=1
+            ret[i.uid]=[count , i.xpPoints]
+        
+        for i in UserStats.objects(quizId= quizId , xpPoints__gt=xpPoints).order_by("xpPoints")[10]:
+            count +=1
+            ret[i.uid]=[count , i.xpPoints]
+            
+        return ret
+        
 
+    
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         user1 , user2 = reorderUids(uid1, uid2)
         if(toIndex == -1):
