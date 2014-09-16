@@ -135,7 +135,15 @@ def getPreviousMessages(response ,user=None):
                             }
                   )
 
-
+def getLeaderboards(response , user = None):
+    quizId = response.get_argument("quizId")
+    globalList = dbUtils.getGlobalLeaderboards(quizId)
+    localList  = dbUtils.getLocalLeaderboards(quizId, user)
+    responseFinish(response, {"messageType":OK_SCORE_BOARD,
+                              "payload":json.dumps(globalList),
+                              "payload1":json.dumps(localList)
+                              })
+    
 @userAuthRequired
 def sendInboxMessages(response ,user=None):
     toUser = dbUtils.getUserByUid(response.get_argument("toUser"))
@@ -152,7 +160,7 @@ def sendInboxMessages(response ,user=None):
 def getUsersInfo(response , user=None):
     uidList = json.loads(response.get_argument("uidList"))
     responseFinish(response, {"messageType": OK_USERS_INFO, 
-                                "payload": map(lambda x:dbUtils.getUserById(x,long=False).toShortJson() , uidList)
+                                "payload": "["+','.join(map(lambda x:dbUtils.getUserByUid(x,long=False).toJsonShort() , uidList))+"]"
                               })
 
 
@@ -328,7 +336,9 @@ serverFunc = {
               "getServer":getServer,
               "activatingBotPQuiz":activatingBotPQuiz,
               "getPreviousMessages":getPreviousMessages,
-              "sendInboxMessages":sendInboxMessages
+              "sendInboxMessages":sendInboxMessages,
+              "getUsersInfo":getUsersInfo,
+              "getLeaderboards":getLeaderboards
              }
 
 #server web request commands with json
