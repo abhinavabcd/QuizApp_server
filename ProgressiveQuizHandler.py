@@ -30,7 +30,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                                             N_CURRENT_QUESTION_ANSWERED:[],
                                             USERS:userStates,##{uid:something}
                                             CREATED_AT:datetime.datetime.now(),
-                                            POINTS:{}
+                                            POINTS:{},
+                                            N_CURRENT_REMATCH_REQUEST:set()
                                         }
         return id , quizState
     
@@ -46,6 +47,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
         runningQuiz = None
         quizPoolWaitId = None
         user = None
+        quiz = None
         
         def broadcastToGroup(self, message, allClients):
             for i in allClients:
@@ -164,6 +166,18 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 self.write_message(json.dumps({"messageType":OK_ACTIVATING_BOT,"payload": dbUtils.getBotUser().toJson(), 
                                                "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}))
                 #THEN CLIENT CLOSES CONNECTION
+            elif(messageType==REMATCH_REQUEST):
+                currentRequests = self.runningQuiz[N_CURRENT_REMATCH_REQUEST]
+                currentRequests.add(self.uid)
+                if(len(currentRequests)>=self.quiz.nPeople):#every one agreed to rematch
+                    self.broadcastToAll(json.dumps({"messageType":OK_START_REMATCH,"payload": dbUtils.getBotUser().toJson(), 
+                                               "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}) , self.quizConnections)
+                else:
+                    self.broadcastToGroup( json.dumps({"messageType":A_REMATCH_REQUEST,"payload": self.uid }), self.quizConnections)
+                    
+                    
+                
+                
                 
         def on_close(self):
             print "Socket CLosed ..."
