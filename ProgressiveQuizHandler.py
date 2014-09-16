@@ -166,6 +166,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 #THEN CLIENT CLOSES CONNECTION
                 
         def on_close(self):
+            print "Socket CLosed ..."
             self.broadcastToGroup({"messageType":USER_DISCONNECTED,"payload1":self.user.uid},self.quizConnections)
             self.quizConnections.remove(self)#either waiting or something , we don't care
             if(len(self.quizConnections)):
