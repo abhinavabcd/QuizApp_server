@@ -94,8 +94,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             self.quizConnections = quizConnections
             if(len(quizConnections)>=int(quiz.nPeople)):# we have enough people
                 self.quizConnections = [quizConnections.pop() for i in range(0, quiz.nPeople)]#nPeople into current quiz
-                uids = map(lambda x:x.user.to_short_json() , quizConnections)
-                self.runningQuizId , self.runningQuiz = generateProgressiveQuiz(quiz, uids)
+                uids = map(lambda x:x.uid , quizConnections)
+                self.runningQuizId , self.runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
                 #question_one = self.runningQuiz[QUESTIONS][0]
                 self.broadcastToAll({"messageType":STARTING_QUESTIONS,
                                                    "payload":self.runningQuizId,
