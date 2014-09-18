@@ -197,7 +197,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             
             self.broadcastToGroup({"messageType":USER_DISCONNECTED,"payload1":self.user.uid},self.quizConnections)
             self.quizConnections.remove(self)#either waiting or something , we don't care
-            if(len(self.quizConnections)==0):
+            if(len(self.quizConnections)):
                 del runningQuizes[self.runningQuizId]
 
         
