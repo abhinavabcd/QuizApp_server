@@ -240,13 +240,19 @@ def getAllUpdates(response, user=None):
 # TYPE for requests to getServerDetails
 @userAuthRequired
 def getServer(response, user=None):
-    type = int(response.get_argument("type",0))
-    if(type==PROGRESSIVE_QUIZ): 
+    type = int(response.get_argument("type",RANDOM_USER_TYPE))
+    if(type==RANDOM_USER_TYPE): 
         quizId = response.get_argument("quizId")
         quiz = dbUtils.getQuizDetails(quizId)
         sid , serverAddr = masterSever.getQuizWebSocketServer(quiz, user)
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
+    
+    elif(type==CHALLENGE_QUIZ_TYPE):
+        sid , serverAddr = masterSever.getRandomWebSocketServer(quiz, user)
+        responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
+        return
+        
 
 def addWebServer(response):
     serveraddr = response.get_argument("serveraddr")
