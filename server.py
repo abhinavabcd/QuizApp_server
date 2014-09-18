@@ -182,7 +182,16 @@ def getUserChallenges(response, user=None):
                               "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getUserChallenges(user, toIndex, fromIndex) ))+"]",
                            })
 
-
+@userAuthRequired
+def updateQuizWinStatus(response, user=None):
+    quizId = response.get_argument("quizId")
+    xpPoints = float(response.get_argument("xpPoints"))
+    winStatus = int(response.get_argument("winStatus"))
+    
+    dbUtils.updateQuizWinStatus(user , quizId , xpPoints, winStatus)
+    responseFinish(response , {"messageType":OK})
+    
+    
 @userAuthRequired
 def getAllUpdates(response, user=None):
     isLogin = response.get_argument("isLogin",False)
@@ -338,7 +347,8 @@ serverFunc = {
               "getPreviousMessages":getPreviousMessages,
               "sendInboxMessages":sendInboxMessages,
               "getUsersInfo":getUsersInfo,
-              "getLeaderboards":getLeaderboards
+              "getLeaderboards":getLeaderboards,
+              "updateQuizWinStatus":updateQuizWinStatus
              }
 
 #server web request commands with json
@@ -387,8 +397,3 @@ if __name__ == "__main__":
     main()
 
     #testCases
-
-
-
-
-

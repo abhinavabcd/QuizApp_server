@@ -208,7 +208,14 @@ class Users(Document):
         self.winsLosses = ret
         return ret
     
-    def updateWinsLosses(self, quizId , win , loss , tie):
+    def updateWinsLosses(self, quizId , win=0 , loss=0 , tie=0 , winStatus = -2):
+        if(winStatus==-1):
+            loss = 1
+        elif(winStatus==0):
+            tie = 1
+        elif(winStatus==1):
+            win = 1
+            
         wl = UserWinsLosses.objects(uid=self.uid, quizId = quizId)
         if(wl):
             wl = wl.get(0)
@@ -217,8 +224,10 @@ class Users(Document):
             wl.uid = self.uid
             wl.quizId = quizId
         if((win or loss) and not tie):
-            wl.wins+=1 if win else 0
-            wl.loss+=1 if loss else 0
+            if(win):
+                wl.wins+=1
+            if(loss):
+                wl.loss+=1
         else:
             wl.ties+=1
         if(self.winsLosses): # update
@@ -392,6 +401,8 @@ def getListFromString(s,toLower=False):
     for i in a:
         for j in i.split(","):
             t = j.strip()
+            if(not t):
+                continue 
             if(toLower):
                 t = t.lower()
             ret.append(t)
@@ -601,9 +612,9 @@ class DbUtils():
             index-=1
         return userChallenges
             
-    def onUserQuizWonLost(self, user, quizId , xpGain , won , lost , tie):
+    def updateQuizWinStatus(self, user, quizId , xpGain , winStatus):
         user.updateStats(quizId, xpGain)
-        user.updateWinsLosses(quizId, won , lost , tie)
+        user.updateWinsLosses(quizId, winStatus = winStatus)
     
     def getTopicMaxCount(self, fullTag):
         return TopicMaxQuestions.getMax(fullTag)
@@ -868,8 +879,7 @@ class DbUtils():
                 break 
             
         return messages
-
-        
+            
 def test_insertInboxMessages(dbUtils , user1, user2):
     dbUtils.insertInboxMessage(user2, user1, "hello 1 ")
     dbUtils.insertInboxMessage(user1, user2, "hello 12 ")
