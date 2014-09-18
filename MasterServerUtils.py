@@ -2,6 +2,8 @@ import AndroidUtils
 import urllib
 import json
 import sys
+import random
+
 ss = {}  #server state
 
 
@@ -35,7 +37,13 @@ class MasterServerUtils():
         for i in webServerMap.keys():
                 self.webServerMap[i] = webServerMap[i]
         self.webServerIds = webServerMap.keys()
-        
+    
+    
+    def getRandomWebSocketServer(self):
+        id = random.choice(self.webServerIds)
+        addr = self.webServerMap[id]
+        return id , addr
+    
     def getQuizWebSocketServer(self,quiz, user):
         quizState = ss.get(quiz.quizId,None)
         if(quizState):

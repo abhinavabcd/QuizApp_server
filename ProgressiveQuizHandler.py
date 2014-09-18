@@ -13,7 +13,7 @@ runningQuizes = {} # all currently running quizes in this server
 def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
     
     def generateProgressiveQuiz(quizId , uids):
-        quiz = dbUtils.getQuizDetails(quizId).get(0)
+        quiz = dbUtils.getQuizDetails(quizId)
         if(quizId):
             nQuestions = quiz.nQuestions
         else:
@@ -65,6 +65,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
         
         @userAuthRequired
         def open(self, user = None):
+            print self.request.arguments
             runningQuizId = self.get_argument("isRunningQuiz",None)
             self.isChallenge = isChallenge = self.get_argument("isChallenge",None)#uid of other user
             self.isChallenged =isChallenged = self.get_argument("isChallenged",None)#uid of the first user
