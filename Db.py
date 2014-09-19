@@ -278,6 +278,12 @@ class Badges(Document):
     condition = StringField()
     type=IntField(default=0)
     modifiedTimestamp = DateTimeField()
+    
+    def toJson(self):
+        sonObj = self.to_mongo()
+        sonObj["tags"] = bson.json_util.dumps(self.tags)
+        sonObj["modifiedTimestamp"] = HelperFunctions.toUtcTimestamp(self.modifiedTimestamp)
+        return bson.json_util.dumps(sonObj)
 
 class Questions(Document):
     questionId = StringField(unique=True)
@@ -761,10 +767,8 @@ class DbUtils():
         user.save()
 
     def addsubscriber(self, toUser, user):
-        subscriber = Users.objects(uid= toUser.uid , subscribers__in=[user.uid])
-        if(len(subscriber)==0):
-            toUser.update(push__subscribers = user.uid)
-            user.update(push__subscribedTo = toUser.uid)
+        toUser.update(add_to_set__subscribers = user.uid)
+        user.update(add_to_set__subscribedTo = toUser.uid)
         
     def removeSubScriber(self , fromUser , user):
         fromUser.update(pull__subscribers =user.uid)
