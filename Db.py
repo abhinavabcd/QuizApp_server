@@ -243,6 +243,8 @@ class Users(Document):
                 "stats":self.stats,
                 "winsLosses":self.winsLosses,
                 "pictureUrl":self.pictureUrl,
+                "subscribers":self.subscribers,
+                "subscribedTo":self.subscribedTo,
                 "coverUrl":self.coverUrl,
                 "gender":self.gender,
                 "country":self.country,
