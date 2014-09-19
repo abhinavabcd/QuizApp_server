@@ -79,6 +79,10 @@ N_CURRENT_REMATCH_REQUEST='12'
 #preference strigns
 PREF_IMMUTABLES_COUNT = "immutables_count"
 ###########Notification types
+CHALLENGE_QUIZ_TYPE = 2;
+RANDOM_USER_TYPE = 1; 
+
+#############################33
 
 DONT_KNOW = 0
 NOTIFICATION_USER_CHALLENGED_YOU = 1
@@ -98,12 +102,6 @@ GCM_HEADERS ={'Content-Type':'application/json',
         }
 
 
-
-
-
-
-### get server
-PROGRESSIVE_QUIZ =0
 
 
 
