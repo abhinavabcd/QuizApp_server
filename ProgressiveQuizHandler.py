@@ -13,7 +13,7 @@ runningQuizes = {} # all currently running quizes in this server
 def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
     
     def generateProgressiveQuiz(quizId , uids):
-        quiz = dbUtils.getQuizDetails(quizId).get(0)
+        quiz = dbUtils.getQuizDetails(quizId)
         if(quizId):
             nQuestions = quiz.nQuestions
         else:
@@ -65,6 +65,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
         
         @userAuthRequired
         def open(self, user = None):
+            print self.request.arguments
             runningQuizId = self.get_argument("isRunningQuiz",None)
             self.isChallenge = isChallenge = self.get_argument("isChallenge",None)#uid of other user
             self.isChallenged =isChallenged = self.get_argument("isChallenged",None)#uid of the first user
@@ -93,8 +94,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             self.quizConnections = quizConnections
             if(len(quizConnections)>=int(quiz.nPeople)):# we have enough people
                 self.quizConnections = [quizConnections.pop() for i in range(0, quiz.nPeople)]#nPeople into current quiz
-                uids = map(lambda x:x.user.to_short_json() , quizConnections)
-                self.runningQuizId , self.runningQuiz = generateProgressiveQuiz(quiz, uids)
+                uids = map(lambda x:x.uid , quizConnections)
+                self.runningQuizId , self.runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
                 #question_one = self.runningQuiz[QUESTIONS][0]
                 self.broadcastToAll({"messageType":STARTING_QUESTIONS,
                                                    "payload":self.runningQuizId,
@@ -185,8 +186,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     
                 
             elif(messageType==START_CHALLENGE_NOW):
-                self.quizPoolWaitId
-                self.broadcastToAll(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload": dbUtils.getUserByUid(self.isChallenge), 
+                self.broadcastToGroup(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload": dbUtils.getUserByUid(self.isChallenge).toJson(), 
                                                "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}) , self.quizConnections)
                 
                 
@@ -199,6 +199,11 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             self.quizConnections.remove(self)#either waiting or something , we don't care
             if(len(self.quizConnections)):
                 del runningQuizes[self.runningQuizId]
+            super(ProgressiveQuizHandler, self).on_close()
+
+        def close(self):#?
+            self.on_close()
+            super(ProgressiveQuizHandler, self).close()
 
         
     return ProgressiveQuizHandler
