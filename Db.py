@@ -154,7 +154,7 @@ class Users(Document):
     activationKey = StringField()
     gcmRegId = StringField()
     
-    badges = ListField(IntField())
+    badges = ListField(StringField())
     loginIndex = IntField()
     googlePlus = StringField()
     facebook = StringField()
@@ -271,7 +271,7 @@ class Tags(Document):
     tag = StringField(unique=True)
 
 class Badges(Document):
-    badgeId = IntField(unique=True)
+    badgeId = StringField(unique=True)
     name = StringField()
     description = StringField()
     assetPath = StringField()
@@ -858,7 +858,14 @@ class DbUtils():
             
         return ret
         
+    def addBadge(self ,user , badgeId):
+        badge = Badges.objects(badgeId=badgeId)
+        if(badge and len(badge)>0):
+            user.update(push__badges = badgeId)
+            return True
+        return False
 
+        
     
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         user1 , user2 = reorderUids(uid1, uid2)
