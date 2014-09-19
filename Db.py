@@ -567,8 +567,6 @@ class DbUtils():
         return True
     
     def addOrModifyBadge(self,badgeId=None, name=None, description=None, assetPath=None, condition=None,  type=0, isDirty=1):
-        if(isinstance(assetPath,str)):
-            assetPath=getListFromString(assetPath)
         print badgeId, type , description, assetPath, condition
         badgeId = str(badgeId)
         badge = Badges.objects(badgeId=badgeId)
