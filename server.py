@@ -141,6 +141,11 @@ def subscribeTo(response, user=None):
     dbUtils.addsubscriber(dbUtils.getUserById(uid2), user)
     responseFinish(response, {"messageType":OK})
     
+def addBadge(response, user=None):
+    badgeId = response.get_argument("badgeId")
+    dbUtils.addBadge(user, badgeId)
+    responseFinish(response, {"messageType":OK})
+    
 
 def getLeaderboards(response , user = None):
     quizId = response.get_argument("quizId")
