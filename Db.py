@@ -1,15 +1,15 @@
+import bson
+import datetime
+import itertools
+import json
 from mongoengine import *
 import random
 import string
-import datetime
 import time
-import bson
-import json
-import itertools
+
+import Config
 from Constants import *
 import HelperFunctions
-import Config
-
 
 
 def reorderUids(uid1, uid2):
@@ -154,7 +154,7 @@ class Users(Document):
     activationKey = StringField()
     gcmRegId = StringField()
     
-    badges = ListField(IntField())
+    badges = ListField(StringField())
     loginIndex = IntField()
     googlePlus = StringField()
     facebook = StringField()
@@ -269,11 +269,12 @@ class Tags(Document):
     tag = StringField(unique=True)
 
 class Badges(Document):
-    badgeId = IntField(unique=True)
+    badgeId = StringField(unique=True)
     name = StringField()
     description = StringField()
     assetPath = StringField()
-    shortAssetPath = StringField()
+    condition = StringField()
+    type=IntField(default=0)
     modifiedTimestamp = DateTimeField()
 
 class Questions(Document):
@@ -561,6 +562,28 @@ class DbUtils():
         answer = str(answer)
         print questionId, questionType , questionDescription, pictures, options, answer, hint, explanation, time, xp, tags
         self.addQuestion(questionId, questionType ,questionDescription , pictures, options, answer, hint , explanation , time, xp , tags)
+        return True
+    
+    def addOrModifyBadge(self,badgeId=None, name=None, description=None, assetPath=None, condition=None,  type=0, isDirty=1):
+        if(isinstance(assetPath,str)):
+            assetPath=getListFromString(assetPath)
+        print badgeId, type , description, assetPath, condition
+        badgeId = str(badgeId)
+        badge = Badges.objects(badgeId=badgeId)
+        
+        if(len(badge)>0):
+            bdg = badge=badge.get(0)
+        else:
+            bdg = badge = Badges()
+            bdg.badgeId = badgeId
+
+        bdg.type = type
+        bdg.name = name
+        bdg.description = description
+        bdg.assetPath = assetPath
+        bdg.condition = condition
+        bdg.modifiedTimestamp = datetime.datetime.now()
+        bdg.save()
         return True
         
     def addOfflineChallenege(self , fromUser, toUid , challengeData):

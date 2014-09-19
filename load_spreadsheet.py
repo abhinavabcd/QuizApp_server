@@ -69,6 +69,21 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
                     if(dbUtils.addOrModifyQuestion(**row)):
                         questionsWorksheet.update_cell(i+2, len(row.keys()), 0)
 
+    'badges'
+    badgesWorksheet = None
+    for i in worksheets:
+        if(i.title.lower().startswith('badges') and (not syncSpecific or i.title.lower() in syncSpecific) and not (i.title.lower in excludeSheets)):
+            badgesWorksheet = i
+            records = badgesWorksheet.get_all_records()
+            count = len(records)
+            for i in range(0,count): #exclude heading
+                row = records[i]
+                row["badgeId"] = "_".join(badgesWorksheet.title.lower().split("_")[1:])+"_"+str(row["badgeId"])
+                #after updating
+                if(IS_NEW_DB or row.get("isDirty",False)):
+                    print row
+                    if(dbUtils.addOrModifyBadge(**row)):
+                        badgesWorksheet.update_cell(i+2, len(row.keys()), 0)
 
 IS_NEW_DB = False
 
