@@ -117,13 +117,14 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
 
 
 @userAuthRequired
-def getUserProfile(response, user=None):
-    uid2 = response.get_argument("uid2")
-    user2 = dbUtils.getUserByUid(uid2)
+def getUserByUid(response, user=None):
+    uid = response.get_argument("uid")
+    user = dbUtils.getUserByUid(uid)
     responseFinish(response, {"messageType":OK_USER_INFO,
-                              "payload":user2.to_json(),
+                              "payload":user.to_json(),
                             }
                   )
+    
 @userAuthRequired
 def getPreviousMessages(response ,user=None):
     uid2 = response.get_argument("uid2")
@@ -134,6 +135,12 @@ def getPreviousMessages(response ,user=None):
                               "payload":"["+','.join(map(lambda x:x.toJson() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex,fromIndex)  ))+"]",
                             }
                   )
+@userAuthRequired
+def subscribeTo(response, user=None):
+    uid2 = response.get_argument("uid2")
+    dbUtils.addsubscriber(dbUtils.getUserById(uid2), user)
+    responseFinish(response, {"messageType":OK})
+    
 
 def getLeaderboards(response , user = None):
     quizId = response.get_argument("quizId")
@@ -240,13 +247,21 @@ def getAllUpdates(response, user=None):
 # TYPE for requests to getServerDetails
 @userAuthRequired
 def getServer(response, user=None):
-    type = int(response.get_argument("type",0))
-    if(type==PROGRESSIVE_QUIZ): 
+    _type = int(response.get_argument("quizType",RANDOM_USER_TYPE))
+    if(_type==RANDOM_USER_TYPE): 
         quizId = response.get_argument("quizId")
         quiz = dbUtils.getQuizDetails(quizId)
         sid , serverAddr = masterSever.getQuizWebSocketServer(quiz, user)
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
+    
+    elif(_type==CHALLENGE_QUIZ_TYPE):
+        quizId = response.get_argument("quizId")
+        quiz = dbUtils.getQuizDetails(quizId)
+        sid , serverAddr = masterSever.getRandomWebSocketServer()
+        responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
+        return
+        
 
 def addWebServer(response):
     serveraddr = response.get_argument("serveraddr")
@@ -348,7 +363,8 @@ serverFunc = {
               "sendInboxMessages":sendInboxMessages,
               "getUsersInfo":getUsersInfo,
               "getLeaderboards":getLeaderboards,
-              "updateQuizWinStatus":updateQuizWinStatus
+              "updateQuizWinStatus":updateQuizWinStatus,
+              "getUserByUid":getUserByUid
              }
 
 #server web request commands with json
