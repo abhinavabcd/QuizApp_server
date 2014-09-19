@@ -76,6 +76,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             self.quiz = quiz = dbUtils.getQuizDetails(quizId)
             self.quizPoolWaitId =  quizPoolWaitId = "_".join(quiz.tags)+"_"+str(quiz.nPeople)
             self.user = user
+            self.uid = user.uid
             if(isChallenge!=None):
                 self.quizPoolWaitId = self.user.uid+"_"+HelperFunctions.generateKey(10)
             elif(isChallenged!=None):
@@ -92,21 +93,23 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     return # client should close connection after this
                                         
             self.quizConnections = quizConnections
+            print self.user
+            print self.uid
+            print self.quizConnections
             if(len(quizConnections)>=int(quiz.nPeople)):# we have enough people
                 self.quizConnections = [quizConnections.pop() for i in range(0, quiz.nPeople)]#nPeople into current quiz
-                uids = map(lambda x:x.uid , quizConnections)
+                uids = map(lambda x:x.uid , self.quizConnections)
                 self.runningQuizId , self.runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
                 #question_one = self.runningQuiz[QUESTIONS][0]
                 self.broadcastToAll({"messageType":STARTING_QUESTIONS,
                                                    "payload":self.runningQuizId,
-                                                   "payload1":"["+",".join(map(lambda uid:dbUtils.getUserByUid(uid).to_json() , uids))+"]",
+                                                   "payload1":"["+",".join(map(lambda uid:dbUtils.getUserByUid(uid).toJson() , uids))+"]",
                                                    "payload2":"["+",".join(map(lambda x:x.to_json() ,self.runningQuiz[QUESTIONS]))+"]"
                                                   },
-                                quizConnections
+                                self.quizConnections
                                )
         # the client sent the message
         def on_message(self, message):
-            print message
             userQuizUpdate = json.loads(message)
             messageType = int(userQuizUpdate[MESSAGE_TYPE])
             if(messageType==USER_ANSWERED_QUESTION):
@@ -115,7 +118,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 elapsedTime = userQuizUpdate[ELAPSED_TIME]
                 whatUserGot = userQuizUpdate[WHAT_USER_HAS_GOT]
                 self.runningQuiz[POINTS][self.uid]=whatUserGot
-                self.broadcastToGroup({"messageType":USER_ANSWERED_QUESTION,"payload":json.dumps([questionId , self.uid, userAnswer,elapsedTime , whatUserGot])},self.quizConnections)
+                self.broadcastToGroup({"messageType":USER_ANSWERED_QUESTION,"payload":message},self.quizConnections)
                 #whatUserGot = int(whatUserGot)
                 self.runningQuiz[N_CURRENT_QUESTION_ANSWERED].append(self.uid)
                 if(len(self.runningQuiz[N_CURRENT_QUESTION_ANSWERED])==len(self.quizConnections)):#if everyone aswered
