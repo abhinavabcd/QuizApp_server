@@ -229,7 +229,7 @@ def getAllUpdates(response, user=None):
         if(userMaxBadgesTimestamp):
             userMaxBadgesTimestamp = datetime.datetime.utcfromtimestamp(max(0,float(userMaxBadgesTimestamp)))
             badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
-            retObj["payload2"] = "["+",".join(map(lambda x:x.to_json(),badges))+"]"
+            retObj["payload2"] = "["+",".join(map(lambda x:x.toJson(),badges))+"]"
 
         retObj["payload6"]=json.dumps(Config.ExternalWebServersMap)
     
