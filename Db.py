@@ -881,10 +881,13 @@ class DbUtils():
             
         return ret
         
-    def addBadge(self ,user , badgeId):
-        badge = Badges.objects(badgeId=badgeId)
-        if(badge and len(badge)>0):
-            user.update(push__badges = badgeId)
+    def addBadges(self ,user , badgeIds):
+        badges = Badges.objects(badgeId=badgeIds)
+        if(badges and len(badges)>0):
+            badgeIds=[]
+            for i in badges:
+                badgeIds.append(i.badgeId)
+            user.update(push_all__badges = badgeIds)
             return True
         return False
 
