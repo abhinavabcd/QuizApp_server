@@ -186,8 +186,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     
                 
             elif(messageType==START_CHALLENGE_NOW):
-                self.quizPoolWaitId
-                self.broadcastToAll(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload": dbUtils.getUserByUid(self.isChallenge), 
+                self.broadcastToGroup(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload": dbUtils.getUserByUid(self.isChallenge).toJson(), 
                                                "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}) , self.quizConnections)
                 
                 
@@ -200,6 +199,11 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             self.quizConnections.remove(self)#either waiting or something , we don't care
             if(len(self.quizConnections)):
                 del runningQuizes[self.runningQuizId]
+            super(ProgressiveQuizHandler, self).on_close()
+
+        def close(self):#?
+            self.on_close()
+            super(ProgressiveQuizHandler, self).close()
 
         
     return ProgressiveQuizHandler
