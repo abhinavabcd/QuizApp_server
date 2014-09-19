@@ -281,7 +281,6 @@ class Badges(Document):
     
     def toJson(self):
         sonObj = self.to_mongo()
-        sonObj["tags"] = bson.json_util.dumps(self.tags)
         sonObj["modifiedTimestamp"] = HelperFunctions.toUtcTimestamp(self.modifiedTimestamp)
         return bson.json_util.dumps(sonObj)
 
