@@ -422,6 +422,7 @@ class DbUtils():
     rrCount = 0
     rrPriorities = 0
     _users_cached_lru= 0
+    _bots = []
     def __init__(self , dbServer):
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
@@ -433,6 +434,9 @@ class DbUtils():
 #                 db =connect('quizApp', alias=i, host=dbServers[i][0], port = dbServers[i][1])
 
         self.dbServer = dbServer
+        from CreateBots import createBots
+        self._bots = createBots(self)
+        
 #         self.dbServerAliases = dbServers.keys()
 #         self.rrPriorities = datetime.date.today()
     
@@ -447,7 +451,7 @@ class DbUtils():
         return None
     
     def getBotUser(self):
-        return Users.objects(uid="00VU4TXZ").get(0)
+        return random.choice(self._bots)
 
 
     def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, assetPath=None, quizList=None,isDirty=1):
@@ -715,13 +719,13 @@ class DbUtils():
 #         self.dbServerAliases[self.rrCount]
 #         self.rrCount+=1
         
-    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False):
+    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = ""):
         user = Users.objects(emailId=emailId)
         if(user or len(user)>0):
             user = user.get(0)
         else:
             user = Users()
-            user.uid = HelperFunctions.generateKey(10)
+            user.uid = preUidText+HelperFunctions.generateKey(10)
             user.stats = {}
             user.winsLosses = {}
             user.activationKey = ""
@@ -862,7 +866,7 @@ class DbUtils():
     def getGlobalLeaderboards(self,quizId):
         ret = {}
         count = 0
-        for i in UserStats.objects(quizId= quizId).order_by("-xpPoints")[20]:
+        for i in UserStats.objects(quizId= quizId).order_by("-xpPoints")[:20]:
             count+=1
             ret[i.uid]=[count , i.xpPoints]
         return ret
@@ -871,12 +875,12 @@ class DbUtils():
         xpPoints = user.getStats(quizId)
         ret = {}
         results  = UserStats.objects(quizId= quizId , xpPoints__lt=xpPoints).order_by("-xpPoints")
-        count = len(results)-10
-        for i in results[10]:
+        count = results.count()-10
+        for i in results[:10]:
             count +=1
             ret[i.uid]=[count , i.xpPoints]
         
-        for i in UserStats.objects(quizId= quizId , xpPoints__gt=xpPoints).order_by("xpPoints")[10]:
+        for i in UserStats.objects(quizId= quizId , xpPoints__gt=xpPoints).order_by("xpPoints")[:10]:
             count +=1
             ret[i.uid]=[count , i.xpPoints]
             
