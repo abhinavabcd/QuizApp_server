@@ -141,12 +141,14 @@ def subscribeTo(response, user=None):
     dbUtils.addsubscriber(dbUtils.getUserById(uid2), user)
     responseFinish(response, {"messageType":OK})
     
+@userAuthRequired
 def addBadges(response, user=None):
     badgeIds = json.loads(response.get_argument("badgeIds"))
     dbUtils.addBadges(user, badgeIds)
     responseFinish(response, {"messageType":OK})
     
 
+@userAuthRequired
 def getLeaderboards(response , user = None):
     quizId = response.get_argument("quizId")
     globalList = dbUtils.getGlobalLeaderboards(quizId)
@@ -369,7 +371,8 @@ serverFunc = {
               "getUsersInfo":getUsersInfo,
               "getLeaderboards":getLeaderboards,
               "updateQuizWinStatus":updateQuizWinStatus,
-              "getUserByUid":getUserByUid
+              "getUserByUid":getUserByUid,
+              "addBadge":addBadges
              }
 
 #server web request commands with json
