@@ -99,7 +99,10 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
             if(len(quizConnections)>=int(quiz.nPeople)):# we have enough people
                 self.quizConnections = [quizConnections.pop() for i in range(0, quiz.nPeople)]#nPeople into current quiz
                 uids = map(lambda x:x.uid , self.quizConnections)
-                self.runningQuizId , self.runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
+                for conn in self.quizConnections:
+                    conn.runningQuizId , conn.runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
+                    if(conn!=self):
+                        conn.quizConnections = self.quizConnections
                 #question_one = self.runningQuiz[QUESTIONS][0]
                 self.broadcastToAll({"messageType":STARTING_QUESTIONS,
                                                    "payload":self.runningQuizId,
@@ -107,7 +110,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                                                    "payload2":"["+",".join(map(lambda x:x.to_json() ,self.runningQuiz[QUESTIONS]))+"]"
                                                   },
                                 self.quizConnections
-                               )
+                               )                          
         # the client sent the message
         def on_message(self, message):
             userQuizUpdate = json.loads(message)
@@ -125,7 +128,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
                     currentQuestion = self.runningQuiz[CURRENT_QUESTION]
                     self.runningQuiz[CURRENT_QUESTION]=currentQuestion+1
-                    if(currentQuestion>=self.quiz.nQquestions):
+                    if(currentQuestion>=self.quiz.nQuestions):
                         pointsMap = self.runningQuiz[POINTS]
                         max = 0
                         maxUid = None
@@ -204,9 +207,9 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 del runningQuizes[self.runningQuizId]
             super(ProgressiveQuizHandler, self).on_close()
 
-        def close(self):#?
-            self.on_close()
-            super(ProgressiveQuizHandler, self).close()
+#         def close(self):#?
+#             self.on_close()
+#             super(ProgressiveQuizHandler, self).close()
 
         
     return ProgressiveQuizHandler
