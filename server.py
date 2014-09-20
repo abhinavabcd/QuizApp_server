@@ -140,7 +140,8 @@ def subscribeTo(response, user=None):
     uid2 = response.get_argument("uid2")
     dbUtils.addsubscriber(dbUtils.getUserById(uid2), user)
     responseFinish(response, {"messageType":OK})
-    
+
+@userAuthRequired
 def addBadges(response, user=None):
     badgeIds = json.loads(response.get_argument("badgeIds"))
     dbUtils.addBadges(user, badgeIds)
