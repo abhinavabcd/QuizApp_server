@@ -892,8 +892,9 @@ class DbUtils():
         if(badges and len(badges)>0):
             badgeIds=[]
             for i in badges:
-                badgeIds.append(i.badgeId)
-            user.update(push_all__badges = badgeIds)
+                user.update(add_to_set__badges = i.badgeId)
+#                badgeIds.append(i.badgeId)
+#            user.update(push_all__badges = badgeIds)
             return True
         return False
 
