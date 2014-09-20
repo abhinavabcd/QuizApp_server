@@ -369,7 +369,8 @@ serverFunc = {
               "getUsersInfo":getUsersInfo,
               "getLeaderboards":getLeaderboards,
               "updateQuizWinStatus":updateQuizWinStatus,
-              "getUserByUid":getUserByUid
+              "getUserByUid":getUserByUid,
+              "addBadges":addBadges
              }
 
 #server web request commands with json
