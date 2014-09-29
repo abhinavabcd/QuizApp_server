@@ -32,6 +32,9 @@ def get_data(url,post=None,headers={}):
     except urllib2.HTTPError, e: 
         ret = None
     return ret
+
+
+
    
 # GCM_API_KEY = "AIzaSyCEhpQRBHfeAsdYS85VlcrsB7XQADbEWNw"
 #     

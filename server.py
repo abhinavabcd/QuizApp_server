@@ -138,8 +138,30 @@ def getPreviousMessages(response ,user=None):
 @userAuthRequired
 def subscribeTo(response, user=None):
     uid2 = response.get_argument("uid2")
-    dbUtils.addsubscriber(dbUtils.getUserById(uid2), user)
+    dbUtils.addsubscriber(dbUtils.getUserByUid(uid2), user)
     responseFinish(response, {"messageType":OK})
+    
+@userAuthRequired
+def addOfflineChallenge(response, user=None):
+    uid2 = response.get_argument("uid2")
+    challengeData = response.get_argument("challengeData")
+    if(dbUtils.addOfflineChallenege(user, uid2, challengeData)):
+        challengeData = json.loads(challengeData)
+        ## send notification
+        addUidToQueue(uid2, {"fromUser":user.uid,
+                                "fromUserName":user.name,
+                                "quizId":challengeData["quizId"],
+                                "messsageType":NOTIFICATION_GCM_OFFLINE_CHALLENGE_NOTIFICATION 
+                              })
+    responseFinish(response, {"messageType":OK})
+    
+
+@userAuthRequired
+def loadQuestionsInOrder(response, user=None):
+    questionIds = json.loads(response.get_argument("questionIds"))
+    questions = dbUtils.getQuestionsById(questionIds)
+    responseFinish(response, {"messageType":OK_QUESTIONS, "payload":"["+",".join(map( lambda x:x.to_json(),questions))+"]"})
+    
     
 @userAuthRequired
 def addBadges(response, user=None):
@@ -201,11 +223,17 @@ def updateQuizWinStatus(response, user=None):
     quizId = response.get_argument("quizId")
     xpPoints = float(response.get_argument("xpPoints"))
     winStatus = int(response.get_argument("winStatus"))
-    
-    dbUtils.updateQuizWinStatus(user , quizId , xpPoints, winStatus)
+    uid2 = response.get_argument("uid2")
+    dbUtils.updateQuizWinStatus(user , quizId , xpPoints, winStatus , uid2)
     responseFinish(response , {"messageType":OK})
     
+
+def searchByUserName(response, user=None):
+    s = response.get_argument("searchQ")
+    users = dbUtils.searchByStartsWithUserName(s)
+    responseFinish(response, {"messageType":OK,"payload":"["+",".join(map(lambda x:x.toJson(),users))+"]"})
     
+
 @userAuthRequired
 def getAllUpdates(response, user=None):
     isLogin = response.get_argument("isLogin",False)
@@ -372,7 +400,11 @@ serverFunc = {
               "getLeaderboards":getLeaderboards,
               "updateQuizWinStatus":updateQuizWinStatus,
               "getUserByUid":getUserByUid,
-              "addBadges":addBadges
+              "addBadges":addBadges,
+              "searchByUserName":searchByUserName,
+              "subscribeTo":subscribeTo,
+              "addOfflineChallenge":addOfflineChallenge,
+              "setGCMRegistrationId":setGCMRegistrationId
              }
 
 #server web request commands with json
@@ -405,7 +437,7 @@ class QuizApp(tornado.web.Application):
            
         handlers = [                    
             (r"/func", Func),
-            (r"/progressiveQuiz", ProgressiveQuizHandler.GenerateProgressiveQuizClass(dbUtils, responseFinish, userAuthRequired)),
+            (r"/progressiveQuiz", ProgressiveQuizHandler.GenerateProgressiveQuizClass(dbUtils, responseFinish, userAuthRequired, addUidToQueue )),
             (r"/(.*)", tornado.web.StaticFileHandler,static_path)               
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
