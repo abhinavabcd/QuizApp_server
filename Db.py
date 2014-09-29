@@ -90,7 +90,7 @@ class OfflineChallenge(Document):
     fromUid_userChallengeIndex = StringField()
     toUid_userChallengeIndex = StringField()
     challengeTye = IntField(default=0)
-    challengeData = StringField() #{quizId:asdasd ,questionIds:[] , pointsGained:[]}
+    challengeData = StringField() #{quizId:asdasd ,userAnswers:[], questions:[]}
     challengeData2 = StringField()
     wonUid = StringField()
     
@@ -100,7 +100,7 @@ class OfflineChallenge(Document):
         del sonObj["_id"]
         return bson.json_util.dumps(sonObj)
         
-        
+         
 class UserFeed(Document):
     uidFeedIndex = StringField()#uid_LOGININDEX
     feedMessage = ReferenceField('Feed')
@@ -603,6 +603,7 @@ class DbUtils():
         offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.index)
         offlineChallenge.challengeData = challengeData
         offlineChallenge.save()
+        return offlineChallenge
         
     def  userCompletedChallenge(self, user ,challengeId,challengeData2):
         offlineChallenge = OfflineChallenge.objects(pk=challengeId)
@@ -616,18 +617,24 @@ class DbUtils():
             a = sum(challengeData1["points"])
             b = sum(challengeData2["points"])
             won , lost , tie = 0 , 0, 0 
+            winStatus = -2
             if(a==b):
                 offlineChallenge.whoWon = ""
+                winStatus  = 0
                 won , lost,tie = 0 ,0 ,1
             elif(a>b):
                 offlineChallenge.whoWon = offlineChallenge.fromUid_userChallengeIndex
                 won , lost , tie = 0 ,1 ,0 
+                winStatus = -1
             else:
                 offlineChallenge.whoWon = offlineChallenge.toUid_userChallengeIndex
                 won , lost ,tie = 1 , 0 ,0
+                winStatus = 1
             
-            self.onUserQuizWonLost(user, quizId, challengeData2.get("xp",0)+20*won, won, lost , tie)
-            self.onUserQuizWonLost(fromUser, quizId, challengeData1.get("xp",0)+20*lost, lost, won , tie)
+            
+            
+            self.updateQuizWinStatus(user, quizId, challengeData2.get("xp",0)+20*won, winStatus)
+            self.updateQuizWinStatus(fromUser, quizId, challengeData1.get("xp",0)+20*lost, -winStatus)
                 
     def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
         index = toIndex
@@ -643,8 +650,19 @@ class DbUtils():
                 break
             index-=1
         return userChallenges
+
+    def searchByStartsWithUserName(self, startsWithStr):
+        return Users.objects(name__istartswith=startsWithStr)[:20]
             
-    def updateQuizWinStatus(self, user, quizId , xpGain , winStatus):
+    def updateQuizWinStatus(self, user, quizId , xpGain , winStatus, uid2):
+        if(user.uid > uid2 or uid2[:2]=="00"): #or uid2 is bot or 
+            s = UserSolvedIds()
+            s.uid = user.uid
+            s.uid2 = uid2
+            s.type = WIN_TYPE #WIN , LOSE , CHALLENGE , 
+            s.points = xpGain
+        
+
         user.updateStats(quizId, xpGain)
         user.updateWinsLosses(quizId, winStatus = winStatus)
     
@@ -705,7 +723,8 @@ class DbUtils():
         user.save()
         return
     
-    
+    def getQuestionsById(self, questionIds):
+        return Questions.objects(questionId__in = questionIds)
 #     
 #     def getDbAliasFromUid(self, uid):
 #         alias =  uid[0:4]

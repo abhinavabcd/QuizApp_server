@@ -7,10 +7,11 @@ import tornado
 from Constants import *
 import HelperFunctions
 import json
+from Config import SERVER_ID
 
 quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
 runningQuizes = {} # all currently running quizes in this server
-def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
+def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , addToGcmQueue):
     
     def generateProgressiveQuiz(quizId , uids):
         quiz = dbUtils.getQuizDetails(quizId)
@@ -89,13 +90,23 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                 if(not isChallenged):# not challenge type , so we add insert into new pool
                     quizConnections = quizWaitingConnectionsPool[quizPoolWaitId] = [self]
                 else:#is challenged then user have definitely left
-                    self.write_message(json.dumps({"messageType":LOAD_CHALLENGE_FROM_OFFLINE}))
+                    self.write_message(json.dumps({"messageType":USER_HAS_LEFT_POOL}))
                     return # client should close connection after this
                                         
             self.quizConnections = quizConnections
             print self.user
             print self.uid
             print self.quizConnections
+            if(isChallenge!=None):#send notification to other user
+                   addToGcmQueue(self.isChallenge, {"fromUser":self.uid,
+                                "fromUserName":self.user.name,
+                                "quizPoolWaitId":self.quizPoolWaitId,   
+                                "serverId":SERVER_ID,
+                                "quizId": quiz.name,
+                                "messsageType":NOTIFICATION_GCM_CHALLENGE_NOTIFICATION 
+                    })
+
+            
             if(len(quizConnections)>=int(quiz.nPeople)):# we have enough people
                 self.quizConnections = [quizConnections.pop() for i in range(0, quiz.nPeople)]#nPeople into current quiz
                 uids = map(lambda x:x.uid , self.quizConnections)
@@ -113,7 +124,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                                )                          
         # the client sent the message
         def on_message(self, message):
-            userQuizUpdate = json.loads(message)
+            uPayload = userQuizUpdate = json.loads(message)
             messageType = int(userQuizUpdate[MESSAGE_TYPE])
             if(messageType==USER_ANSWERED_QUESTION):
                 questionId = userQuizUpdate[QUESTION_ID]
@@ -192,14 +203,18 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired):
                     
                 
             elif(messageType==START_CHALLENGE_NOW):
-                self.broadcastToGroup(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload": dbUtils.getUserByUid(self.isChallenge).toJson(), 
-                                               "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}) , self.quizConnections)
+                self.write_message(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload1": dbUtils.getUserByUid(self.isChallenge).toJson(), 
+                                               "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}))
                 
                 
         def on_close(self):
             print "Socket CLosed ..."
-            if(self.isChallenge):
-                del quizWaitingConnectionsPool[self.quizPoolWaitId]
+            try:
+                if(self.isChallenge):
+                    del quizWaitingConnectionsPool[self.quizPoolWaitId]
+            except:
+                print "ERRRRRRR, careful , resolve later"
+                pass
             
             self.broadcastToGroup({"messageType":USER_DISCONNECTED,"payload1":self.user.uid},self.quizConnections)
             self.quizConnections.remove(self)#either waiting or something , we don't care
