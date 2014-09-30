@@ -85,7 +85,7 @@ def userAuthRequired(func):
 def registerWithGoogle(response):
     user = json.loads(response.get_argument("userJson"))
     userAccessToken = user['googlePlus']
-    callback = onRegisterWithSocialNetwork(response,user,GPLUS_USER_SAVED)
+    callback = onRegisterWithGPlusNetwork(response,user,GPLUS_USER_SAVED)
     http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
     http_client.fetch("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="+userAccessToken,callback) # here we try     
 
@@ -93,11 +93,12 @@ def registerWithGoogle(response):
 def registerWithFacebook(response):
     user = json.loads(response.get_argument("userJson"))
     userAccessToken = user['facebook']
-    callback = onRegisterWithSocialNetwork(response,user,GPLUS_USER_SAVED)
+    callback = onRegisterWithFbNetwork(response,user,FACEBOOK_USER_SAVED)
     http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
-    http_client.fetch("https://graph.facebook.com/me?access_token="+userAccessToken,callback) # here we try     
+    http_client.fetch("https://graph.facebook.com/me?fields=id, cover,name,email,address,picture,location,gender,birthday,verified,friends&access_token="+userAccessToken,callback) # here we try     
 
-def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAVED):
+
+def onRegisterWithGPlusNetwork(response, user):
     def newFunc(httpResponse):
         data = httpResponse.buffer  
         temp =json.loads(data.read())
@@ -106,9 +107,52 @@ def onRegisterWithSocialNetwork(response, user, responseCode = FACEBOOK_USER_SAV
         else:
             try:
                 userIp = response.request.remote_ip
-                userObject = dbUtils.registerUser( user["name"], user["deviceId"], user["emailId"], user.get("pictureUrl",None),user.get("coverUrl",None),user.get("birthday",None),user.get("gender",None),user.get("place",None),userIp , user.get("facebook",None),user.get("googlePlus",None),True)
+                userObject = dbUtils.registerUser( user["name"], 
+                                                   user["deviceId"], 
+                                                   user["emailId"], 
+                                                   user.get("pictureUrl",None),
+                                                   user.get("coverUrl",None),
+                                                   user.get("birthday",None),
+                                                   user.get("gender",None),
+                                                   user.get("place",None),
+                                                   userIp ,
+                                                   user.get("facebook",None),
+                                                   user.get("googlePlus",None),
+                                                   True,
+                                                   gPlusUid = temp["id"]
+                                                   )
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
-                responseFinish(response,{"messageType":responseCode , "payload":encodedKey})
+                responseFinish(response,{"messageType":GPLUS_USER_SAVED , "payload":encodedKey})
+            except:
+                responseFinish(response, {"messageType":NOT_AUTHORIZED})
+    return newFunc
+
+
+def onRegisterWithFbNetwork(response, user):
+    def newFunc(httpResponse):
+        data = httpResponse.buffer  
+        temp =json.loads(data.read())
+        if(not temp or temp.get("error",None)):
+            responseFinish(response, {"messageType":NOT_AUTHORIZED})
+        else:
+            try:
+                userIp = response.request.remote_ip
+                userObject = dbUtils.registerUser( user["name"], 
+                                                   user["deviceId"], 
+                                                   user["emailId"], 
+                                                   user.get("pictureUrl",None),
+                                                   user.get("coverUrl",None),
+                                                   user.get("birthday",None),
+                                                   user.get("gender",None),
+                                                   user.get("place",None),
+                                                   userIp ,
+                                                   user.get("facebook",None),
+                                                   user.get("googlePlus",None),
+                                                   True,
+                                                   fbUid = temp["id"]
+                                               )
+                encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
+                responseFinish(response,{"messageType":FACEBOOK_USER_SAVED , "payload":encodedKey})
             except:
                 responseFinish(response, {"messageType":NOT_AUTHORIZED})
     return newFunc
@@ -144,8 +188,9 @@ def subscribeTo(response, user=None):
 @userAuthRequired
 def addOfflineChallenge(response, user=None):
     uid2 = response.get_argument("uid2")
+    offlineChallengeId = response.get_argument("offlineChallengeId",None)
     challengeData = response.get_argument("challengeData")
-    if(dbUtils.addOfflineChallenege(user, uid2, challengeData)):
+    if(dbUtils.addOfflineChallenge(user, uid2, challengeData, offlineChallengeId)):
         challengeData = json.loads(challengeData)
         ## send notification
         addUidToQueue(uid2, {"fromUser":user.uid,
