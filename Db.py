@@ -87,6 +87,7 @@ class UserActivityStep(Document):
         return self
         
 class OfflineChallenge(Document):
+    offlineChallengeId = StringField()
     fromUid_userChallengeIndex = StringField()
     toUid_userChallengeIndex = StringField()
     challengeTye = IntField(default=0)
@@ -96,7 +97,8 @@ class OfflineChallenge(Document):
     
     def toJson(self):
         sonObj = self.to_mongo()
-        sonObj["challengeId"] =self._id
+        if(self.offlineChallengeId==None):
+            sonObj["offlineChallengeId"] =self._id
         del sonObj["_id"]
         return bson.json_util.dumps(sonObj)
         
@@ -158,6 +160,8 @@ class Users(Document):
     loginIndex = IntField()
     googlePlus = StringField()
     facebook = StringField()
+    gPlusUid = StringField()
+    fbUid = StringField()
     activationCode = StringField()
     newDeviceId = StringField()
     createdAt = DateTimeField()
@@ -595,12 +599,16 @@ class DbUtils():
         bdg.save()
         return True
         
-    def addOfflineChallenege(self , fromUser, toUid , challengeData):
+    def addOfflineChallenge(self , fromUser, toUid , challengeData, offlineChallengeId=None):
         toUser = self.getUserByUid(toUid)
         
         offlineChallenge = OfflineChallenge()
-        offlineChallenge.fromUid_userChallengeIndex = fromUser.uid+"_"+str(fromUser.userChallengesIndex.getAndIncrement())
-        offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.index)
+        if(offlineChallengeId!=None):
+            offlineChallenge.offlineChallengeId = offlineChallengeId
+        else:
+            offlineChallenge.offlineChallengeId = HelperFunctions.generateKey(10)
+        offlineChallenge.fromUid_userChallengeIndex = fromUser.uid+"_"+str(fromUser.userChallengesIndex.index) # yeah , its a little bit funny too
+        offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.getAndIncrement(toUser))
         offlineChallenge.challengeData = challengeData
         offlineChallenge.save()
         return offlineChallenge
@@ -738,7 +746,7 @@ class DbUtils():
 #         self.dbServerAliases[self.rrCount]
 #         self.rrCount+=1
         
-    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = ""):
+    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None):
         user = Users.objects(emailId=emailId)
         if(user or len(user)>0):
             user = user.get(0)
@@ -768,6 +776,8 @@ class DbUtils():
             user.emailId = emailId
             user.createdAt = datetime.datetime.now()
             user.loginIndex = 0
+            user.fbUid = fbUid
+            user.gPlusUid = gPlusUid
             
         user.newDeviceId = deviceId
         user.name = name
