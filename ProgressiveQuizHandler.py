@@ -79,9 +79,9 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
             self.user = user
             self.uid = user.uid
             if(isChallenge!=None):
-                self.quizPoolWaitId = self.user.uid+"_"+HelperFunctions.generateKey(10)
+                self.quizPoolWaitId = quizPoolWaitId = self.user.uid+"_"+HelperFunctions.generateKey(10)
             elif(isChallenged!=None):
-                self.quizPoolWaitId = isChallenged
+                self.quizPoolWaitId = quizPoolWaitId = isChallenged
                 
             quizConnections = quizWaitingConnectionsPool.get(quizPoolWaitId,None)
             if(quizConnections):
@@ -103,7 +103,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                                 "quizPoolWaitId":self.quizPoolWaitId,   
                                 "serverId":SERVER_ID,
                                 "quizId": quiz.name,
-                                "messsageType":NOTIFICATION_GCM_CHALLENGE_NOTIFICATION 
+                                "messsageType":NOTIFICATION_GCM_CHALLENGE_NOTIFICATION,  
+                                "timeStamp":HelperFunctions.toUtcTimestamp(datetime.datetime.now())
                     })
 
             
@@ -204,7 +205,9 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                 
             elif(messageType==START_CHALLENGE_NOW):
                 self.write_message(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload1": dbUtils.getUserByUid(self.isChallenge).toJson(), 
-                                               "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}))
+                                               "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]",
+                                               "payload3":self.quizPoolWaitId
+                                              }))
                 
                 
         def on_close(self):
