@@ -468,7 +468,9 @@ serverFunc = {
               "searchByUserName":searchByUserName,
               "subscribeTo":subscribeTo,
               "addOfflineChallenge":addOfflineChallenge,
-              "setGCMRegistrationId":setGCMRegistrationId
+              "setGCMRegistrationId":setGCMRegistrationId,
+              "loadQuestionsInOrder":loadQuestionsInOrder,
+              "onOfflineChallengeCompleted":onOfflineChallengeCompleted
              }
 
 #server web request commands with json
