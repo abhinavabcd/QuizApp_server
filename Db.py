@@ -90,7 +90,7 @@ class OfflineChallenge(Document):
     offlineChallengeId = StringField()
     fromUid_userChallengeIndex = StringField()
     toUid_userChallengeIndex = StringField()
-    challengeTye = IntField(default=0)
+    challengeType = IntField(default=0)
     challengeData = StringField() #{quizId:asdasd ,userAnswers:[], questions:[]}
     challengeData2 = StringField()
     wonUid = StringField()
@@ -615,7 +615,7 @@ class DbUtils():
         return offlineChallenge
         
     def onUserCompletedChallenge(self, user ,challengeId,challengeData2):
-        offlineChallenge = OfflineChallenge.objects(offlineChallengeId=challengeId)
+        offlineChallenge = OfflineChallenge.objects(offlineChallengeId=challengeId).get(0)
         offlineChallenge.challengeData2 = challengeData2
         fromUser = self.getUserByUid(offlineChallenge.fromUid_userChallengeIndex.split("_")[0])
         
@@ -642,9 +642,9 @@ class DbUtils():
             
             
             
-            self.updateQuizWinStatus(user, quizId, challengeData2.get("xp",0)+20*won, winStatus)
+            self.updateQuizWinStatus(user, quizId, challengeData2.get("xp",0)+20*won, winStatus,fromUser.uid)
             self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId)
-            self.updateQuizWinStatus(fromUser, quizId, challengeData1.get("xp",0)+20*lost, -winStatus)
+            self.updateQuizWinStatus(fromUser, quizId, challengeData1.get("xp",0)+20*lost, -winStatus, user.uid)
             return True
         return True
     def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
@@ -767,13 +767,13 @@ class DbUtils():
             #user feed index , # few changes to the way lets see s
             user.userFeedIndex = userFeedIndex = UserActivityStep()
             userFeedIndex.uid = user.uid+"_feed"
-            userFeedIndex.index = 1
+            userFeedIndex.index = 0
             userFeedIndex.userLoginIndex = 0
             userFeedIndex.save()
             ###
             user.userChallengesIndex = userChallengesIndex = UserActivityStep()
             userChallengesIndex.uid = user.uid+"_challenges"
-            userChallengesIndex.index = 1
+            userChallengesIndex.index = 0
             userChallengesIndex.userLoginIndex = 0
             userChallengesIndex.save()
             ###
@@ -858,7 +858,7 @@ class DbUtils():
         for uid in user.subscribers:
             user = self.getUserByUid(uid)
             userFeed = UserFeed()
-            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.getAndIncrementIndex())
+            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.getAndIncrement(user))
             userFeed.feedMessage = f
             userFeed.save()
     
@@ -870,7 +870,7 @@ class DbUtils():
         f.save()
         
         userFeed = UserFeed()
-        userFeed.uidFeedIndex= user.uid+"_"+str(user.userFeedIndex.getAndIncrementIndex())
+        userFeed.uidFeedIndex= user.uid+"_"+str(user.userFeedIndex.getAndIncrement(user))
         userFeed.feedMessage = f
         userFeed.save()
         
