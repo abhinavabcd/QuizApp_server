@@ -100,6 +100,12 @@ NOTIFICATION_SERVER_COMMAND = 6
 NOTIFICATION_GCM_CHALLENGE_NOTIFICATION = 7
 NOTIFICATION_GCM_OFFLINE_CHALLENGE_NOTIFICATION = 8
 
+#############################feed types################
+FEED_CHALLENGE = 5
+
+
+####################################
+ 
 IS_TEST_BUILD = True
 ONE_DAY= datetime.timedelta(days = 1)
 EPOCH_DATETIME = datetime.datetime(1970,1,1)

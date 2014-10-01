@@ -110,6 +110,7 @@ class UserFeed(Document):
     
 class Feed(Document):
     fromUid = StringField()
+    type = IntField(default = 0)
     message = StringField()
     
     
@@ -608,13 +609,13 @@ class DbUtils():
         else:
             offlineChallenge.offlineChallengeId = HelperFunctions.generateKey(10)
         offlineChallenge.fromUid_userChallengeIndex = fromUser.uid+"_"+str(fromUser.userChallengesIndex.index) # yeah , its a little bit funny too
-        offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.getAndIncrement(toUser))
+        offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.getAndIncrement(toUser).index)
         offlineChallenge.challengeData = challengeData
         offlineChallenge.save()
         return offlineChallenge
         
-    def  userCompletedChallenge(self, user ,challengeId,challengeData2):
-        offlineChallenge = OfflineChallenge.objects(pk=challengeId)
+    def onUserCompletedChallenge(self, user ,challengeId,challengeData2):
+        offlineChallenge = OfflineChallenge.objects(offlineChallengeId=challengeId)
         offlineChallenge.challengeData2 = challengeData2
         fromUser = self.getUserByUid(offlineChallenge.fromUid_userChallengeIndex.split("_")[0])
         
@@ -622,9 +623,9 @@ class DbUtils():
             challengeData1= json.loads(offlineChallenge.challengeData)
             challengeData2= json.loads(offlineChallenge.challengeData2)
             quizId = challengeData1["quizId"]
-            a = sum(challengeData1["points"])
-            b = sum(challengeData2["points"])
-            won , lost , tie = 0 , 0, 0 
+            a = challengeData1["userAnswers"][-1][WHAT_USER_HAS_GOT]
+            b = challengeData2["userAnswers"][-1][WHAT_USER_HAS_GOT]
+            won , lost , tie = 0, 0, 0 
             winStatus = -2
             if(a==b):
                 offlineChallenge.whoWon = ""
@@ -642,9 +643,14 @@ class DbUtils():
             
             
             self.updateQuizWinStatus(user, quizId, challengeData2.get("xp",0)+20*won, winStatus)
+            self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId)
             self.updateQuizWinStatus(fromUser, quizId, challengeData1.get("xp",0)+20*lost, -winStatus)
-                
+            return True
+        return True
     def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
+        limit =20
+        if(fromIndex!=0):
+            limit = 1000000
         index = toIndex
         if(toIndex==-1):
             index = user.userChallengesIndex.index
@@ -654,7 +660,7 @@ class DbUtils():
             for i in OfflineChallenge.objects(toUid_userChallengeIndex = user.uid+"_"+str(index)):
                 userChallenges.append(i)#getting from reference field
                 count+=1
-            if(count>20):
+            if(count>limit):
                 break
             index-=1
         return userChallenges
@@ -855,7 +861,22 @@ class DbUtils():
             userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.getAndIncrementIndex())
             userFeed.feedMessage = f
             userFeed.save()
-            
+    
+    def publishFeedToUser(self,fromUid ,  user, type, message):
+        f = Feed()
+        f.fromUid = fromUid
+        f.type =type
+        f.message = message
+        f.save()
+        
+        userFeed = UserFeed()
+        userFeed.uidFeedIndex= user.uid+"_"+str(user.userFeedIndex.getAndIncrementIndex())
+        userFeed.feedMessage = f
+        userFeed.save()
+        
+        
+        
+                
     def insertInboxMessage(self,fromUser, toUser , message):
         inboxMessage = UserInboxMessages()
         inboxMessage.fromUid = fromUser.uid
@@ -902,15 +923,16 @@ class DbUtils():
     
     def getLocalLeaderboards(self, quizId , user):
         xpPoints = user.getStats(quizId)
+        xpPoints = xpPoints.get(quizId,0)
         ret = {}
         results  = UserStats.objects(quizId= quizId , xpPoints__lt=xpPoints).order_by("-xpPoints")
-        count = results.count()-10
+        count = len(results)
         for i in results[:10]:
             count +=1
             ret[i.uid]=[count , i.xpPoints]
         
         for i in UserStats.objects(quizId= quizId , xpPoints__gt=xpPoints).order_by("xpPoints")[:10]:
-            count +=1
+            count -=1
             ret[i.uid]=[count , i.xpPoints]
             
         return ret

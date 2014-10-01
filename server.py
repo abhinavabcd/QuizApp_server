@@ -85,7 +85,7 @@ def userAuthRequired(func):
 def registerWithGoogle(response):
     user = json.loads(response.get_argument("userJson"))
     userAccessToken = user['googlePlus']
-    callback = onRegisterWithGPlusNetwork(response,user,GPLUS_USER_SAVED)
+    callback = onRegisterWithGPlusNetwork(response,user)
     http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
     http_client.fetch("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="+userAccessToken,callback) # here we try     
 
@@ -93,7 +93,7 @@ def registerWithGoogle(response):
 def registerWithFacebook(response):
     user = json.loads(response.get_argument("userJson"))
     userAccessToken = user['facebook']
-    callback = onRegisterWithFbNetwork(response,user,FACEBOOK_USER_SAVED)
+    callback = onRegisterWithFbNetwork(response,user)
     http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
     http_client.fetch("https://graph.facebook.com/me?fields=id, cover,name,email,address,picture,location,gender,birthday,verified,friends&access_token="+userAccessToken,callback) # here we try     
 
@@ -119,11 +119,11 @@ def onRegisterWithGPlusNetwork(response, user):
                                                    user.get("facebook",None),
                                                    user.get("googlePlus",None),
                                                    True,
-                                                   gPlusUid = temp["id"]
+                                                   gPlusUid = temp["user_id"]
                                                    )
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
                 responseFinish(response,{"messageType":GPLUS_USER_SAVED , "payload":encodedKey})
-            except:
+            except Exception as ex:
                 responseFinish(response, {"messageType":NOT_AUTHORIZED})
     return newFunc
 
@@ -184,6 +184,24 @@ def subscribeTo(response, user=None):
     uid2 = response.get_argument("uid2")
     dbUtils.addsubscriber(dbUtils.getUserByUid(uid2), user)
     responseFinish(response, {"messageType":OK})
+
+@userAuthRequired
+def onOfflineChallengeCompleted(response, user=None):
+    offlineChallengeId = response.get_argument("offlineChallengeId")
+    challengeData = response.get_argument("challengeData")
+    if(dbUtils.onUserCompletedChallenge(user,offlineChallengeId, challengeData)!=None):
+        responseFinish(response,{"messageType":OK})
+    else:
+        responseFinish(response,{"messageType":FAILED})
+        
+        
+        
+        
+        
+        
+    
+    
+    
     
 @userAuthRequired
 def addOfflineChallenge(response, user=None):
@@ -283,10 +301,11 @@ def searchByUserName(response, user=None):
 def getAllUpdates(response, user=None):
     isLogin = response.get_argument("isLogin",False)
     isFistLogin =  response.get_argument("isFirstLogin",False)
+    lastChallengeIndex = int(response.get_argument("lastOfflineChallengeIndex",0));
     retObj = {"messageType":OK_UPDATES,
                                "payload7":user.toJson(),
                                "payload3":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
-                               "payload5":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user)))+"]"
+                               "payload5":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user , fromIndex=lastChallengeIndex)))+"]"
                               }
     if(isLogin):
         quizzes = None
@@ -495,6 +514,7 @@ def main():
     tornado.ioloop.IOLoop.instance().start()
     
 if __name__ == "__main__":
+    print tornado.web.create_signed_value(secret_auth , "key","masterQ56VOWVRJS")
     main()
 
     #testCases
