@@ -208,7 +208,8 @@ def addOfflineChallenge(response, user=None):
     uid2 = response.get_argument("uid2")
     offlineChallengeId = response.get_argument("offlineChallengeId",None)
     challengeData = response.get_argument("challengeData")
-    if(dbUtils.addOfflineChallenge(user, uid2, challengeData, offlineChallengeId)):
+    offlineChallenge = dbUtils.addOfflineChallenge(user, uid2, challengeData, offlineChallengeId);
+    if(offlineChallenge):
         challengeData = json.loads(challengeData)
         ## send notification
         addUidToQueue(uid2, {"fromUser":user.uid,
@@ -216,7 +217,7 @@ def addOfflineChallenge(response, user=None):
                                 "quizId":challengeData["quizId"],
                                 "messsageType":NOTIFICATION_GCM_OFFLINE_CHALLENGE_NOTIFICATION 
                               })
-    responseFinish(response, {"messageType":OK})
+    responseFinish(response, {"messageType":OK , "payload":offlineChallenge.to_json()})
     
 
 @userAuthRequired
@@ -306,7 +307,7 @@ def getAllUpdates(response, user=None):
                                "payload7":user.toJson(),
                                "payload3":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
                                "payload5":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user , fromIndex=lastChallengeIndex)))+"]"
-                              }
+                               }
     if(isLogin):
         quizzes = None
         categories= None
