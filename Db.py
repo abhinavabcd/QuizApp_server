@@ -254,6 +254,8 @@ class Users(Document):
                 "gender":self.gender,
                 "country":self.country,
                 "status":self.status,
+                "gPlusUid":self.gPlusUid,
+                "fbUid":self.fbUid
                 })
      
     def toJsonShort(self):
@@ -267,6 +269,8 @@ class Users(Document):
                 "gender":self.gender,
                 "country":self.country,
                 "status":self.status,
+                "gPlusUid":self.gPlusUid,
+                "fbUid":self.fbUid
                 })
     
     userStats = property(getStats)
@@ -641,7 +645,7 @@ class DbUtils():
                 winStatus = 1
             
             
-            
+            offlineChallenge.save()
             self.updateQuizWinStatus(user, quizId, challengeData2.get("xp",0)+20*won, winStatus,fromUser.uid)
             self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId)
             self.updateQuizWinStatus(fromUser, quizId, challengeData1.get("xp",0)+20*lost, -winStatus, user.uid)
@@ -858,7 +862,7 @@ class DbUtils():
         for uid in user.subscribers:
             user = self.getUserByUid(uid)
             userFeed = UserFeed()
-            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.getAndIncrement(user))
+            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.getAndIncrement(user).index)
             userFeed.feedMessage = f
             userFeed.save()
     
@@ -870,7 +874,7 @@ class DbUtils():
         f.save()
         
         userFeed = UserFeed()
-        userFeed.uidFeedIndex= user.uid+"_"+str(user.userFeedIndex.getAndIncrement(user))
+        userFeed.uidFeedIndex= user.uid+"_"+str(user.userFeedIndex.getAndIncrement(user).index)
         userFeed.feedMessage = f
         userFeed.save()
         
@@ -931,7 +935,7 @@ class DbUtils():
             count +=1
             ret[i.uid]=[count , i.xpPoints]
         
-        for i in UserStats.objects(quizId= quizId , xpPoints__gt=xpPoints).order_by("xpPoints")[:10]:
+        for i in UserStats.objects(quizId= quizId , xpPoints__gte=xpPoints).order_by("xpPoints")[:10]:
             count -=1
             ret[i.uid]=[count , i.xpPoints]
             
