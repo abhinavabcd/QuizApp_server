@@ -112,7 +112,7 @@ class Feed(Document):
     fromUid = StringField()
     type = IntField(default = 0)
     message = StringField()
-    
+    message2= StringField()
     
     
     
@@ -647,7 +647,7 @@ class DbUtils():
             
             offlineChallenge.save()
             self.updateQuizWinStatus(user, quizId, challengeData2.get("xp",0)+20*won, winStatus,fromUser.uid)
-            self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId)
+            self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId , offlineChallenge.challengeData2)
             self.updateQuizWinStatus(fromUser, quizId, challengeData1.get("xp",0)+20*lost, -winStatus, user.uid)
             return True
         return True
@@ -853,10 +853,12 @@ class DbUtils():
             ind-=1
         return userFeedMessages
     
-    def publishFeed(self, user, message):
+    def publishFeed(self, user, message, message2=None):
         f = Feed()
         f.fromUid = user.uid
         f.message = message
+        if(message2!=None):
+            f.message2 = message2
         f.save()
         #### move to tasks other server if possible
         for uid in user.subscribers:
@@ -866,11 +868,13 @@ class DbUtils():
             userFeed.feedMessage = f
             userFeed.save()
     
-    def publishFeedToUser(self,fromUid ,  user, type, message):
+    def publishFeedToUser(self,fromUid ,  user, type, message, message2):
         f = Feed()
         f.fromUid = fromUid
         f.type =type
         f.message = message
+        if(message2!=None):
+            f.message2 = message2
         f.save()
         
         userFeed = UserFeed()
