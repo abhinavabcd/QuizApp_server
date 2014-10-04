@@ -194,13 +194,13 @@ def onOfflineChallengeCompleted(response, user=None):
     else:
         responseFinish(response,{"messageType":FAILED})
         
-        
-        
-        
-        
-        
-    
-    
+@userAuthRequired
+def getOfflineChallengeById(response, user=None):
+    offlineChallenge = dbUtils.getOfflineChallengeById(response.get_argument("offlineChallengeId"), user)
+    if(offlineChallenge):
+        responseFinish(response, {"messageType":OK_CHALLENGES,"payload":offlineChallenge.to_json()})    
+        return
+    responseFinish(response,{"messageType":FAILED})
     
     
 @userAuthRequired
@@ -471,7 +471,8 @@ serverFunc = {
               "addOfflineChallenge":addOfflineChallenge,
               "setGCMRegistrationId":setGCMRegistrationId,
               "loadQuestionsInOrder":loadQuestionsInOrder,
-              "onOfflineChallengeCompleted":onOfflineChallengeCompleted
+              "onOfflineChallengeCompleted":onOfflineChallengeCompleted,
+              "getOfflineChallengeById":getOfflineChallengeById
              }
 
 #server web request commands with json

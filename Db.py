@@ -113,7 +113,7 @@ class Feed(Document):
     type = IntField(default = 0)
     message = StringField()
     message2= StringField()
-    
+    timestamp = FloatField()
     
     
 
@@ -603,6 +603,14 @@ class DbUtils():
         bdg.modifiedTimestamp = datetime.datetime.now()
         bdg.save()
         return True
+    
+    def getOfflineChallengeById(self, offlineChallengeId, user):
+        
+        offlineChallenge =  OfflineChallenge.objects(offlineChallengeId=offlineChallengeId).get(0)
+        if(user.uid in offlineChallenge.fromUid_userChallengeIndex or user.uid in offlineChallenge.toUid_userChallengeIndex):
+            return offlineChallenge
+        return None
+            
         
     def addOfflineChallenge(self , fromUser, toUid , challengeData, offlineChallengeId=None):
         toUser = self.getUserByUid(toUid)
@@ -646,9 +654,9 @@ class DbUtils():
             
             
             offlineChallenge.save()
-            self.updateQuizWinStatus(user, quizId, challengeData2.get("xp",0)+20*won, winStatus,fromUser.uid)
+            self.updateQuizWinStatus(user, quizId, a+20*won, winStatus,fromUser.uid)
             self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId , offlineChallenge.challengeData2)
-            self.updateQuizWinStatus(fromUser, quizId, challengeData1.get("xp",0)+20*lost, -winStatus, user.uid)
+            self.updateQuizWinStatus(fromUser, quizId, b+20*lost, -winStatus, user.uid)
             return True
         return True
     def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
@@ -840,8 +848,7 @@ class DbUtils():
         return tagObj
     
     def getRecentUserFeed(self, user, toIndex=-1, fromIndex=0):
-        userFeedIndex= user.userFeedIndex
-        ind = toIndex if toIndex>0 else userFeedIndex.index
+        ind = toIndex if toIndex>0 else user.userFeedIndex.index
         cnt =50
         userFeedMessages = []
         while(ind>fromIndex):
@@ -859,6 +866,7 @@ class DbUtils():
         f.message = message
         if(message2!=None):
             f.message2 = message2
+        f.timestamp = HelperFunctions.toUtcTimestamp(datetime.datetime.now())
         f.save()
         #### move to tasks other server if possible
         for uid in user.subscribers:
@@ -875,6 +883,7 @@ class DbUtils():
         f.message = message
         if(message2!=None):
             f.message2 = message2
+        f.timestamp = HelperFunctions.toUtcTimestamp(datetime.datetime.now())
         f.save()
         
         userFeed = UserFeed()
