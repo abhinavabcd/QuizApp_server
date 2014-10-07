@@ -102,7 +102,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                                 "fromUserName":self.user.name,
                                 "quizPoolWaitId":self.quizPoolWaitId,   
                                 "serverId":SERVER_ID,
-                                "quizId": quiz.name,
+                                "quizId": quiz.quizId,
+                                "quizName":quiz.name,
                                 "messsageType":NOTIFICATION_GCM_CHALLENGE_NOTIFICATION,  
                                 "timeStamp":HelperFunctions.toUtcTimestamp(datetime.datetime.now())
                     })
