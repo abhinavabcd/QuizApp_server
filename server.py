@@ -20,7 +20,7 @@ import Config
 import ProgressiveQuizHandler
 
 dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
-masterSever = MasterServerUtils.MasterServerUtils(Config.WebServersMap)
+masterSever = MasterServerUtils.MasterServerUtils(Config.WebServersMap , Config.ExternalWebServersMap)
 
 logging.basicConfig(filename='log',level=logging.INFO)
 
@@ -95,7 +95,7 @@ def registerWithFacebook(response):
     userAccessToken = user['facebook']
     callback = onRegisterWithFbNetwork(response,user)
     http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
-    http_client.fetch("https://graph.facebook.com/me?fields=id, cover,name,email,address,picture,location,gender,birthday,verified,friends&access_token="+userAccessToken,callback) # here we try     
+    http_client.fetch("https://graph.facebook.com/me?fields=id,cover,name,email,address,picture,location,gender,birthday,verified,friends&access_token="+userAccessToken,callback) # here we try     
 
 
 def onRegisterWithGPlusNetwork(response, user):
@@ -106,6 +106,8 @@ def onRegisterWithGPlusNetwork(response, user):
             responseFinish(response, {"messageType":NOT_AUTHORIZED})
         else:
             try:
+                gPlusFriends = json.loads(user.gPlusFriends) # list of friend uids
+                fbFriends = []
                 userIp = response.request.remote_ip
                 userObject = dbUtils.registerUser( user["name"], 
                                                    user["deviceId"], 
@@ -119,7 +121,9 @@ def onRegisterWithGPlusNetwork(response, user):
                                                    user.get("facebook",None),
                                                    user.get("googlePlus",None),
                                                    True,
-                                                   gPlusUid = temp["user_id"]
+                                                   gPlusUid = temp["user_id"],
+                                                   gPlusFriends = gPlusFriends,
+                                                   fbFriends = fbFriends
                                                    )
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
                 responseFinish(response,{"messageType":GPLUS_USER_SAVED , "payload":encodedKey})
@@ -165,7 +169,7 @@ def getUserByUid(response, user=None):
     uid = response.get_argument("uid")
     user = dbUtils.getUserByUid(uid)
     responseFinish(response, {"messageType":OK_USER_INFO,
-                              "payload":user.to_json(),
+                              "payload":user.toJson(),
                             }
                   )
     
@@ -288,7 +292,10 @@ def updateQuizWinStatus(response, user=None):
     xpPoints = float(response.get_argument("xpPoints"))
     winStatus = int(response.get_argument("winStatus"))
     uid2 = response.get_argument("uid2")
-    dbUtils.updateQuizWinStatus(user , quizId , xpPoints, winStatus , uid2)
+    userAnswers1 = response.get_argument("userAnswers1",None)
+    userAnswers2 = response.get_argument("userAnswers2",None)
+    
+    dbUtils.updateQuizWinStatus(user , quizId , xpPoints, winStatus , uid2, userAnswers1 , userAnswers2)
     responseFinish(response , {"messageType":OK})
     
 
@@ -314,7 +321,7 @@ def getAllUpdates(response, user=None):
         badges = None
         userMaxQuizTimestamp = response.get_argument("maxQuizTimestamp",None)
         if(userMaxQuizTimestamp):
-            userMaxQuizTimestamp = datetime.datetime.utcfromtimestamp(float(userMaxQuizTimestamp))
+            userMaxQuizTimestamp = datetime.datetime.utcfromtimestamp(float(userMaxQuizTimestamp)+1)
             quizzes = dbUtils.getAllQuizzes(userMaxQuizTimestamp)
             categories = dbUtils.getAllCategories(userMaxQuizTimestamp)
             retObj["payload"]="["+','.join(map(lambda x:x.toJson() , quizzes ))+"]"
@@ -322,7 +329,7 @@ def getAllUpdates(response, user=None):
             
         userMaxBadgesTimestamp = response.get_argument("maxBadgesTimestamp",None)
         if(userMaxBadgesTimestamp):
-            userMaxBadgesTimestamp = datetime.datetime.utcfromtimestamp(max(0,float(userMaxBadgesTimestamp)))
+            userMaxBadgesTimestamp = datetime.datetime.utcfromtimestamp(max(0,float(userMaxBadgesTimestamp)+1))
             badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
             retObj["payload2"] = "["+",".join(map(lambda x:x.toJson(),badges))+"]"
 
@@ -374,7 +381,8 @@ def removeWebServer(response):
     
 def updateWebServerMap(response):
     webServerMap  = json.loads(response.get_argument("webServerMap"))
-    masterSever.updateWebServerMap(webServerMap)
+    externalWebServerMap  = json.loads(response.get_argument("externalWebServerMap"))
+    masterSever.updateWebServerMap(webServerMap, externalWebServerMap)
 
 
 @userAuthRequired

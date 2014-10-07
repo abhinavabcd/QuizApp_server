@@ -116,14 +116,17 @@ class Feed(Document):
     timestamp = FloatField()
     
     
-
-class UserSolvedIds(Document):
+##### contains all quiz history of all games , offline online
+class UserGamesHistory(Document):
     uid = StringField()
     uid2 = StringField()
+    uid_uid2 = StringField()
     type = StringField() #WIN , LOSE , CHALLENGE , 
-    solvedId= StringField()
-    points = StringField()
-    questionIdToPointsMap = DictField()
+    solvedId= StringField() # to indentify exactly what type of quiz between what users
+    points = IntField()
+    userAnswers1 = StringField()
+    userAnswers2 = StringField()
+    
 
 class UserStats(Document):
     uid  = StringField() # uid
@@ -171,7 +174,8 @@ class Users(Document):
     userFeedIndex = ReferenceField(UserActivityStep)
     userChallengesIndex = ReferenceField(UserActivityStep)
     userType = IntField(default=0)
-    
+    gPlusFriends = StringField()
+    fbFriends = StringField()
     
     
     def getStats(self, quizId=None):
@@ -680,14 +684,18 @@ class DbUtils():
     def searchByStartsWithUserName(self, startsWithStr):
         return Users.objects(name__istartswith=startsWithStr)[:20]
             
-    def updateQuizWinStatus(self, user, quizId , xpGain , winStatus, uid2):
+    def updateQuizWinStatus(self, user, quizId , xpGain , winStatus, uid2 , userAnswers1 , userAnswers2):
         if(user.uid > uid2 or uid2[:2]=="00"): #or uid2 is bot or 
-            s = UserSolvedIds()
+            s = UserGamesHistory()
             s.uid = user.uid
             s.uid2 = uid2
+            s.uid_uid2 = user.uid+"_"+uid2
+            s.solvedId = user.uid+"_"+uid2+"_"+quizId
             s.type = WIN_TYPE #WIN , LOSE , CHALLENGE , 
             s.points = xpGain
-        
+            s.userAnswers1 = userAnswers1
+            s.userAnswers2 = userAnswers2
+            
 
         user.updateStats(quizId, xpGain)
         user.updateWinsLosses(quizId, winStatus = winStatus)
@@ -763,8 +771,8 @@ class DbUtils():
 #         #arrange by priority here
 #         self.dbServerAliases[self.rrCount]
 #         self.rrCount+=1
-        
-    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None):
+    ### this should rather be connect to fb , gplus or refresh users list too not just register User
+    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None , gPlusFriends = None , fbFriends = []):
         user = Users.objects(emailId=emailId)
         if(user or len(user)>0):
             user = user.get(0)
@@ -794,9 +802,39 @@ class DbUtils():
             user.emailId = emailId
             user.createdAt = datetime.datetime.now()
             user.loginIndex = 0
-            user.fbUid = fbUid
-            user.gPlusUid = gPlusUid
             
+        if(fbUid!=None):
+            user.fbUid = fbUid
+            newFriends = []
+            if(user.fbFriends==None):
+                newFriends= fbFriends
+            else:
+                newFriends = fbFriends - json.loads(user.fbFriends)
+            for i in newFriends:
+                user2 = Users.objects(fbUid = i)
+                if(user2):
+                    user2= user2.get(0)
+                    # mutual friends
+                    self.addsubscriber(user, user2)
+                    self.addsubscriber(user2, user)
+                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid)
+                    
+        if(gPlusUid!=None):
+            user.gPlusUid = gPlusUid
+            newFriends = []
+            if(user.gPlusFriends==None):
+                newFriends= gPlusFriends
+            else:
+                newFriends = gPlusFriends - user.gPlusFriends
+            for i in newFriends:
+                user2 = Users.objects(gPlusUid = i)
+                if(user2):
+                    user2= user2.get(0)
+                    # mutual friends
+                    self.addsubscriber(user, user2)
+                    self.addsubscriber(user2, user)
+                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid)
+        
         user.newDeviceId = deviceId
         user.name = name
         user.deviceId = deviceId
@@ -879,7 +917,7 @@ class DbUtils():
     def publishFeedToUser(self,fromUid ,  user, type, message, message2):
         f = Feed()
         f.fromUid = fromUid
-        f.type =type
+        f.type = type
         f.message = message
         if(message2!=None):
             f.message2 = message2
@@ -890,9 +928,6 @@ class DbUtils():
         userFeed.uidFeedIndex= user.uid+"_"+str(user.userFeedIndex.getAndIncrement(user).index)
         userFeed.feedMessage = f
         userFeed.save()
-        
-        
-        
                 
     def insertInboxMessage(self,fromUser, toUser , message):
         inboxMessage = UserInboxMessages()
