@@ -3,6 +3,7 @@ import urllib
 import json
 import sys
 import random
+from Config import ExternalWebServersMap
 
 ss = {}  #server state
 
@@ -14,11 +15,11 @@ class MasterServerUtils():
     rrCount = 0
     webServerMap= {}
     webServerIds=[]
-    def __init__(self,webServerMap):
-        self.updateWebServerMap(webServerMap)
-        for i in webServerMap.values():#while starting inform all other servers to update this map
+    def __init__(self,webServerMap, externalServerMap):
+        self.updateWebServerMap(webServerMap, externalServerMap)
+        for i in webServerMap.values():#while starting inform all other local servers to update this map
             try:
-                print AndroidUtils.get_data(i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap)})).read()
+                print AndroidUtils.get_data(i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap) , "externalWebServerMap":json.dumps(ExternalWebServersMap)})).read()
             except:
                 print sys.exc_info()[0]
     def addServer(self, sid , addr):
@@ -33,9 +34,10 @@ class MasterServerUtils():
         self.updateWebServerMap(self.webServerMap)
     
         
-    def updateWebServerMap(self, webServerMap):
+    def updateWebServerMap(self, webServerMap , externalServerMap):
         for i in webServerMap.keys():
                 self.webServerMap[i] = webServerMap[i]
+        ExternalWebServersMap = externalServerMap
         self.webServerIds = webServerMap.keys()
     
     
