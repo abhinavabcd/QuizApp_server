@@ -106,7 +106,7 @@ def onRegisterWithGPlusNetwork(response, user):
             responseFinish(response, {"messageType":NOT_AUTHORIZED})
         else:
             try:
-                gPlusFriends = json.loads(user.gPlusFriends) # list of friend uids
+                gPlusFriends = user.get('gPlusFriendUids',None) # list of friend uids
                 fbFriends = []
                 userIp = response.request.remote_ip
                 userObject = dbUtils.registerUser( user["name"], 
