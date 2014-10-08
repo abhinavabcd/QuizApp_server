@@ -809,7 +809,8 @@ class DbUtils():
             if(user.fbFriends==None):
                 newFriends= fbFriends
             else:
-                newFriends = fbFriends - json.loads(user.fbFriends)
+                newFriends = list(set(fbFriends) - set(json.loads(user.fbFriends)))
+            newFriends.remove(fbUid)
             for i in newFriends:
                 user2 = Users.objects(fbUid = i)
                 if(user2):
@@ -817,7 +818,7 @@ class DbUtils():
                     # mutual friends
                     self.addsubscriber(user, user2)
                     self.addsubscriber(user2, user)
-                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid)
+                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid,None)
                     
         if(gPlusUid!=None):
             user.gPlusUid = gPlusUid
@@ -825,7 +826,8 @@ class DbUtils():
             if(user.gPlusFriends==None):
                 newFriends= gPlusFriends
             else:
-                newFriends = gPlusFriends - user.gPlusFriends
+                newFriends = list(set(gPlusFriends) - set(json.loads(user.gPlusFriends)))
+            newFriends.remove(gPlusUid)
             for i in newFriends:
                 user2 = Users.objects(gPlusUid = i)
                 if(user2):
@@ -833,7 +835,7 @@ class DbUtils():
                     # mutual friends
                     self.addsubscriber(user, user2)
                     self.addsubscriber(user2, user)
-                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid)
+                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid,None)
         
         user.newDeviceId = deviceId
         user.name = name
@@ -914,10 +916,10 @@ class DbUtils():
             userFeed.feedMessage = f
             userFeed.save()
     
-    def publishFeedToUser(self,fromUid ,  user, type, message, message2):
+    def publishFeedToUser(self,fromUid ,  user, _type, message, message2):
         f = Feed()
         f.fromUid = fromUid
-        f.type = type
+        f.type = _type
         f.message = message
         if(message2!=None):
             f.message2 = message2
