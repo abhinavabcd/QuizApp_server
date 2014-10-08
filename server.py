@@ -369,15 +369,15 @@ def getServer(response, user=None):
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
         
-
-def addWebServer(response):
-    serveraddr = response.get_argument("serveraddr")
-    sid = response.get_argument("sid")
-    masterSever.addServer(sid, serveraddr)
-    
-def removeWebServer(response):
-    sid = response.get_argument("sid")
-    masterSever.removeServer(sid)
+# 
+# def addWebServer(response):
+#     serveraddr = response.get_argument("serveraddr")
+#     sid = response.get_argument("sid")
+#     masterSever.addServer(sid, serveraddr)
+#     
+# def removeWebServer(response):
+#     sid = response.get_argument("sid")
+#     masterSever.removeServer(sid)
     
 def updateWebServerMap(response):
     webServerMap  = json.loads(response.get_argument("webServerMap"))
