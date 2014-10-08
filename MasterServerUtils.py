@@ -14,6 +14,8 @@ LI_LAST_WAITING_UID =2
 class MasterServerUtils():
     rrCount = 0
     webServerMap= {}
+    externalWebServerMap = {}
+    
     webServerIds=[]
     def __init__(self,webServerMap, externalServerMap):
         self.updateWebServerMap(webServerMap, externalServerMap)
@@ -22,31 +24,35 @@ class MasterServerUtils():
                 print AndroidUtils.get_data(i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap) , "externalWebServerMap":json.dumps(ExternalWebServersMap)})).read()
             except:
                 print sys.exc_info()[0]
-    def addServer(self, sid , addr):
-        self.webServerMap[sid]=addr
-        self.updateWebServerMap(self.webServerMap)
-    
-    def removeServer(self, sid):
-        del self.webServerMap[sid]
-        if(sid=="master"):#fail safe 
-            master = min(self.webServerMap.keys())
-            self.webServerMap["master"]  =self.webServerMap[master]
-        self.updateWebServerMap(self.webServerMap)
+#     def addServer(self, sid , addr):
+#         self.webServerMap[sid]=addr
+#         self.updateWebServerMap(self.webServerMap)
+#     
+#     def removeServer(self, sid):
+#         del self.webServerMap[sid]
+#         if(sid=="master"):#fail safe 
+#             master = min(self.webServerMap.keys())
+#             self.webServerMap["master"]  =self.webServerMap[master]
+#         self.updateWebServerMap(self.webServerMap)
     
         
     def updateWebServerMap(self, webServerMap , externalServerMap):
         for i in webServerMap.keys():
                 self.webServerMap[i] = webServerMap[i]
-        ExternalWebServersMap = externalServerMap
+                self.externalWebServerMap[i] = externalServerMap[i]
+        #ExternalWebServersMap = externalServerMap
         self.webServerIds = webServerMap.keys()
     
     
-    def getRandomWebSocketServer(self):
+    def getRandomWebSocketServer(self, isExternal=True):
         id = random.choice(self.webServerIds)
-        addr = self.webServerMap[id]
+        if(not isExternal):
+            addr = self.webServerMap[id]
+        else:
+            addr = self.externalWebServerMap[id]
         return id , addr
     
-    def getQuizWebSocketServer(self,quiz, user):
+    def getQuizWebSocketServer(self,quiz, user , isExternal=True):
         quizState = ss.get(quiz.quizId,None)
         if(quizState):
             quizState[LI_N_PEOPLE_WAITING]-=1
@@ -56,7 +62,11 @@ class MasterServerUtils():
             ss[quiz.quizId]= quizState = [quiz.nPeople*3 , self.getRoundRobinServerId(),None]
         
         quizState[LI_LAST_WAITING_UID] = user.uid
-        return quizState[LI_USERS_WAITING_SERVERID] , self.webServerMap[quizState[LI_USERS_WAITING_SERVERID]]
+        if(not isExternal):
+            return quizState[LI_USERS_WAITING_SERVERID] , self.webServerMap[quizState[LI_USERS_WAITING_SERVERID]]
+        else:
+            return quizState[LI_USERS_WAITING_SERVERID] , self.externalWebServerMap[quizState[LI_USERS_WAITING_SERVERID]]
+
     
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
         quizState = ss.get(quizId,None)
