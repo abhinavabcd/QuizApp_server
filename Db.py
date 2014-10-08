@@ -810,8 +810,8 @@ class DbUtils():
                 newFriends= fbFriends
             else:
                 newFriends = list(set(fbFriends) - set(json.loads(user.fbFriends)))
-            newFriends.remove(fbUid)
             for i in newFriends:
+                if(i==fbUid): continue
                 user2 = Users.objects(fbUid = i)
                 if(user2):
                     user2= user2.get(0)
@@ -827,8 +827,8 @@ class DbUtils():
                 newFriends= gPlusFriends
             else:
                 newFriends = list(set(gPlusFriends) - set(json.loads(user.gPlusFriends)))
-            newFriends.remove(gPlusUid)
             for i in newFriends:
+                if(i==gPlusUid): continue
                 user2 = Users.objects(gPlusUid = i)
                 if(user2):
                     user2= user2.get(0)
