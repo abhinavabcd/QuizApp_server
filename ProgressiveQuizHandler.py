@@ -27,7 +27,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
             userStates[i]={}
             
         runningQuizes[id] = quizState = {   QUESTIONS: questions,
-                                            CURRENT_QUESTION :-1,
+                                            CURRENT_QUESTION :0,
                                             N_CURRENT_QUESTION_ANSWERED:[],
                                             USERS:userStates,##{uid:something}
                                             CREATED_AT:datetime.datetime.now(),
@@ -112,8 +112,10 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
             if(len(quizConnections)>=int(quiz.nPeople)):# we have enough people
                 self.quizConnections = [quizConnections.pop() for i in range(0, quiz.nPeople)]#nPeople into current quiz
                 uids = map(lambda x:x.uid , self.quizConnections)
+                _runningQuizId , _runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
                 for conn in self.quizConnections:
-                    conn.runningQuizId , conn.runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
+                    conn.runningQuizId = _runningQuizId
+                    conn.runningQuiz = _runningQuiz
                     if(conn!=self):
                         conn.quizConnections = self.quizConnections
                 #question_one = self.runningQuiz[QUESTIONS][0]
@@ -137,11 +139,12 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                 self.broadcastToGroup({"messageType":USER_ANSWERED_QUESTION,"payload":message},self.quizConnections)
                 #whatUserGot = int(whatUserGot)
                 self.runningQuiz[N_CURRENT_QUESTION_ANSWERED].append(self.uid)
-                if(len(self.runningQuiz[N_CURRENT_QUESTION_ANSWERED])==len(self.quizConnections)):#if everyone aswered
+                if(len(self.runningQuiz[N_CURRENT_QUESTION_ANSWERED])>=len(self.quizConnections)):#if everyone aswered
                     self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
                     currentQuestion = self.runningQuiz[CURRENT_QUESTION]
-                    self.runningQuiz[CURRENT_QUESTION]=currentQuestion+1
-                    if(currentQuestion>=self.quiz.nQuestions):
+                    self.runningQuiz[CURRENT_QUESTION]=currentQuestion+1# next question
+                    print currentQuestion
+                    if(currentQuestion>=self.quiz.nQuestions-1):
                         pointsMap = self.runningQuiz[POINTS]
                         max = 0
                         maxUid = None
@@ -156,9 +159,9 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                                             },
                                          self.quizConnections)
                         #TODO: calculate winner and save in Db
-                        for conn in self.quizConnections:
-                            currentUsersPoints =self.runningQuiz[POINTS]
-                            dbUtils.onUserQuizWonLost( conn.user, conn.quiz.quizId , currentUsersPoints[conn.uid] , currentUsersPoints[conn.uid]==max , currentUsersPoints[conn.uid]<max , currentUsersPoints[conn.uid]==max)
+#                         for conn in self.quizConnections:
+#                             currentUsersPoints =self.runningQuiz[POINTS]
+#                             dbUtils.onUserQuizWonLost( conn.user, conn.quiz.quizId , currentUsersPoints[conn.uid] , currentUsersPoints[conn.uid]==max , currentUsersPoints[conn.uid]<max , currentUsersPoints[conn.uid]==max)
                         return
                     currentQuestionIndex = self.runningQuiz[CURRENT_QUESTION]
                     question = self.runningQuiz[QUESTIONS][currentQuestionIndex]
@@ -171,9 +174,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
             elif(messageType==GET_NEXT_QUESTION):#user explicitly calls this function on if other doesn't responsd
                 n_answered =self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]
                 isFirstQuestion = False
-                if(self.runningQuiz[CURRENT_QUESTION]==-1):
+                if(self.runningQuiz[CURRENT_QUESTION]==0):
                     isFirstQuestion = True
-                    self.runningQuiz[CURRENT_QUESTION]==0
                     
                 if(isFirstQuestion or len(n_answered) ==len(self.quizConnections)==self.quiz.nPeople):#if everyone aswered
                     self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]

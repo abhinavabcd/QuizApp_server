@@ -116,7 +116,7 @@ ONE_DAY= datetime.timedelta(days = 1)
 EPOCH_DATETIME = datetime.datetime(1970,1,1)
 
 secret_auth="asdsadkjhsakjdhjksad"
-GCM_API_KEY = "AIzaSyCEhpQRBHfeAsdYS85VlcrsB7XQADbEWNw"
+GCM_API_KEY = "AIzaSyD8h1-0yqOnQV9A5AGsvfi0j59s3Yj9ZPw"
 GCM_HEADERS ={'Content-Type':'application/json',
               'Authorization':'key='+GCM_API_KEY
         }
