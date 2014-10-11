@@ -239,6 +239,13 @@ def addBadges(response, user=None):
     
 
 @userAuthRequired
+def setStatusMsg(response, user = None):
+    msg = response.get_argument("statusMsg")
+    user.status = msg[:30]
+    user.save()
+    responseFinish(response, {"messageType":OK})
+        
+@userAuthRequired
 def getLeaderboards(response , user = None):
     quizId = response.get_argument("quizId")
     globalList = dbUtils.getGlobalLeaderboards(quizId)
@@ -454,7 +461,8 @@ def updateUserRating(response , user=None):
 ###################internal functions##############################
 def updateServerMap(response):
     webServerMap = json.loads(response.get_argument("webServerMap"))
-    masterSever.updateWebServerMap(webServerMap)
+    externalWebServerMap = json.loads(response.get_argument("externalWebServerMap"))
+    masterSever.updateWebServerMap(webServerMap, externalWebServerMap)
     response.finish("OK")
 
 
@@ -480,7 +488,8 @@ serverFunc = {
               "setGCMRegistrationId":setGCMRegistrationId,
               "loadQuestionsInOrder":loadQuestionsInOrder,
               "onOfflineChallengeCompleted":onOfflineChallengeCompleted,
-              "getOfflineChallengeById":getOfflineChallengeById
+              "getOfflineChallengeById":getOfflineChallengeById,
+              "setStatusMsg":setStatusMsg
              }
 
 #server web request commands with json
