@@ -34,5 +34,5 @@ def loadJsonData(dbUtils):
 
 if __name__=="__main__":
     import Config
-    dbUtils = DbUtils(["192.168.0.10",27017,datetime.date(2014, 10 , 15) , 10] ) 
+    dbUtils = DbUtils(["127.0.0.1",27017,datetime.date(2014, 10 , 15) , 10] ) 
     loadJsonData(dbUtils)
