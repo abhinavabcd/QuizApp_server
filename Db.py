@@ -802,7 +802,9 @@ class DbUtils():
             user.emailId = emailId
             user.createdAt = datetime.datetime.now()
             user.loginIndex = 0
-            
+        
+        
+        subscribersList = []
         if(fbUid!=None):
             user.fbUid = fbUid
             newFriends = []
@@ -816,10 +818,7 @@ class DbUtils():
                 if(user2):
                     user2= user2.get(0)
                     # mutual friends
-                    self.addsubscriber(user, user2)
-                    self.addsubscriber(user2, user)
-                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid,None)
-                    
+                    subscribersList.append(user2)
         if(gPlusUid!=None):
             user.gPlusUid = gPlusUid
             newFriends = []
@@ -832,10 +831,8 @@ class DbUtils():
                 user2 = Users.objects(gPlusUid = i)
                 if(user2):
                     user2= user2.get(0)
+                    subscribersList.append(user2)
                     # mutual friends
-                    self.addsubscriber(user, user2)
-                    self.addsubscriber(user2, user)
-                    self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid,None)
         
         user.newDeviceId = deviceId
         user.name = name
@@ -850,6 +847,11 @@ class DbUtils():
         user.googlePlus = gPlusToken
         user.isActivated = isActivated
         user.save()
+        for user2 in subscribersList:
+            self.addsubscriber(user, user2)
+            self.addsubscriber(user2, user)
+            self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid,None)
+
         return user
     
     def incrementLoginIndex(self, user):
@@ -900,10 +902,11 @@ class DbUtils():
             ind-=1
         return userFeedMessages
     
-    def publishFeed(self, user, message, message2=None):
+    def publishFeed(self, user, _type ,  message, message2=None):
         f = Feed()
         f.fromUid = user.uid
         f.message = message
+        f.type = _type
         if(message2!=None):
             f.message2 = message2
         f.timestamp = HelperFunctions.toUtcTimestamp(datetime.datetime.now())
@@ -998,15 +1001,15 @@ class DbUtils():
             badgeIds=[]
             for i in badges:
                 user.update(add_to_set__badges = i.badgeId)
-#                badgeIds.append(i.badgeId)
-#            user.update(push_all__badges = badgeIds)
+                badgeIds.append(i.badgeId)
+            self.publishFeed(user, FEED_USER_WON_BADGES , json.dumps(badgeIds) , None)
             return True
         return False
 
         
     
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
-        user1 , user2 = reorderUids(uid1, uid2)
+        uid1 , uid2 = reorderUids(uid1, uid2)
         if(toIndex == -1):
             r = Uid1Uid2Index.objects(uid1_uid2 = uid1+"_"+uid2)
             if(not r):
