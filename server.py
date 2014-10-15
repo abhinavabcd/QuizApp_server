@@ -219,7 +219,8 @@ def addOfflineChallenge(response, user=None):
         addUidToQueue(uid2, {"fromUser":user.uid,
                                 "fromUserName":user.name,
                                 "quizId":challengeData["quizId"],
-                                "messsageType":NOTIFICATION_GCM_OFFLINE_CHALLENGE_NOTIFICATION 
+                                "quizName":dbUtils.getQuizDetails(challengeData["quizId"]).name,
+                                "messageType":NOTIFICATION_GCM_OFFLINE_CHALLENGE_NOTIFICATION 
                               })
     responseFinish(response, {"messageType":OK , "payload":offlineChallenge.to_json()})
     
@@ -263,7 +264,7 @@ def sendInboxMessages(response ,user=None):
     addUidToQueue(toUser.uid, {"fromUser":user.uid,
                                 "fromUserName":user.name,
                                 "textMessage":textMessage,
-                                "messsageType":NOTIFICATION_GCM_INBOX_MESSAGE 
+                                "messageType":NOTIFICATION_GCM_INBOX_MESSAGE 
                                 })
     responseFinish(response, {"messageType":OK_SEND_MESSAGE})
 
