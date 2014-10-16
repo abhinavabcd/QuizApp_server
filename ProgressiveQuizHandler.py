@@ -32,7 +32,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                                             USERS:userStates,##{uid:something}
                                             CREATED_AT:datetime.datetime.now(),
                                             POINTS:{},
-                                            N_CURRENT_REMATCH_REQUEST:set()
+                                            N_CURRENT_REMATCH_REQUEST:set(),
+                                            N_CURRENT_USERS_READY:set()
                                         }
         return id , quizState
     
@@ -118,7 +119,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                     if(conn!=self):
                         conn.quizConnections = self.quizConnections
                 #question_one = self.runningQuiz[QUESTIONS][0]
-                self.broadcastToAll({"messageType":STARTING_QUESTIONS,
+                self.broadcastToAll({"messageType":LOAD_QUESTIONS,
                                                    "payload":self.runningQuizId,
                                                    "payload1":"["+",".join(map(lambda uid:dbUtils.getUserByUid(uid).toJson() , uids))+"]",
                                                    "payload2":"["+",".join(map(lambda x:x.to_json() ,self.runningQuiz[QUESTIONS]))+"]"
@@ -129,7 +130,17 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
         def on_message(self, message):
             uPayload = userQuizUpdate = json.loads(message)
             messageType = int(userQuizUpdate[MESSAGE_TYPE])
-            if(messageType==USER_ANSWERED_QUESTION):
+            if(messageType==USER_READY): 
+                self.runningQuiz[N_CURRENT_USERS_READY].add(self.uid)
+                if(len(self.runningQuiz[N_CURRENT_USERS_READY])>=len(self.quizConnections)):
+                    self.broadcastToAll({"messageType":STARTING_QUESTIONS},
+                                         self.quizConnections)
+                else:
+                    self.broadcastToGroup({"messageType":USER_READY, "payload":self.uid},
+                                         self.quizConnections)
+                    
+            
+            elif(messageType==USER_ANSWERED_QUESTION):
                 questionId = userQuizUpdate[QUESTION_ID]
                 userAnswer = userQuizUpdate[USER_ANSWER]
                 elapsedTime = userQuizUpdate[ELAPSED_TIME]
@@ -171,7 +182,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                     
                 
             elif(messageType==GET_NEXT_QUESTION):#user explicitly calls this function on if other doesn't responsd
-                n_answered =self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]
+                n_answered = self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]
                 isFirstQuestion = False
                 if(self.runningQuiz[CURRENT_QUESTION]==0):
                     isFirstQuestion = True
