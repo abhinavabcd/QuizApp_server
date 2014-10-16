@@ -46,7 +46,6 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
         quizConnections =None
         runningQuizId= None
         runningQuiz = None
-        quizPoolWaitId = None
         user = None
         quiz = None
         isChallenge = None
