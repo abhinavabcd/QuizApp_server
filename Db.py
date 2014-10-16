@@ -953,7 +953,7 @@ class DbUtils():
 
         #experimental only
     def getRecentMessagesIfAny(self, user , afterTimestamp):
-        messagesAfterTimestamp = UserInboxMessages.objects(toUid_LoginIndex = user.uid+"_"+user.lastLoginIndex , timestamp__gte = afterTimestamp)
+        messagesAfterTimestamp = UserInboxMessages.objects(toUid_LoginIndex = user.uid+"_"+str(user.loginIndex) , timestamp__gt = afterTimestamp)
         return messagesAfterTimestamp
         
     def userHasWon(self,user, quizId, xpGain):
@@ -983,11 +983,11 @@ class DbUtils():
         xpPoints = xpPoints.get(quizId,0)
         ret = {}
         results  = UserStats.objects(quizId= quizId , xpPoints__lt=xpPoints).order_by("-xpPoints")
-        count = len(results)
+        count = user_rank = len(results)
         for i in results[:10]:
             count +=1
             ret[i.uid]=[count , i.xpPoints]
-        
+        count = user_rank
         for i in UserStats.objects(quizId= quizId , xpPoints__gte=xpPoints).order_by("xpPoints")[:10]:
             count -=1
             ret[i.uid]=[count , i.xpPoints]
