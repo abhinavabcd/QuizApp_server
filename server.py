@@ -354,7 +354,7 @@ def getAllUpdates(response, user=None):
         recentMessages = "["+','.join(map(lambda x:x.toJson(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
         retObj["payload4"] = recentMessages #unseen messages if any
         
-    
+    retObj["payload10"] = json.dumps({"serverTime":HelperFunctions.toUtcTimestamp(datetime.datetime.now())})
     responseFinish(response, retObj)
     if(isLogin):
         dbUtils.incrementLoginIndex(user)
