@@ -219,6 +219,7 @@ def addOfflineChallenge(response, user=None):
         addUidToQueue(uid2, {"fromUser":user.uid,
                                 "fromUserName":user.name,
                                 "quizId":challengeData["quizId"],
+                                "payload1":offlineChallenge.offlineChallengeId,
                                 "quizName":dbUtils.getQuizDetails(challengeData["quizId"]).name,
                                 "messageType":NOTIFICATION_GCM_OFFLINE_CHALLENGE_NOTIFICATION 
                               })
