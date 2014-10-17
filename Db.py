@@ -659,7 +659,7 @@ class DbUtils():
             
             offlineChallenge.save()
             self.updateQuizWinStatus(user, quizId, a+20*won, winStatus,fromUser.uid, None, None)
-            self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId , offlineChallenge.challengeData2)
+            self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId , None )
             self.updateQuizWinStatus(fromUser, quizId, b+20*lost, -winStatus, user.uid , None, None)
             return True
         return True
