@@ -87,7 +87,7 @@ class UserActivityStep(Document):
         return self
         
 class OfflineChallenge(Document):
-    offlineChallengeId = StringField()
+    offlineChallengeId = StringField(unique=True)
     fromUid_userChallengeIndex = StringField()
     toUid_userChallengeIndex = StringField()
     challengeType = IntField(default=0)
