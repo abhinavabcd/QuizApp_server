@@ -89,5 +89,5 @@ IS_NEW_DB = True
 
 if __name__=="__main__":
     import Config
-    dbUtils = DbUtils(["127.0.0.1",27017,datetime.date(2014, 8 , 27) , 10] ) 
+    dbUtils = DbUtils(["127.0.0.1",27017,datetime.date(2014, 8 , 27) , 10] , createBots = False) 
     syncSpreadSheets(dbUtils, syncSpecific=[] , excludeSheets=["tags"])
