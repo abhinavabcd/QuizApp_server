@@ -438,7 +438,7 @@ class DbUtils():
     rrPriorities = 0
     _users_cached_lru= 0
     _bots = []
-    def __init__(self , dbServer, createBots = True):
+    def __init__(self , dbServer, _createBots = True):
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
         print dbServer
@@ -449,7 +449,7 @@ class DbUtils():
 #                 db =connect('quizApp', alias=i, host=dbServers[i][0], port = dbServers[i][1])
 
         self.dbServer = dbServer
-        if(createBots):
+        if(_createBots):
             from CreateBots import createBots
             self._bots = createBots(self, UserWinsLosses)
         
@@ -778,8 +778,12 @@ class DbUtils():
 #         self.dbServerAliases[self.rrCount]
 #         self.rrCount+=1
     ### this should rather be connect to fb , gplus or refresh users list too not just register User
-    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None , gPlusFriends = None , fbFriends = []):
-        user = Users.objects(emailId=emailId)
+    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None , gPlusFriends = None , fbFriends = [], connectUid=None):
+        if(connectUid!=None):
+            user = Users.objects(uid=connectUid)
+        else:
+            user = Users.objects(emailId=emailId)
+
         if(user or len(user)>0):
             user = user.get(0)
         else:
