@@ -531,6 +531,7 @@ class QuizApp(tornado.web.Application):
 
 
 def main():
+    print "PROCESS_PID: "+os.getpid()
     http_server = tornado.httpserver.HTTPServer(QuizApp())
     http_server.listen(HTTP_PORT)
     tornado.ioloop.PeriodicCallback(sendGcmMessages, 2000).start()
