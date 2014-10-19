@@ -1,12 +1,11 @@
-from random import randrange, random
+from random import randrange, random, sample
 
-from Db import UserWinsLosses
-
+UserWinsLosses = None
 
 def generateRandomStats(user, quizzes):
         if(not user.getStats()): 
-            for quiz in random.sample(quizzes,6):
-                xpPoints = random.randrange(400, 2000)
+            for quiz in sample(quizzes,min(len(quizzes), 6)):
+                xpPoints = randrange(400, 2000)
                 user.updateStats(quiz.quizId , xpPoints) 
                 wl = UserWinsLosses.objects(uid=user.uid, quizId = quiz.quizId)
                 if(wl):
@@ -18,15 +17,19 @@ def generateRandomStats(user, quizzes):
                     wl.wins=xpPoints/randrange(50, 120)#avg points 
                     wl.loss=xpPoints/randrange(50, 120)
                     wl.ties=xpPoints/randrange(50, 120)
+                wl.save()
 
 
-
-def createBots(dbUtils):
+def createBots(dbUtils , _UserWinsLosses):
+    global UserWinsLosses
+    UserWinsLosses = _UserWinsLosses
     l= []
-    quizzes = map(lambda x: x , dbUtils.getAllQuizzes())
+    import datetime
+    quizzes = map(lambda x: x , dbUtils.getAllQuizzes(datetime.datetime.utcfromtimestamp(0)))
+    print quizzes
+    
     l.append(dbUtils.registerUser("Prashanthi", "123456789", "saloni123@gmail.com", "userb/prashanthi.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True, preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
-    
     l.append(dbUtils.registerUser("Swathi reddy", "123456789", "swathi123@gmail.com", "userb/swathi.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
     l.append(dbUtils.registerUser("Shanvitha", "123457890", "Shanvitha@gmail.com", "userb/shanvitha.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
