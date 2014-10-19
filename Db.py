@@ -374,6 +374,8 @@ class Categories(Document):
     description = StringField()
     quizList = ListField(StringField())
     assetPath = StringField()
+    bgAssetPath = StringField()
+    titleAssetPath = StringField()
     type = StringField()
     modifiedTimestamp = DateTimeField()
     
@@ -436,7 +438,7 @@ class DbUtils():
     rrPriorities = 0
     _users_cached_lru= 0
     _bots = []
-    def __init__(self , dbServer):
+    def __init__(self , dbServer, createBots = True):
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
         print dbServer
@@ -447,8 +449,9 @@ class DbUtils():
 #                 db =connect('quizApp', alias=i, host=dbServers[i][0], port = dbServers[i][1])
 
         self.dbServer = dbServer
-        from CreateBots import createBots
-        self._bots = createBots(self)
+        if(createBots):
+            from CreateBots import createBots
+            self._bots = createBots(self, UserWinsLosses)
         
 #         self.dbServerAliases = dbServers.keys()
 #         self.rrPriorities = datetime.date.today()
@@ -467,7 +470,7 @@ class DbUtils():
         return random.choice(self._bots)
 
 
-    def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, assetPath=None, quizList=None,isDirty=1):
+    def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, assetPath=None, bgAssetPath=None, titleAssetPath=None,  quizList=None,isDirty=1):
         categoryId = str(categoryId)
         if(isinstance(quizList,str)):
             quizList = getListFromString(quizList)
@@ -481,6 +484,9 @@ class DbUtils():
         c.shortDescription = shortDescription
         c.description = description
         c.assetPath = assetPath
+        c.bgAssetPath = bgAssetPath
+        c.titleAssetPath = titleAssetPath
+        
         quizListTemp = []
         ##TODO: below check if quiz is present in quizList
         for i in c.quizList:
