@@ -507,7 +507,6 @@ class Func(tornado.web.RequestHandler):
         task = task if task!=None else self.get_argument("task",None)
         logging.info(task)
         logging.info(self.request.arguments)
-        print self.request.arguments
         func = serverFunc.get(task,None)
         if(func):
             func(self)
