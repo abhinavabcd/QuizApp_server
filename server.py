@@ -190,6 +190,12 @@ def subscribeTo(response, user=None):
     responseFinish(response, {"messageType":OK})
 
 @userAuthRequired
+def unSubscribeTo(response, user=None):
+    uid2 = response.get_argument("uid2")
+    dbUtils.removeSubScriber(dbUtils.getUserByUid(uid2), user)
+    responseFinish(response, {"messageType":OK})
+
+@userAuthRequired
 def onOfflineChallengeCompleted(response, user=None):
     offlineChallengeId = response.get_argument("offlineChallengeId")
     challengeData = response.get_argument("challengeData")
@@ -486,6 +492,7 @@ serverFunc = {
               "addBadges":addBadges,
               "searchByUserName":searchByUserName,
               "subscribeTo":subscribeTo,
+              "unSubscribeTo":unSubscribeTo,
               "addOfflineChallenge":addOfflineChallenge,
               "setGCMRegistrationId":setGCMRegistrationId,
               "loadQuestionsInOrder":loadQuestionsInOrder,

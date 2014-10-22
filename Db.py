@@ -10,6 +10,7 @@ import time
 import Config
 from Constants import *
 import HelperFunctions
+from reportlab.lib.validators import isInstanceOf
 
 
 def reorderUids(uid1, uid2):
@@ -472,7 +473,7 @@ class DbUtils():
 
     def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, assetPath=None, bgAssetPath=None, titleAssetPath=None,  quizList=None,isDirty=1):
         categoryId = str(categoryId)
-        if(isinstance(quizList,str)):
+        if(isinstance(quizList,str) or isinstance(quizList, int)):
             quizList = getListFromString(quizList)
             
         c= Categories.objects(categoryId = categoryId)
@@ -872,7 +873,7 @@ class DbUtils():
         toUser.update(add_to_set__subscribers = user.uid)
         user.update(add_to_set__subscribedTo = toUser.uid)
         
-    def removeSubScriber(self , fromUser , user):
+    def removeSubscriber(self , fromUser , user):
         fromUser.update(pull__subscribers =user.uid)
         user.update(pull__subscribedTo =fromUser.uid)
         
