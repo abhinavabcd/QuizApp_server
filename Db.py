@@ -10,7 +10,6 @@ import time
 import Config
 from Constants import *
 import HelperFunctions
-from reportlab.lib.validators import isInstanceOf
 
 
 def reorderUids(uid1, uid2):
