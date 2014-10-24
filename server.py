@@ -424,7 +424,6 @@ def activatingBotPQuiz(response, user=None):
 def responseFinish(response,data):
     data = json.dumps(data)
     logging.info(data)
-    print data
     response.finish(data) 
 
 @userAuthRequired
