@@ -565,8 +565,8 @@ class DbUtils():
                     _max = TopicMaxQuestions.getNewId(fullTag)
                     tagsAll.append(fullTag+"_"+str(_max))
                     tagsAll2.append(fullTag)
-            print tagsAll
-            print tagsAll2
+#             print tagsAll
+#             print tagsAll2
     
             q.tagsAllSubjects= tagsAll2
             q.tagsAllIndex= tagsAll
@@ -590,7 +590,7 @@ class DbUtils():
         if(isinstance(pictures,str)):
             pictures=getListFromString(pictures)
         answer = str(answer)
-        print questionId, questionType , questionDescription, pictures, options, answer, hint, explanation, time, xp, tags
+        #print questionId, questionType , questionDescription, pictures, options, answer, hint, explanation, time, xp, tags
         self.addQuestion(questionId, questionType ,questionDescription , pictures, options, answer, hint , explanation , time, xp , tags)
         return True
     
@@ -992,14 +992,14 @@ class DbUtils():
         xpPoints = user.getStats(quizId)
         xpPoints = xpPoints.get(quizId,0)
         ret = {}
-        results  = UserStats.objects(quizId= quizId , xpPoints__lt=xpPoints).order_by("-xpPoints")
+        results  = UserStats.objects(quizId= quizId , xpPoints__gte=xpPoints).order_by("-xpPoints")
         count = user_rank = len(results)
         for i in results[:10]:
-            count +=1
+            count -=1
             ret[i.uid]=[count , i.xpPoints]
         count = user_rank
-        for i in UserStats.objects(quizId= quizId , xpPoints__gte=xpPoints).order_by("xpPoints")[:10]:
-            count -=1
+        for i in UserStats.objects(quizId= quizId , xpPoints__lt=xpPoints).order_by("xpPoints")[:10]:
+            count +=1
             ret[i.uid]=[count , i.xpPoints]
             
         return ret
