@@ -992,13 +992,13 @@ class DbUtils():
         xpPoints = user.getStats(quizId)
         xpPoints = xpPoints.get(quizId,0)
         ret = {}
-        results  = UserStats.objects(quizId= quizId , xpPoints__gte=xpPoints).order_by("xpPoints")
+        results  = UserStats.objects(quizId= quizId , xpPoints__gt=xpPoints).order_by("xpPoints")
         count = user_rank = len(results)
         for i in results[:10]:
             count -=1
             ret[i.uid]=[count , i.xpPoints]
-        count = user_rank
-        for i in UserStats.objects(quizId= quizId , xpPoints__lt=xpPoints).order_by("-xpPoints")[:10]:
+        count = user_rank-1# to include user into this
+        for i in UserStats.objects(quizId= quizId , xpPoints__lte=xpPoints).order_by("-xpPoints")[:10]:
             count +=1
             ret[i.uid]=[count , i.xpPoints]
             
