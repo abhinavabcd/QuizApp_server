@@ -68,7 +68,7 @@ class UserInboxMessages(Document):
     fromUid_LoginIndex = StringField() #uid1_LOGININDEX
     toUid_LoginIndex = StringField() #uid2_LOGININDEX
     
-    def toJson(self):
+    def to_json(self):
         son = self.to_mongo()
         del son["fromUid_LoginIndex"]
         del son["toUid_LoginIndex"]
@@ -162,8 +162,8 @@ class Users(Document):
     
     badges = ListField(StringField())
     loginIndex = IntField()
-    googlePlus = StringField()
-    facebook = StringField()
+    googlePlus = StringField(default=None)
+    facebook = StringField(default=None) 
     gPlusUid = StringField()
     fbUid = StringField()
     activationCode = StringField()
@@ -853,8 +853,8 @@ class DbUtils():
         user.gender = gender
         user.place = place
         user.ipAddress = ipAddress
-        user.facebook = facebookToken
-        user.googlePlus = gPlusToken
+        user.facebook = facebookToken if facebookToken!=None else user.facebook
+        user.googlePlus = gPlusToken if gPlusToken!=None else user.googlePlus
         user.isActivated = isActivated
         user.save()
         for user2 in subscribersList:
