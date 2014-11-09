@@ -123,7 +123,8 @@ def onRegisterWithGPlusNetwork(response, user):
                                                    True,
                                                    gPlusUid = temp["user_id"],
                                                    gPlusFriends = gPlusFriends,
-                                                   fbFriends = fbFriends
+                                                   fbFriends = fbFriends,
+                                                   connectUid = user.get("connectUid",None)
                                                    )
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
                 responseFinish(response,{"messageType":GPLUS_USER_SAVED , "payload":encodedKey})
@@ -153,7 +154,8 @@ def onRegisterWithFbNetwork(response, user):
                                                    user.get("facebook",None),
                                                    user.get("googlePlus",None),
                                                    True,
-                                                   fbUid = temp["id"]
+                                                   fbUid = temp["id"],
+                                                   connectUid = user.get("connectUid",None)
                                                )
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
                 responseFinish(response,{"messageType":FACEBOOK_USER_SAVED , "payload":encodedKey})
@@ -180,7 +182,7 @@ def getPreviousMessages(response ,user=None):
     fromIndex = int(response.get_argument("fromIndex",0))
     
     responseFinish(response, {"messageType":OK_MESSAGES,
-                              "payload":"["+','.join(map(lambda x:x.toJson() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex,fromIndex)  ))+"]",
+                              "payload":"["+','.join(map(lambda x:x.to_json() ,dbUtils.getMessagesBetween(user.uid, uid2, toIndex,fromIndex)  ))+"]",
                             }
                   )
 @userAuthRequired
@@ -358,7 +360,7 @@ def getAllUpdates(response, user=None):
     lastSeenTimestamp = response.get_argument("lastSeenTimestamp",None)
     if(lastSeenTimestamp):
         lastSeenTimestamp = datetime.datetime.utcfromtimestamp(float(lastSeenTimestamp))
-        recentMessages = "["+','.join(map(lambda x:x.toJson(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
+        recentMessages = "["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentMessagesIfAny(user, lastSeenTimestamp)))+"]"
         retObj["payload4"] = recentMessages #unseen messages if any
         
     retObj["payload10"] = json.dumps({"serverTime":HelperFunctions.toUtcTimestamp(datetime.datetime.now())})
