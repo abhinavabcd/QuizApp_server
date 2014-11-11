@@ -434,6 +434,7 @@ def getListFromString(s,toLower=False):
 class DbUtils():
 
     dbServer = []
+    dbConnection = None
     rrCount = 0
     rrPriorities = 0
     _users_cached_lru= 0
@@ -442,7 +443,7 @@ class DbUtils():
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
         print dbServer
-        connect('quizApp',host= dbServer[0], port = dbServer[1])
+        self.dbConnection = connect('quizApp',host= dbServer[0], port = dbServer[1])
             
 #         for i in dbServerAliases:
 #             if(i!=DEFAULT_SERVER_ALIAS):
