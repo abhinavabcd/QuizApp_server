@@ -93,8 +93,8 @@ class role_data(DynamicDocument):
     movie = ReferenceField('movie_data')
     
 
+dbUtils = DbUtils(Config.dbServer) # creating a conenction each time  ? not good , 
 def createQuestion(questionDescription,options,answer,hint,tags):
-        dbUtils = DbUtils(Config.dbServer)
         dbUtils.addQuestion(generateKey(),0 ,questionDescription , [], options, answer, hint , "" , 10, 10 , tags) #addQuestion
 
 def bracesFormatter(mName):
