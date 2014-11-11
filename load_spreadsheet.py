@@ -86,7 +86,8 @@ def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi
                     if(dbUtils.addOrModifyBadge(**row)):
                         badgesWorksheet.update_cell(i+2, len(row.keys()), 0)
 
-IS_NEW_DB = True
+import sys
+IS_NEW_DB = True if (len(sys.argv)>1  and sys.argv[1]=='syncall') else False
 
 if __name__=="__main__":
     import Config
