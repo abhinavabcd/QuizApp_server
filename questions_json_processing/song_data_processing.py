@@ -1,5 +1,37 @@
-import json
+import urllib
+import re
+import copy
 import random
+from lxml.html import parse, tostring, clean,etree
+from lxml.etree import strip_tags
+import pprint
+import StringIO
+import yajl as json
+import socket
+import time
+import urllib2
+import logging
+import zlib 
+import itertools
+import os
+import json
+import codecs
+from StringIO import StringIO
+from mongoengine import *
+import random
+import string
+import datetime
+import time
+import bson
+import sys
+from Config import *
+from Db import *
+from HelperFunctions import *
+from mongoengine.context_managers import switch_db
+
+dbUtils = DbUtils(Config.dbServer) # creating a conenction each time  ? not good , 
+def createQuestion(questionDescription,options,answer,hint,tags , qid = None):
+        dbUtils.addQuestion(qid if qid else generateKey(),0 ,questionDescription , [], options, answer, hint , "" , 10, 10 , tags) #addQuestion
 
 def random_insert(lst, item):
     lst.insert(random.randrange(len(lst)+1), item)
@@ -40,8 +72,10 @@ for movie in movies.keys():
 
 questions = []
 count = 0
+all_lyricists = []
 all_movies = movies.keys()
 
+temp = {}
 all_music_directors = []
 for movie in movies:
     movie = movies[movie]
@@ -67,29 +101,21 @@ for movie, song in movie_song:
         else:
             song["singers"] = a
             
+        
+for i in map( lambda x: x[1].get("lyricists",[]), movie_song):
+    if(i):
+        temp[i] = True
+all_lyricists = temp.keys()
 
-def get_all_lyricists(movie_song):
-    temp = {}
-    for i in map( lambda x: x[1].get("lyricists",[]), movie_song):
-        if(i):
-            temp[i] = True
-    return temp.keys()
-
-def get_all_songs(movie_song):
+def get_all_songs():
     temp = {}   
     for i in map( lambda x: x[1].get("singers",[]), movie_song):
         if(i):
             temp[i] = True
     return temp.keys()
 
-
-
-
-all_lyricists = get_all_lyricists(movie_song)
-all_singers = get_all_songs(movie_song)
+all_singers = get_all_songs()
 all_songs = map(lambda x : x[1]["name"] , movie_song)
-
-
  
 for movie,song in movie_song:
     lyr = song.get("lyricists",None)
@@ -102,6 +128,16 @@ for movie,song in movie_song:
         questions.append(question)
         count+=1
         print question
+##        
+##        d = answer+" wrote the lyrics from which song from the movie '"+movie+("("+str(y)+")" if y else "")+"'"
+##        answer = song["name"]
+##        options = check_and_get_options(answer , all_songs,4)
+##        
+##        question = ["lyr_"+str(count),0 ,d , [], options , answer, "" , "" , 10, 10 , ['song','lyricists']]
+##        questions.append(question)
+##        count+=1
+##        print question
+        break
 
 count = 0
 for movie,song in movie_song:
@@ -112,6 +148,7 @@ for movie,song in movie_song:
     question = ["song_movie_"+str(count),0 ,d , [], options , movie, "" , "" , 10, 10 , ['song']]
     print question
     questions.append(question)
+    break
 
 count = 0
 for movie,song in movie_song:
@@ -119,11 +156,13 @@ for movie,song in movie_song:
     y = movies[movie].get("year_of_release",None)
     d = "Who are the singers for the song '"+song['name']+"' from '"+movie+("("+str(y)+")" if y else "")+"'"
     singer = song["singers"]
+##    options = check_and_get_options(map(lambda x:x["name"], movies[movie]["song"] ), all_songs, 4 , False)
     options = check_and_get_options(singer, all_singers , 4)
     question = ["song_movie_"+str(count),0 ,d , [], options , singer, "" , "" , 10, 10 , ['singer','movie']]
     count+=1
     print question
     questions.append(question)
+    break
 
 count = 0
 for title in set(map(lambda x: x[0] , movie_song)):
@@ -136,3 +175,9 @@ for title in set(map(lambda x: x[0] , movie_song)):
         count+=1
         print question
         questions.append(question)
+        break
+
+for q in questions:
+    createQuestion(q[2], q[4], q[5], q[6], q[10] , qid = q[0])
+    
+
