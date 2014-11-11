@@ -40,6 +40,6 @@ def createBots(dbUtils , _UserWinsLosses):
     generateRandomStats(l[-1] , quizzes) 
     l.append(dbUtils.registerUser("Nidhi", "123456789", "nidhi@gmail.com", "userb/nidhi.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
-    l.append(dbUtils.registerUser("Nandini chauhan", "123456789", "nandidni@gmail.com", "userb/namratha.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
+    l.append(dbUtils.registerUser("Nandini chauhan", "123456789", "nandidni@gmail.com", "userb/nandini.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
     return l
