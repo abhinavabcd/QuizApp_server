@@ -31,16 +31,23 @@ def get_data(url,post=None,headers={}):
         if ret.info().get('Content-Encoding') == 'gzip':
             ret = StringIO(zlib.decompress(ret.read(),16+zlib.MAX_WBITS))
     except urllib2.HTTPError, e: 
-        ret = None
+        ret = StringIO("")
     return ret
 
-def getFbLikes(fbUrl):
+def getFbLikes(fbUrl, unique_id):
     try:
-        data = json.loads(get_data("https://graph.facebook.com/?ids="+fbUrl).read())
+        data = open("./fb_likes/"+unique_id,"r").read()
+    except:
+        data = get_data("https://graph.facebook.com/?ids="+fbUrl).read()
+        open("./fb_likes/"+unique_id,"w").write(data)
+        
+    try:
+        data = json.loads(data)
         data = data[data.keys()[0]]
         return int(data.get(u'shares',0))
     except Exception as ex:
         return 0
+
 headers = {
 'Host':	'play.raaga.com',
 'User-Agent':	'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0',
@@ -73,8 +80,10 @@ for i in a.cssselect(".browseresult_index_album a"):
     try:
         try:
             data = open("./del_songs_data/"+i.attrib["href"].split("/")[-1]).read()
+            print "reading from cache"
         except:
             data = get_data(i.attrib["href"], headers=headers).read()
+            print "downloading "+ i.attrib["href"] + ("saving to ./del_songs_data/"+i.attrib["href"].split("/")[-1])
             open("./del_songs_data/"+i.attrib["href"].split("/")[-1],"w").write(data)
             
         song_page = parse(StringIO(data)).getroot()
@@ -148,12 +157,12 @@ for i in a.cssselect(".browseresult_index_album a"):
                 print lyricist
                 song_data["lyricists"]=lyricist
                 
-        song_data["fb_likes"] = fb_like_count = getFbLikes(fb_like_url)
+        song_data["fb_likes"] = fb_like_count = getFbLikes(fb_like_url, id)
         print "fb_likes: "+str(fb_like_count)
         songs_list.append(song_data)
         
     count+=1
-    if(count>10):
+    if(count>100):
         count = 0
         f = open("song_data.json","w")
         f.write(json.dumps(movies))
