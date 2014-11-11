@@ -31,7 +31,7 @@ from mongoengine.context_managers import switch_db
 
 dbUtils = DbUtils(Config.dbServer) # creating a conenction each time  ? not good , 
 def createQuestion(questionDescription,options,answer,hint,tags , qid = None):
-        dbUtils.addQuestion(qid if qid else generateKey(),0 ,questionDescription , [], options, answer, hint , "" , 10, 10 , tags) #addQuestion
+        dbUtils.addQuestion(qid if qid else generateKey(),0 ,questionDescription , [], json.dumps(options), answer, hint , "" , 10, 10 , tags) #addQuestion
 
 def random_insert(lst, item):
     lst.insert(random.randrange(len(lst)+1), item)
@@ -41,7 +41,7 @@ def check_and_get_options(answer, list_options , count=4, insert_answer=True):
         retry = False
         k = random.sample(list_options, count-1)
         for i in k:
-            if (i in answer):
+            if (i == answer):
                 retry= True
         if(not retry):
             if(insert_answer):
@@ -70,6 +70,9 @@ for movie in movies.keys():
             except:
                     pass
 
+print len(movie_song)
+exit
+
 questions = []
 count = 0
 all_lyricists = []
@@ -83,23 +86,25 @@ for movie in movies:
         movie["music_directors"] = a = (" and ".join(movie["music_directors"])).strip()
         if(a):
             all_music_directors.append(a)
+    
+    for song in movie.get("songs",[]):
+        if(song.get("lyricists",[])):
+            song.get("lyricists").sort()
+            a = song["lyricists"].pop()
+            if(song["lyricists"]):
+                song["lyricists"] = " and ".join([' , '.join(song["lyricists"]), a])
+            else:
+                song["lyricists"] = a
+            
+        if(song.get("singers",[])):
+            song.get("singers").sort()
+            a = song["singers"].pop()
+            if(song["singers"]):
+                song["singers"] = " and ".join([' , '.join(song["singers"]), a])
+            else:
+                song["singers"] = a
+    
 
-for movie, song in movie_song:
-    if(song.get("lyricists",[])):
-        song.get("lyricists").sort()
-        a = song["lyricists"].pop()
-        if(song["singers"]):
-            song["lyricists"] = " and ".join([' , '.join(song["lyricists"]), a])
-        else:
-            song["lyricists"] = a
-        
-    if(song.get("singers",[])):
-        song.get("singers").sort()
-        a = song["singers"].pop()
-        if(song["singers"]):
-            song["singers"] = " and ".join([' , '.join(song["singers"]), a])
-        else:
-            song["singers"] = a
             
         
 for i in map( lambda x: x[1].get("lyricists",[]), movie_song):
@@ -137,7 +142,6 @@ for movie,song in movie_song:
 ##        questions.append(question)
 ##        count+=1
 ##        print question
-        break
 
 count = 0
 for movie,song in movie_song:
@@ -148,7 +152,6 @@ for movie,song in movie_song:
     question = ["song_movie_"+str(count),0 ,d , [], options , movie, "" , "" , 10, 10 , ['song']]
     print question
     questions.append(question)
-    break
 
 count = 0
 for movie,song in movie_song:
@@ -156,13 +159,13 @@ for movie,song in movie_song:
     y = movies[movie].get("year_of_release",None)
     d = "Who are the singers for the song '"+song['name']+"' from '"+movie+("("+str(y)+")" if y else "")+"'"
     singer = song["singers"]
+    if(singer):
 ##    options = check_and_get_options(map(lambda x:x["name"], movies[movie]["song"] ), all_songs, 4 , False)
-    options = check_and_get_options(singer, all_singers , 4)
-    question = ["song_movie_"+str(count),0 ,d , [], options , singer, "" , "" , 10, 10 , ['singer','movie']]
-    count+=1
-    print question
-    questions.append(question)
-    break
+        options = check_and_get_options(singer, all_singers , 4)
+        question = ["song_movie_"+str(count),0 ,d , [], options , singer, "" , "" , 10, 10 , ['singer','movie']]
+        count+=1
+        print question
+        questions.append(question)
 
 count = 0
 for title in set(map(lambda x: x[0] , movie_song)):
@@ -171,13 +174,14 @@ for title in set(map(lambda x: x[0] , movie_song)):
         d = "who is the music director of movie '"+title+"'"
         options = check_and_get_options(movie["music_directors"],all_music_directors,4)
         answer = movie["music_directors"]
-        question = ["music_director_"+str(count),0 ,d , [], options , answer, "" , "" , 10, 10 , ['music_director','movie']]
-        count+=1
-        print question
-        questions.append(question)
-        break
+        if(answer):
+            question = ["music_director_"+str(count),0 ,d , [], options , answer, "" , "" , 10, 10 , ['musicdirector','movie']]
+            count+=1
+            print question
+            questions.append(question)
 
 for q in questions:
+    print q
     createQuestion(q[2], q[4], q[5], q[6], q[10] , qid = q[0])
     
 

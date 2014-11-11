@@ -533,6 +533,7 @@ class DbUtils():
         
         if(len(question)>0):
             q = question=question.get(0)
+            print "Modifying question"
         else:
             q = question = Questions()
             q.questionId = questionId
@@ -550,6 +551,7 @@ class DbUtils():
         ##################### save tags after the question is saved and save again if there was an error it should help
         oldTags =question.tags[:]
         if(set(oldTags) != set(tags)):
+            print "Modifying old tags"
             for i in question.tagsAllIndex:
                 tagSet= i.split("_")
                 _id = tagSet.pop()
@@ -994,7 +996,7 @@ class DbUtils():
         xpPoints = xpPoints.get(quizId,0)
         ret = {}
         results  = UserStats.objects(quizId= quizId , xpPoints__gt=xpPoints).order_by("xpPoints")
-        count = user_rank = len(results)
+        count = user_rank = len(results)+1
         for i in results[:10]:
             count -=1
             ret[i.uid]=[count , i.xpPoints]
