@@ -66,7 +66,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
         
         @userAuthRequired
         def open(self, user = None):
-            print self.request.arguments
+            #print self.request.arguments
             runningQuizId = self.get_argument("isRunningQuiz",None)
             self.isChallenge = isChallenge = self.get_argument("isChallenge",None)#uid of other user
             self.isChallenged =isChallenged = self.get_argument("isChallenged",None)#uid of the first user
@@ -94,9 +94,9 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                     return # client should close connection after this
                                         
             self.quizConnections = quizConnections
-            print self.user
-            print self.uid
-            print self.quizConnections
+            #print self.user
+            #print self.uid
+            #print self.quizConnections
             if(isChallenge!=None):#send notification to other user
                    addToGcmQueue(self.isChallenge, {"fromUser":self.uid,
                                 "fromUserName":self.user.name,
@@ -153,7 +153,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                     self.runningQuiz[N_CURRENT_QUESTION_ANSWERED]=[]
                     currentQuestion = self.runningQuiz[CURRENT_QUESTION]
                     self.runningQuiz[CURRENT_QUESTION]=currentQuestion+1# next question
-                    print currentQuestion
+                    #print currentQuestion
                     if(currentQuestion>=self.quiz.nQuestions-1):
                         pointsMap = self.runningQuiz[POINTS]
                         max = 0
@@ -224,12 +224,12 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                 
                 
         def on_close(self):
-            print "Socket CLosed ..."
+            #print "Socket CLosed ..."
             try:
                 if(self.isChallenge):
                     del quizWaitingConnectionsPool[self.quizPoolWaitId]
             except:
-                print "ERRRRRRR, careful , resolve later"
+                #print "ERRRRRRR, careful , resolve later"
                 pass
             
             self.broadcastToGroup({"messageType":USER_DISCONNECTED,"payload1":self.user.uid},self.quizConnections)
