@@ -118,7 +118,7 @@ ONE_DAY= datetime.timedelta(days = 1)
 EPOCH_DATETIME = datetime.datetime(1970,1,1)
 
 secret_auth="asdsadkjhsakjdhjksad"
-GCM_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" # write your gcm project key from console
+GCM_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" ## YOUR GCM API KEY HERE
 GCM_HEADERS ={'Content-Type':'application/json',
               'Authorization':'key='+GCM_API_KEY
         }
