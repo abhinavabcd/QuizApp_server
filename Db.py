@@ -442,7 +442,7 @@ class DbUtils():
     def __init__(self , dbServer, _createBots = True):
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
-        print dbServer
+        #print dbServer
         self.dbConnection = connect('quizApp',host= dbServer[0], port = dbServer[1])
             
 #         for i in dbServerAliases:
@@ -533,7 +533,7 @@ class DbUtils():
         
         if(len(question)>0):
             q = question=question.get(0)
-            print "Modifying question"
+            #print "Modifying question"
         else:
             q = question = Questions()
             q.questionId = questionId
@@ -551,7 +551,7 @@ class DbUtils():
         ##################### save tags after the question is saved and save again if there was an error it should help
         oldTags =question.tags[:]
         if(set(oldTags) != set(tags)):
-            print "Modifying old tags"
+            #print "Modifying old tags"
             for i in question.tagsAllIndex:
                 tagSet= i.split("_")
                 _id = tagSet.pop()
@@ -598,7 +598,7 @@ class DbUtils():
         return True
     
     def addOrModifyBadge(self,badgeId=None, name=None, description=None, assetPath=None, condition=None,  type=0, isDirty=1):
-        print badgeId, type , description, assetPath, condition
+        #print badgeId, type , description, assetPath, condition
         badgeId = str(badgeId)
         badge = Badges.objects(badgeId=badgeId)
         
