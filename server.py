@@ -372,13 +372,12 @@ def getAllUpdates(response, user=None):
 @userAuthRequired
 def getServer(response, user=None):
     _type = int(response.get_argument("quizType",RANDOM_USER_TYPE))
-    if(_type==RANDOM_USER_TYPE): 
+    if(_type==RANDOM_USER_TYPE or _type==SIMO_USER_TYPE): 
         quizId = response.get_argument("quizId")
         quiz = dbUtils.getQuizDetails(quizId)
         sid , serverAddr = masterSever.getQuizWebSocketServer(quiz, user)
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
-    
     elif(_type==CHALLENGE_QUIZ_TYPE):
         quizId = response.get_argument("quizId")
         quiz = dbUtils.getQuizDetails(quizId)

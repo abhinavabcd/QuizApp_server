@@ -1,7 +1,7 @@
 import gspread
 from Db import *
 
-def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw',syncSpecific = ["tags"] , excludeSheets=[]):
+def syncSpreadSheets(dbUtils, spreadSheetKey= '1ZxY330e74AB5Sy0uwrMdEUKQYJez2ANnVrlEAFTNTuo',syncSpecific = ["tags"] , excludeSheets=[]):
 #def syncSpreadSheets(dbUtils, spreadSheetKey= '18vi7Glhc_4qb8v1nMbnFz3NeYPamcVTQV0g7OzTQBZU',syncSpecific = ["tags"] , excludeSheets=[]):
     gc = gspread.login("iamthedisguised@gmail.com","warrior3Within")
     wb = gc.open_by_key(spreadSheetKey)

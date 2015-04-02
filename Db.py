@@ -443,7 +443,7 @@ class DbUtils():
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
         #print dbServer
-        self.dbConnection = connect('quizApp',host= dbServer[0], port = dbServer[1])
+        self.dbConnection = connect('OneUp',host= dbServer[0], port = dbServer[1])
             
 #         for i in dbServerAliases:
 #             if(i!=DEFAULT_SERVER_ALIAS):
@@ -745,14 +745,47 @@ class DbUtils():
                     
         return questions
             
-                
-                
-            
-                
-            
-            
-            
-            
+    ## Writing this method especially for SIMO people defining new type of quiz            
+    def getSIMOQuestions(self , quiz):
+        fullTag = "_".join(sorted(quiz.tags))
+        questionsCount = quiz.nQuestions
+        
+        count =  self.getTopicMaxCount(fullTag)
+        questions = []
+        if(count <= questionsCount):
+            questions = [x for x in Questions.objects(tagsAllSubjects= fullTag)]
+            numQuestions = len(questions)
+            for i in range(questionsCount-count):#needed questions 
+                questions.append(questions[i%numQuestions])#repeat
+            return questions
+        questionIds= {}
+        c=0
+        maxIterations = 50
+        qtime = 10
+         
+        while(c<questionsCount):
+            if(maxIterations<0):
+                break
+            if c<3:
+                qtime = 10
+            elif c<6:
+                qtime = 20
+            else:
+                qtime = 30
+            maxIterations-=1
+            numRand = random.randint(0,count)
+            if(questionIds.get(int(numRand),None)==None):
+                questionIds[numRand]=True
+                question = Questions.objects(tagsAllIndex=fullTag+"_"+str(numRand),time=qtime) # TODO: Needs optimization
+                if(question):
+                    question = question.get(0)
+                    questions.append(question)
+                    c+=1
+        
+        for i in range(questionsCount-len(questions)):
+            questions.append(questions[i])# repeat them 
+                    
+        return questions
         
 
     def getAllCategories(self,modifiedTimestamp):

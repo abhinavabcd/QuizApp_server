@@ -84,7 +84,8 @@ N_CURRENT_USERS_READY='14'
 PREF_IMMUTABLES_COUNT = "immutables_count"
 ###########Notification types
 CHALLENGE_QUIZ_TYPE = 2;
-RANDOM_USER_TYPE = 1; 
+RANDOM_USER_TYPE = 1;
+SIMO_USER_TYPE = 4;  # for SIMO type of quiz
 #############################33
 WIN_TYPE="w"
 LOOSE_TYPE="l"

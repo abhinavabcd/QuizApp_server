@@ -13,14 +13,17 @@ quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
 runningQuizes = {} # all currently running quizes in this server
 def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , addToGcmQueue):
     
-    def generateProgressiveQuiz(quizId , uids):
+    def generateProgressiveQuiz(quizId , quizType, uids):
         quiz = dbUtils.getQuizDetails(quizId)
         if(quizId):
             nQuestions = quiz.nQuestions
         else:
             nQuestions = 7
         
-        questions = dbUtils.getRandomQuestions(quiz)
+        if quizType==SIMO_USER_TYPE:
+            questions = dbUtils.getSIMOQuestions(quiz)
+        else:
+            questions = dbUtils.getRandomQuestions(quiz)
         id = HelperFunctions.generateKey(10)
         userStates={}
         for i in uids:
@@ -51,6 +54,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
         quiz = None
         isChallenge = None
         isChallenged = None
+        quizType = None
         
         
         def broadcastToGroup(self, message, allClients):
@@ -71,6 +75,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
             self.isChallenge = isChallenge = self.get_argument("isChallenge",None)#uid of other user
             self.isChallenged =isChallenged = self.get_argument("isChallenged",None)#uid of the first user
             quizId = self.get_argument("quizId")
+            quizType = self.get_argument("quizType")
+            
             if(runningQuizId):
                 pass
             
@@ -112,7 +118,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
             if(len(quizConnections)>=int(quiz.nPeople)):# we have enough people
                 self.quizConnections = [quizConnections.pop() for i in range(0, quiz.nPeople)]#nPeople into current quiz
                 uids = map(lambda x:x.uid , self.quizConnections)
-                _runningQuizId , _runningQuiz = generateProgressiveQuiz(quiz.quizId, uids)
+                _runningQuizId , _runningQuiz = generateProgressiveQuiz(quiz.quizId,quizType, uids)
                 for conn in self.quizConnections:
                     conn.runningQuizId = _runningQuizId
                     conn.runningQuiz = _runningQuiz
