@@ -2,6 +2,7 @@ import bson
 import datetime
 import itertools
 import json
+import logging
 from mongoengine import *
 import random
 import string
@@ -745,48 +746,94 @@ class DbUtils():
                     
         return questions
             
-    ## Writing this method especially for SIMO people defining new type of quiz            
+    ## Writing this method especially for SIMO people defining new type of quiz
+    ## TODO: Writing naive code, Need to optimize            
     def getSIMOQuestions(self , quiz):
+        logging.info("fetching SIMO quiz type questions")
+        
         fullTag = "_".join(sorted(quiz.tags))
         questionsCount = quiz.nQuestions
         
-        count =  self.getTopicMaxCount(fullTag)
+        count10 =  Questions.objects(tagsAllSubjects=fullTag,time=10).count()
+        count20 =  Questions.objects(tagsAllSubjects=fullTag,time=20).count()
+        count30 =  Questions.objects(tagsAllSubjects=fullTag,time=30).count()
+        
+        questions10 = []
+        questions20 = []
+        questions30 = []
         questions = []
-        if(count <= questionsCount):
-            questions = [x for x in Questions.objects(tagsAllSubjects= fullTag)]
-            numQuestions = len(questions)
-            for i in range(questionsCount-count):#needed questions 
-                questions.append(questions[i%numQuestions])#repeat
-            return questions
-        questionIds= {}
+        
+        if(count10+count20+count30 <= questionsCount):
+            questions = [x for x in Questions.objects(tagsAllSubjects= fullTag).order_by("time")]
+            return self.doSIMORepeat(questions)
+        
+        questionIds10= {}
+        questionIds20= {}
+        questionIds30= {}
+        
         c=0
         maxIterations = 50
-        qtime = 10
-         
+        
         while(c<questionsCount):
             if(maxIterations<0):
                 break
-            if c<3:
-                qtime = 10
-            elif c<6:
-                qtime = 20
-            else:
-                qtime = 30
+            
             maxIterations-=1
-            numRand = random.randint(0,count)
-            if(questionIds.get(int(numRand),None)==None):
-                questionIds[numRand]=True
-                question = Questions.objects(tagsAllIndex=fullTag+"_"+str(numRand),time=qtime) # TODO: Needs optimization
-                if(question):
-                    question = question.get(0)
-                    questions.append(question)
-                    c+=1
-        
-        for i in range(questionsCount-len(questions)):
-            questions.append(questions[i])# repeat them 
+            
+            if c<3:
+                numRand = random.randint(0,count10)
+                if(questionIds10.get(int(numRand),None)==None):
+                    questionIds10[numRand]=True
+                    question = Questions.objects(tagsAllSubjects=fullTag,time=10)[numRand:numRand+1].first() # TODO: Needs optimization
+                    if(question):
+                        questions10.append(question)
+                        c+=1
+            elif c<6:
+                numRand = random.randint(0,count20)
+                if(questionIds20.get(int(numRand),None)==None):
+                    questionIds20[numRand]=True
+                    question = Questions.objects(tagsAllSubjects=fullTag,time=20)[numRand:numRand+1].first() # TODO: Needs optimization
+                    if(question):
+                        questions20.append(question)
+                        c+=1
+            else:
+                numRand = random.randint(0,count30)
+                if(questionIds30.get(int(numRand),None)==None):
+                    questionIds30[numRand]=True
+                    question = Questions.objects(tagsAllSubjects=fullTag,time=30)[numRand:numRand+1].first() # TODO: Needs optimization
+                    if(question):
+                        questions30.append(question)
+                        c+=1
+        return self.doSIMORepeat(questions10+questions20+questions30)
+    
+    # if number of questions is less than required for a quiz (SIMO quiz type) # Assuming 7 questions
+    def doSIMORepeat(self,questions):
+        if len(questions)< 7:
+            questions10 = []
+            questions20 = []
+            questions30 = []
+            
+            for ques in questions:
+                if ques.time == 10:
+                    questions10.append(ques)
+                elif ques.time == 20:
+                    questions20.append(ques)
+                elif ques.time == 30:
+                    questions30.append(ques)
+            
+            print questions10, questions20, questions30
+            
+            if len(questions10)<3:
+                for i in range(3-len(questions10)):#needed questions 
+                    questions10.append(questions10[i%len(questions10)])#repeat
+            if len(questions20)<3:
+                for i in range(3-len(questions20)):#needed questions 
+                    questions20.append(questions20[i%len(questions20)])#repeat
+            if len(questions30)==0:
+                questions30.append(questions20[0])        
                     
+            return questions10+questions20+questions30
         return questions
-        
 
     def getAllCategories(self,modifiedTimestamp):
         return Categories.objects(modifiedTimestamp__gt = modifiedTimestamp)

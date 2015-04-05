@@ -3,11 +3,14 @@ Created on Aug 27, 2014
 
 @author: abhinav2
 '''
+import json
+import logging
 import tornado
+
+from Config import SERVER_ID
 from Constants import *
 import HelperFunctions
-import json
-from Config import SERVER_ID
+
 
 quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
 runningQuizes = {} # all currently running quizes in this server
@@ -20,7 +23,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
         else:
             nQuestions = 7
         
-        if quizType==SIMO_USER_TYPE:
+        if quizType==str(SIMO_USER_TYPE):
             questions = dbUtils.getSIMOQuestions(quiz)
         else:
             questions = dbUtils.getRandomQuestions(quiz)
@@ -75,7 +78,8 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
             self.isChallenge = isChallenge = self.get_argument("isChallenge",None)#uid of other user
             self.isChallenged =isChallenged = self.get_argument("isChallenged",None)#uid of the first user
             quizId = self.get_argument("quizId")
-            quizType = self.get_argument("quizType")
+            
+            self.quizType = quizType = self.get_argument("quizType")
             
             if(runningQuizId):
                 pass
@@ -208,23 +212,37 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                     pass
                 # client disconnected
             elif(messageType==ACTIVATE_BOT):
-                self.write_message(json.dumps({"messageType":OK_ACTIVATING_BOT, "payload1": dbUtils.getBotUser().toJson(), 
-                                               "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}))
+                if (self.quizType!=str(SIMO_USER_TYPE)):
+                    self.write_message(json.dumps({"messageType":OK_ACTIVATING_BOT, "payload1": dbUtils.getBotUser().toJson(), 
+                                                   "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}))
+                else:
+                    self.write_message(json.dumps({"messageType":OK_ACTIVATING_BOT, "payload1": dbUtils.getBotUser().toJson(), 
+                                                   "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getSIMOQuestions(self.quiz)))+"]"}))
                 #THEN CLIENT CLOSES CONNECTION
             elif(messageType==REMATCH_REQUEST):
                 currentRequests = self.runningQuiz[N_CURRENT_REMATCH_REQUEST]
                 currentRequests.add(self.uid) 
                 if(len(currentRequests)>=self.quiz.nPeople):#every one agreed to rematch
-                    self.broadcastToAll(json.dumps({"messageType":OK_START_REMATCH,"payload": dbUtils.getBotUser().toJson(), 
-                                               "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}) , self.quizConnections)
+                    if (self.quizType!=str(SIMO_USER_TYPE)):
+                        self.broadcastToAll(json.dumps({"messageType":OK_START_REMATCH,"payload": dbUtils.getBotUser().toJson(), 
+                                                   "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}) , self.quizConnections)
+                    else:
+                        self.broadcastToAll(json.dumps({"messageType":OK_START_REMATCH,"payload": dbUtils.getBotUser().toJson(), 
+                                               "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getSIMOQuestions(self.quiz)))+"]"}) , self.quizConnections)
                 else:
                     self.broadcastToGroup( json.dumps({"messageType":REMATCH_REQUEST,"payload": self.uid }), self.quizConnections)
                     
                     
                 
             elif(messageType==START_CHALLENGE_NOW):
-                self.write_message(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload1": dbUtils.getUserByUid(self.isChallenge).toJson(), 
-                                               "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]",
+                if (self.quizType!=str(SIMO_USER_TYPE)):
+                    self.write_message(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload1": dbUtils.getUserByUid(self.isChallenge).toJson(), 
+                                                   "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]",
+                                                   "payload3":self.quizPoolWaitId
+                                                  }))
+                else:
+                    self.write_message(json.dumps({"messageType":OK_CHALLENGE_WITHOUT_OPPONENT ,"payload1": dbUtils.getUserByUid(self.isChallenge).toJson(), 
+                                               "payload2":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getSIMOQuestions(self.quiz)))+"]",
                                                "payload3":self.quizPoolWaitId
                                               }))
                 
