@@ -322,7 +322,8 @@ class Questions(Document):
                            "answer":self.answer,
                            "explanation":self.explanation,
                            "time":self.time,
-                           "xp":self.xp
+                           "xp":self.xp,
+                           "hint":self.hint
                            })
 
 
@@ -804,7 +805,8 @@ class DbUtils():
                     if(question):
                         questions30.append(question)
                         c+=1
-        return self.doSIMORepeat(questions10+questions20+questions30)
+        questions = questions10+questions20+questions30
+        return self.doSIMORepeat(questions)
     
     # if number of questions is less than required for a quiz (SIMO quiz type) # Assuming 7 questions
     def doSIMORepeat(self,questions):
