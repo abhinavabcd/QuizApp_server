@@ -5,7 +5,7 @@ from oauth2client.client import SignedJwtAssertionCredentials
 
 def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw',syncSpecific = ["tags"] , excludeSheets=[]):
 #def syncSpreadSheets(dbUtils, spreadSheetKey= '18vi7Glhc_4qb8v1nMbnFz3NeYPamcVTQV0g7OzTQBZU',syncSpecific = ["tags"] , excludeSheets=[]):
-    credentials_data = json.load(open('XXX---PUTHEJSONFILEHERE---XXX'))
+    credentials_data = json.load(open('config_files/credentials.json'))
     scope = ['https://spreadsheets.google.com/feeds']    
     credentials = SignedJwtAssertionCredentials(credentials_data['client_email'], credentials_data['private_key'], scope)
     gc = gspread.authorize(credentials)
@@ -97,5 +97,5 @@ IS_NEW_DB = True if (len(sys.argv)>1  and sys.argv[1]=='syncall') else False
 
 if __name__=="__main__":
     import Config
-    dbUtils = DbUtils(["127.0.0.1",27017,datetime.date(2014, 8 , 27) , 10] , _createBots = False) 
+    dbUtils = DbUtils(Config.dbServer , _createBots = False) 
     syncSpreadSheets(dbUtils, syncSpecific=[] , excludeSheets=["tags"])

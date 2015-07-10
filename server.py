@@ -36,7 +36,7 @@ def create_timed_rotating_log(path):
     logger.addHandler(handler)
     return logger
 
-tornado.log.access_log = logger = create_timed_rotating_log('./quizapp_logs/quizapp.log')
+tornado.log.access_log = logger = create_timed_rotating_log('quizapp_logs/quizapp.log')
 # log end
 
 
@@ -92,7 +92,7 @@ def userAuthRequired(func):
             responseFinish(response,{"messageType":NOT_AUTHORIZED})
             return
         kwargs.update({"user":user})
-        logger.info("user : "+user)
+        logger.info("user : "+uid)
         return func(response,*args,**kwargs)
     return wrapper
 
