@@ -37,7 +37,7 @@ def create_timed_rotating_log(path):
     logger.addHandler(handler)
     return logger
 
-tornado.log.access_log = logger = create_timed_rotating_log('/var/logs/quizapp.log')
+tornado.log.access_log = logger = create_timed_rotating_log('./quizapp_logs/quizapp.log')
 # log end
 
 
