@@ -1,9 +1,15 @@
 import gspread
 from Db import *
+import json
+from oauth2client.client import SignedJwtAssertionCredentials
 
 def syncSpreadSheets(dbUtils, spreadSheetKey= '1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw',syncSpecific = ["tags"] , excludeSheets=[]):
 #def syncSpreadSheets(dbUtils, spreadSheetKey= '18vi7Glhc_4qb8v1nMbnFz3NeYPamcVTQV0g7OzTQBZU',syncSpecific = ["tags"] , excludeSheets=[]):
-    gc = gspread.login("iamthedisguised@gmail.com","warrior3Within")
+    credentials_data = json.load(open('XXX---PUTHEJSONFILEHERE---XXX'))
+    scope = ['https://spreadsheets.google.com/feeds']    
+    credentials = SignedJwtAssertionCredentials(credentials_data['client_email'], credentials_data['private_key'], scope)
+    gc = gspread.authorize(credentials)
+
     wb = gc.open_by_key(spreadSheetKey)
     worksheets = wb.worksheets()
     
