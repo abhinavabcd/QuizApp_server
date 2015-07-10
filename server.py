@@ -8,7 +8,6 @@ from tornado.options import define, options, parse_command_line
 import tornado.options
 import tornado.web
 from tornado import websocket
-
 import json
 from Constants import *
 import Db
@@ -93,6 +92,7 @@ def userAuthRequired(func):
             responseFinish(response,{"messageType":NOT_AUTHORIZED})
             return
         kwargs.update({"user":user})
+        logger.info("user : "+user)
         return func(response,*args,**kwargs)
     return wrapper
 
@@ -440,7 +440,7 @@ def activatingBotPQuiz(response, user=None):
 
 def responseFinish(response,data):
     data = json.dumps(data)
-    logger.info(data)
+    #logger.info(data)
     response.finish(data) 
 
 @userAuthRequired
@@ -560,7 +560,15 @@ def main():
     tornado.ioloop.IOLoop.instance().start()
     
 if __name__ == "__main__":
-    print tornado.web.create_signed_value(secret_auth , "key","masterQ56VOWVRJS")
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", help="display a square of a given number",
+                        type=int)
+    args = parser.parse_args()
+    if(args.port):
+        import Constants
+        Constants.HTTP_PORT = args.port
+          
     main()
 
     #testCases
