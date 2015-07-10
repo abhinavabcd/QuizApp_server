@@ -13,17 +13,32 @@ import json
 from Constants import *
 import Db
 import AndroidUtils
-import MasterServerUtils
+import RouterServerUtils
 import logging
 import HelperFunctions
 import Config 
 import ProgressiveQuizHandler
 
 dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
-masterSever = MasterServerUtils.MasterServerUtils(Config.WebServersMap , Config.ExternalWebServersMap)
+routerServer = RouterServerUtils.RouterServerUtils(dbUtils , Config.WebServersMap , Config.ExternalWebServersMap)
 
-logging.basicConfig(filename='log',level=logging.INFO)
+from logging.handlers import TimedRotatingFileHandler
+ 
+# log start
+def create_timed_rotating_log(path):
+    """"""
+    logger = logging.getLogger("Quizapp time log")
+    logger.setLevel(logging.INFO)
+ 
+    handler = TimedRotatingFileHandler(path,
+                                       when="H",
+                                       interval=1,
+                                       backupCount=240)
+    logger.addHandler(handler)
+    return logger
 
+tornado.log.access_log = logger = create_timed_rotating_log('/var/logs/quizapp.log')
+# log end
 
 
 gcmQueue = []
@@ -51,9 +66,9 @@ def sendGcmMessages():
         for i in range(min(c , GCM_BATCH_COUNT)):
             data = gcmQueue.pop()  # { registrationIds:[] , data :{} }
             data = json.dumps(data)
-            logging.info("GCM:PUSH:")
-            logging.info(data)
-            logging.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = GCM_HEADERS).read()) 
+            logger.info("GCM:PUSH:")
+            logger.info(data)
+            logger.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = GCM_HEADERS).read()) 
              
 def addGcmToQueue(registrationIds, packetData):
     gcmQueue.append({"registration_ids":registrationIds,"data":packetData })
@@ -375,14 +390,14 @@ def getServer(response, user=None):
     if(_type==RANDOM_USER_TYPE): 
         quizId = response.get_argument("quizId")
         quiz = dbUtils.getQuizDetails(quizId)
-        sid , serverAddr = masterSever.getQuizWebSocketServer(quiz, user)
+        sid , serverAddr = routerServer.getQuizWebSocketServer(quiz, user)
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
     
     elif(_type==CHALLENGE_QUIZ_TYPE):
         quizId = response.get_argument("quizId")
         quiz = dbUtils.getQuizDetails(quizId)
-        sid , serverAddr = masterSever.getRandomWebSocketServer()
+        sid , serverAddr = routerServer.getRandomWebSocketServer()
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
         
@@ -390,16 +405,16 @@ def getServer(response, user=None):
 # def addWebServer(response):
 #     serveraddr = response.get_argument("serveraddr")
 #     sid = response.get_argument("sid")
-#     masterSever.addServer(sid, serveraddr)
+#     routerServer.addServer(sid, serveraddr)
 #     
 # def removeWebServer(response):
 #     sid = response.get_argument("sid")
-#     masterSever.removeServer(sid)
+#     routerServer.removeServer(sid)
     
-def updateWebServerMap(response):
-    webServerMap  = json.loads(response.get_argument("webServerMap"))
-    externalWebServerMap  = json.loads(response.get_argument("externalWebServerMap"))
-    masterSever.updateWebServerMap(webServerMap, externalWebServerMap)
+# def updateWebServerMap(response):
+#     webServerMap  = json.loads(response.get_argument("webServerMap"))
+#     externalWebServerMap  = json.loads(response.get_argument("externalWebServerMap"))
+#     routerServer.updateWebServerMap(webServerMap, externalWebServerMap)
 
 
 @userAuthRequired
@@ -420,12 +435,12 @@ def getUserInfo(response, user =None):
 def activatingBotPQuiz(response, user=None):
     quizId = response.get_argument("quizId")
     sid = response.get_argument("sid")
-    masterSever.waitingUserBotOrCancelled(quizId, sid, user.uid)
+    routerServer.waitingUserBotOrCancelled(quizId, sid, user.uid)
     responseFinish(response, {"messageType":OK})
 
 def responseFinish(response,data):
     data = json.dumps(data)
-    logging.info(data)
+    logger.info(data)
     response.finish(data) 
 
 @userAuthRequired
@@ -471,7 +486,7 @@ def updateUserRating(response , user=None):
 def updateServerMap(response):
     webServerMap = json.loads(response.get_argument("webServerMap"))
     externalWebServerMap = json.loads(response.get_argument("externalWebServerMap"))
-    masterSever.updateWebServerMap(webServerMap, externalWebServerMap)
+    routerServer.updateWebServerMap(webServerMap, externalWebServerMap)
     response.finish("OK")
 
 
@@ -506,8 +521,8 @@ serverFunc = {
 class Func(tornado.web.RequestHandler):
     def get(self,task=None):
         task = task if task!=None else self.get_argument("task",None)
-        logging.info(task)
-        logging.info(self.request.arguments)
+        logger.info(task)
+        logger.info(self.request.arguments)
         func = serverFunc.get(task,None)
         if(func):
             func(self)

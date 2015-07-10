@@ -59,6 +59,14 @@ class Uid1Uid2Index(Document):
 
         return obj.index
 
+
+class ServerState(Document):
+    quizId = StringField()
+    peopleWaiting = IntField()
+    serverId = StringField()
+    lastWaitingUserId = StringField()
+    
+
 class UserInboxMessages(Document):
     fromUid_toUid_index = StringField()#tag to identify block of messages
     fromUid = StringField()
@@ -1019,8 +1027,10 @@ class DbUtils():
             return True
         return False
 
+    def getQuizState(self, quizId):
+        quizState = ServerState.objects(quizId = quizId)
+        return quizState
         
-    
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         uid1 , uid2 = reorderUids(uid1, uid2)
         if(toIndex == -1):

@@ -5,19 +5,22 @@ import sys
 import random
 from Config import ExternalWebServersMap
 
-ss = {}  #server state
+# 
+# LI_N_PEOPLE_WAITING = 0
+# LI_USERS_WAITING_SERVERID =1
+# LI_LAST_WAITING_UID =2
 
-
-LI_N_PEOPLE_WAITING = 0
-LI_USERS_WAITING_SERVERID =1
-LI_LAST_WAITING_UID =2
-class MasterServerUtils():
+class RouterServerUtils():
     rrCount = 0
     webServerMap= {}
     externalWebServerMap = {}
     
     webServerIds=[]
-    def __init__(self,webServerMap, externalServerMap):
+    dbUtils = None
+    
+    
+    def __init__(self,dbUtils , webServerMap, externalServerMap):
+        self.dbUtils = dbUtils
         self.updateWebServerMap(webServerMap, externalServerMap)
         for i in webServerMap.values():#while starting inform all other local servers to update this map
             try:
@@ -53,25 +56,33 @@ class MasterServerUtils():
         return id , addr
     
     def getQuizWebSocketServer(self,quiz, user , isExternal=True):
-        quizState = ss.get(quiz.quizId,None)
+        quizState = self.dbUtils.getQuizState(quiz.quizId)
+                 
         if(quizState):
-            quizState[LI_N_PEOPLE_WAITING]-=1
-            if(quizState[LI_N_PEOPLE_WAITING]<=0):
-                ss[quiz.quizId]= quizState = [quiz.nPeople*3 , self.getRoundRobinServerId(),None]
+            quizState.peopleWaiting-=1
+            if(quizState.peopleWaiting<=0):
+                quizState.peopleWaiting = quiz.nPeople*3
+                quizState.serverId = self.getRoundRobinServerId()
+                quizState.lastWaitingUserId = user.uid
         else:
-            ss[quiz.quizId]= quizState = [quiz.nPeople*3 , self.getRoundRobinServerId(),None]
-        
-        quizState[LI_LAST_WAITING_UID] = user.uid
+            quizState.peopleWaiting = quiz.nPeople*3
+            quizState.serverId =  self.getRoundRobinServerId()
+            quizState.lastWaitingUserId = user.uid
+            
+        quizState.save()
+                   
         if(not isExternal):
-            return quizState[LI_USERS_WAITING_SERVERID] , self.webServerMap[quizState[LI_USERS_WAITING_SERVERID]]
+            return quizState.serverId , self.webServerMap[quizState.serverId]
         else:
-            return quizState[LI_USERS_WAITING_SERVERID] , self.externalWebServerMap[quizState[LI_USERS_WAITING_SERVERID]]
+            return quizState.serverId , self.externalWebServerMap[quizState.serverId]
 
     
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
-        quizState = ss.get(quizId,None)
-        if(quizState and quizState[LI_USERS_WAITING_SERVERID]== sid and quizState[LI_LAST_WAITING_UID]== uid):
-            ss[quizId]=None
+        quizState = self.dbUtils.getQuizState(quizId)
+        if(quizState and quizState.serverId == sid and quizState.lastWaitingUserId == uid):
+            quizState.peopleWaiting = 0
+            quizState.save()
+            
     
     def getRoundRobinServerId(self):
         self.rrCount+=1
@@ -81,4 +92,4 @@ class MasterServerUtils():
 
 
 if __name__=="__main__":
-    m = MasterServerUtils({"master":"192.168.0.1:8084"})
+    m = RouterServerUtils({"master":"192.168.0.1:8084"})
