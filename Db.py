@@ -85,8 +85,8 @@ class UserInboxMessages(Document):
     toUid_LoginIndex = StringField() #uid2_LOGININDEX
     meta = {
         'indexes': [
-               ('toUid_LoginIndex','-timestamp')
-               ('fromUid_toUid_index')
+               ('toUid_LoginIndex','-timestamp'),
+               'fromUid_toUid_index'
             ]
             }
     def to_json(self):
