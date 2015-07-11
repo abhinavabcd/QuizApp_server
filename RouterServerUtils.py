@@ -4,6 +4,7 @@ import json
 import sys
 import random
 from Config import ExternalWebServersMap
+from Db import ServerState
 
 # 
 # LI_N_PEOPLE_WAITING = 0
@@ -65,6 +66,7 @@ class RouterServerUtils():
                 quizState.serverId = self.getRoundRobinServerId()
                 quizState.lastWaitingUserId = user.uid
         else:
+            quizState = ServerState()
             quizState.peopleWaiting = quiz.nPeople*3
             quizState.serverId =  self.getRoundRobinServerId()
             quizState.lastWaitingUserId = user.uid
