@@ -32,6 +32,13 @@ class Uid1Uid2Index(Document):
     uid2 = StringField()
     uid1LoginIndex = IntField()
     uid2LoginIndex = IntField()
+    meta = {
+        'indexes': [
+            'uid1','uid2',
+            'uid1_uid2'
+            
+            ]
+        }
     @staticmethod 
     def getAndIncrementIndex(user1, user2):
         if(user1.uid < user2.uid):#swap maintain same order always
@@ -76,7 +83,12 @@ class UserInboxMessages(Document):
     timestamp = DateTimeField()
     fromUid_LoginIndex = StringField() #uid1_LOGININDEX
     toUid_LoginIndex = StringField() #uid2_LOGININDEX
-    
+    meta = {
+        'indexes': [
+               ('toUid_LoginIndex','-timestamp')
+               ('fromUid_toUid_index')
+            ]
+            }
     def to_json(self):
         son = self.to_mongo()
         del son["fromUid_LoginIndex"]
@@ -103,7 +115,9 @@ class OfflineChallenge(Document):
     challengeData = StringField() #{quizId:asdasd ,userAnswers:[], questions:[]}
     challengeData2 = StringField()
     wonUid = StringField()
-    
+    meta = {
+            'indexes':['toUid_userChallengeIndex']
+            }
     def toJson(self):
         sonObj = self.to_mongo()
         if(self.offlineChallengeId==None):
@@ -141,14 +155,26 @@ class UserStats(Document):
     uid  = StringField() # uid
     quizId = StringField() # use double index here
     xpPoints = IntField(default = 0)#rev index
-
+    meta = {
+        'indexes': [
+                    'uid'
+                    ('uid','quizId')
+                    ('quizId','-xpPoints')
+                ]
+        }
+                    
 class UserWinsLosses(Document):
     uid = StringField()
     quizId = StringField()
     wins = IntField(default = 0)
     loss = IntField(default = 0)
     ties = IntField(default = 0)
-    
+    meta = {
+        'indexes': [
+                    'uid'
+                    ('uid','quizId')
+                ]
+        }
 class Users(Document):
     uid = StringField(unique=True)
     name = StringField()
@@ -186,7 +212,13 @@ class Users(Document):
     gPlusFriends = StringField()
     fbFriends = StringField()
     
-    
+    meta = {
+        'indexes': [
+            'fbUid',
+            'gPlusUid',
+            'emailId'
+            ]
+        }
     def getStats(self, quizId=None):
         ret = {}
         stats = None
@@ -301,6 +333,11 @@ class Badges(Document):
     type=IntField(default=0)
     modifiedTimestamp = DateTimeField()
     
+    meta = {
+        'indexes': [
+            '-modifiedTimestamp'
+            ]
+        }
     def toJson(self):
         sonObj = self.to_mongo()
         sonObj["modifiedTimestamp"] = HelperFunctions.toUtcTimestamp(self.modifiedTimestamp)
@@ -320,7 +357,13 @@ class Questions(Document):
     tagsAllSubjects = ListField(StringField()) #categorynameIndex , ....
     tagsAllIndex = ListField(StringField())
     tags=ListField(StringField())
-
+    meta = {
+        'indexes': [
+                    'tags',
+                    'tagsAllSubjects',
+                    'tagsAllIndex'
+                ]
+        }
     def to_json(self):
         return json.dumps({"questionId":self.questionId,
                            "questionType":self.questionType,
@@ -388,6 +431,11 @@ class Categories(Document):
     type = StringField()
     modifiedTimestamp = DateTimeField()
     
+    meta = {
+        'indexes': [
+            '-modifiedTimestamp'
+            ]
+        }
     def toJson(self):
         sonObj = self.to_mongo()
         sonObj["quizList"] = bson.json_util.dumps(self.quizList)
@@ -404,7 +452,12 @@ class Quiz(Document):
     nQuestions = IntField()
     nPeople = IntField()
     modifiedTimestamp = DateTimeField()
-    
+    meta = {
+        'indexes': [
+            '-modifiedTimestamp',
+            'tags'
+            ]
+        }
     def toJson(self):
         sonObj = self.to_mongo()
         sonObj["tags"] = bson.json_util.dumps(self.tags)
