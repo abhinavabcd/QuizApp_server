@@ -5,6 +5,7 @@ Created on Aug 26, 2014
 '''
 
 import datetime
+from collections import namedtuple
 
 SERVER_ID = "master"
 
@@ -18,4 +19,9 @@ ExternalWebServersMap = {
                 # "1":"http://192.168.0.10:8083"
                 }
 
-dbServer = ["10.240.64.162",27017,datetime.date(2014, 8 , 27) , 10] #10 => priority to choost/computing power
+DBServer= namedtuple("DBServer",["ip","port","createdDate","username","password"],verbose=False, rename=False)
+dbServer = DBServer(ip="10.240.64.162",
+                    port= 27017,
+                    createdDate= datetime.date(2014, 8 , 27) ,
+                    username= "quizapp",
+                    password ="PASSWORD_HERE") #10 => priority to choost/computing power

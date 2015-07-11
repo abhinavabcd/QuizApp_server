@@ -10,6 +10,7 @@ import time
 import Config
 from Constants import *
 import HelperFunctions
+from Config import dbServer
 
 
 def reorderUids(uid1, uid2):
@@ -451,7 +452,7 @@ class DbUtils():
 #         dbServerAliases =dbServers.keys()
 #         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
         #print dbServer
-        self.dbConnection = connect('quizApp',host= dbServer[0], port = dbServer[1])
+        self.dbConnection = connect('quizApp',host= dbServer.ip, port = dbServer.port, username= dbServer.username, password=dbServer.password)
             
 #         for i in dbServerAliases:
 #             if(i!=DEFAULT_SERVER_ALIAS):
