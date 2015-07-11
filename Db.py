@@ -157,8 +157,8 @@ class UserStats(Document):
     xpPoints = IntField(default = 0)#rev index
     meta = {
         'indexes': [
-                    'uid'
-                    ('uid','quizId')
+                    'uid',
+                    ('uid','quizId'),
                     ('quizId','-xpPoints')
                 ]
         }
@@ -171,7 +171,7 @@ class UserWinsLosses(Document):
     ties = IntField(default = 0)
     meta = {
         'indexes': [
-                    'uid'
+                    'uid',
                     ('uid','quizId')
                 ]
         }
