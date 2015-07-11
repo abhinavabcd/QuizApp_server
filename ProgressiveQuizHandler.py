@@ -37,8 +37,16 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                                         }
         return id , quizState
     
+    def resetQuizState(quizState, questions):
+        quizState[QUESTIONS] = questions
+        quizState[CURRENT_QUESTION] = 0
+        quizState[POINTS] = {}
+        quizState[N_CURRENT_REMATCH_REQUEST] = set()
+        quizState[N_CURRENT_USERS_READY] = set()
+        
     
     
+        
     
             
     class ProgressiveQuizHandler(tornado.websocket.WebSocketHandler):
@@ -209,8 +217,10 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                 currentRequests = self.runningQuiz[N_CURRENT_REMATCH_REQUEST]
                 currentRequests.add(self.uid) 
                 if(len(currentRequests)>=self.quiz.nPeople):#every one agreed to rematch
+                    questions = dbUtils.getRandomQuestions(self.quiz)
+                    resetQuizState(self.runningQuiz, questions)
                     self.broadcastToAll(json.dumps({"messageType":OK_START_REMATCH,"payload": dbUtils.getBotUser().toJson(), 
-                                               "payload1":"["+",".join(map(lambda x:x.to_json() ,dbUtils.getRandomQuestions(self.quiz)))+"]"}) , self.quizConnections)
+                                               "payload1":"["+",".join(map(lambda x:x.to_json() ,questions))+"]"}) , self.quizConnections)
                 else:
                     self.broadcastToGroup( json.dumps({"messageType":REMATCH_REQUEST,"payload": self.uid }), self.quizConnections)
                     
