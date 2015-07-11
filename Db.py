@@ -1029,7 +1029,9 @@ class DbUtils():
 
     def getQuizState(self, quizId):
         quizState = ServerState.objects(quizId = quizId)
-        return quizState
+        if(quizState):
+            return quizState.get(0)
+        return None
         
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         uid1 , uid2 = reorderUids(uid1, uid2)
