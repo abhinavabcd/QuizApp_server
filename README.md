@@ -1,44 +1,99 @@
-#QuizApp Server
+#Latest commit:
+Made some improvements to load the project faster, moved to android studio and gradle. I have to admit , this was my 2nd attempt at android app : ) , little buggy on the concepts of controllers and screens. I wanted to have a game and a state machine model when i started the code. I tried it keep the code classified as possible. Just email me if you want some feature or any short modifications.  If you felt something about the project, just drop a Hello email , would make me happy. : )
+
+Live Version here:
+https://storage.googleapis.com/quizappassets/files/app-release.apk
+
+ - controllers manages screens(one or more screens).
+ - A screen is just a linearlayout , when you need a screen to be shown, load the controller(by calling quizApp.loadAppController(Controller.class) ) do some logic and create the screen. quizApp.addView(Screen) will animate it.
+ - All server related functionality is in ServerCalls.java , all calls are handled asynchronously with a generic listener , will more to tasks from bolt library if i find time.
+
+
+
+
+#QuizApp android
 This a  clone of popular trivia app QuizUp , written totally in android, without use of any graphic libraries.
-The server runs on tornado, can scale over multiple instances by deploying more webservers.
+The server side runs on tornado, can horizontally scale over multiple instances by deploying more servers.
 QuizApp uses websockets for the multiplayer game.
 
-Its a eclipse android Project . 
-You will also need QuizApp_Android the android client.
-[Github QuizApp android client](https://github.com/abhinavabcd/QuizApp_Android)
+
+
+Depends on:(included in libs)
+	Autobahn websockets (https://github.com/tavendo/AutobahnAndroid)
+	MPCharts Lib (https://github.com/PhilJay/MPAndroidChart)
+	ormlite.
+
+Most client configuration is in Config.java , do have a look into it. All the 'in game App strings' in UiUtils.java , use them to navigate though the code.
+
+you will have to download a "google-services.json" with google-plus and gcm enables if you want to use it for a different build, i have included one by default , you can start from here to generate it.
+
+https://developers.google.com/mobile/add?platform=android&cntapi=signin&cnturl=https:%2F%2Fdevelopers.google.com%2Fidentity%2Fsign-in%2Fandroid%2Fsign-in%3Fconfigured%3Dtrue&cntlbl=Continue%20Adding%20Sign-In.
+
+
+
+You will need QuizApp_tornado_server to launch the app you can clone it from here. I have deployed the mongo instances and the web server instances on google compute.
+[Github quizApp Server](https://github.com/abhinavabcd/QuizApp_server),
 
 ###Steps to get the client and server working.
 
 #Setting up Server :
-1. Launch mongoDB
+
+- you need to have gspread.  https://github.com/burnash/gspread , go through , http://gspread.readthedocs.org/en/latest/oauth2.html for the oauth authorization part to sync sheet from google drive.
+	- git clone https://github.com/burnash/gspread.git
+	- python setup.py install
+
+- python-lxml for 2.7 python , this is absolutely not needed , but good to have for crawling scripts.
+	- sudo apt-get install libxml2-dev libxslt-dev python-dev
+	- sudo pip install lxml
+
+- tornado , http://www.tornadoweb.org/en/stable/
+	- pip install tornado
+
+- mongoengine, http://docs.mongoengine.org/guide/installing.html
+ 	- pip install mongoengine
+
+
+
+1. Launch mongoDB. there is a one click deploy on google compute, but it will cost you price.
 2. Configure Config.py , change the dbServer address to point to mongoDb.
-3. Change the WebServerMap and ExternalWebServerMap to appropriate address of how your server ip address looks from the internal and external viewpoint.
-4. Give a Unique server Id in Config.py
+3. Change the WebServerMap and ExternalWebServerMap to point which are internal and external ip's for your server instances.
+4. when you want to launch or change the existing webservers update Config.py and relaunch it, this will propapage to existing servers.
+(you may also need the GCM key for the notifications to work , from your cloud project create a public access key for server applications.
+copy that key and place it in Constants.py GCM key.
+)
 
 ##Loading data to server
-5. Configure load_spreadsheet.py with the your spreadsheet containing your data. see this sample sheet clone it.
+5. You will have to download Configure load_spreadsheet.py.
 [QuizApp server google SpreadSheet](https://docs.google.com/spreadsheets/d/1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw/edit?usp=sharing)
-6. 'python load_spreadsheet.py syncall'    to sync all the sheet.. else it will sync only the data marked with <b>"isDirty:1"</b> in the sheet
+The process is a little heavy , create a project in https://console.developers.google.com/ , go from API's enable drive Api , then from Credentials you have to create a OAuth Service client and download that json.
+Take the service account id , and share the clones spread sheet sheet with that random  email( this will enable api access to read from drive).
+
+6 Place the downloaded credentials in a folder names config_files in the root directory. You may run "python load_spreedsheet.py"
+ 'python load_spreadsheet.py syncall'    to sync all the sheet.. else it will sync only the data marked with <b>"isDirty:1"</b> in the sheet.
 
 ###You can additonally load sample questions from telugu movies by
 7. Load sample questions by running load_question_data.py and input as suggested in the output.
+on the root , type python and enter shell.
+	exec(open("questions_json_processing/load_questions_from_json.py"))
+	when promtps from path enter  "questions_json_processing/questions_json"
+
+	exec(open("questions_json_processing/song_data_processing.py"))
+	when promtps from path enter  "questions_json_processing/song_data.json"
+
 8. Once the data is loaded , start the server by running server.py
 
 ##Client Configuration
-8. In ServerCalls.java change the SERVER_ADDR and CDN path variables to suit your need ,pointing to the webserver and the server which hosts your images and asset files.
+8. In ServerCalls.java change the SERVER_ADDR and CDN path variables to suit your need ,pointing to the server and the server which hosts your images and asset files respectively.
 
-Conversations/chatting works with Google GCM notifications for now. will change to websockets at later point of time.
+Conversations/chatting works with Google GCM notifications for now.
 
-#Scaling the webserver
-To launch a new webserver, change Config.py and add your current server to existing 'WebserveMap' and 'ExternalWebServerMap' with your server id ,  to the existing list , this list will be propagated to other servers , so update it carefully before launching the new server. 
+#Scaling the server
+To launch a new server, change Config.py and add your current server to existing 'WebserverMap' and 'ExternalWebServerMap' with your server id ,  to the existing list , this list will be propagated to other servers , so update it carefully before launching the new server. 
 You should be good to go, it integrates seemlessly in terms of horizontal scaling, MongoDb can be deployed in a cluster to scale the db .
-For any issues you can open up an issue or email abhinavabcd@gmail.com or vinay.bhargav.reddy@gmail.com
+For any issues you can open up an issue or email abhinavabcd@gmail.com
 
 This was stared as a random project, needs many changes perticularly in ui. And bug fixes :P 
 All contributions and modifications are copylefted.
-
-##Enable GCM
-Create a project in google console and upate a gcm key inside Constants.py to enable notifications and other depeneds on GCM notifications.
 
 #Screenshots
 
@@ -47,7 +102,7 @@ Create a project in google console and upate a gcm key inside Constants.py to en
 
 Thanks Vinay for contributions to code.
 
-
-
+#--
+you may want to add the googleplay services lib by importing from sdk/extras
 
 
