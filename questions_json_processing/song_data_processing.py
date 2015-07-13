@@ -50,7 +50,7 @@ def check_and_get_options(answer, list_options , count=4, insert_answer=True):
 
 
 
-movies = json.loads(open(raw_input("Enter json questions file path ::")).read())
+movies = json.loads(open(raw_input("Enter movies file path (./song_data.json)::")).read())
 likes = []
 for movie in movies.keys():
 	for song in movies[movie].get("songs",[]):
