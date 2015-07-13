@@ -270,6 +270,14 @@ def setStatusMsg(response, user = None):
     user.save()
     responseFinish(response, {"messageType":OK})
         
+
+@userAuthRequired
+def addFeedback(response, user=None):
+    msg = response.get_argument("feedback")
+    dbUtils.addFeedback(user, msg)
+    responseFinish(response, {"messageType":OK})
+    
+    
 @userAuthRequired
 def getLeaderboards(response , user = None):
     quizId = response.get_argument("quizId")
@@ -514,7 +522,9 @@ serverFunc = {
               "loadQuestionsInOrder":loadQuestionsInOrder,
               "onOfflineChallengeCompleted":onOfflineChallengeCompleted,
               "getOfflineChallengeById":getOfflineChallengeById,
-              "setStatusMsg":setStatusMsg
+              "setStatusMsg":setStatusMsg,
+              "sendFeedback":addFeedback,
+              
              }
 
 #server web request commands with json

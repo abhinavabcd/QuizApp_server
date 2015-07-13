@@ -130,6 +130,12 @@ class UserFeed(Document):
     uidFeedIndex = StringField()#uid_LOGININDEX
     feedMessage = ReferenceField('Feed')
     
+
+class Feedback(Document):
+    user = ReferenceField('Users')
+    feedback = StringField()
+    
+
     
 class Feed(Document):
     fromUid = StringField()
@@ -1045,6 +1051,13 @@ class DbUtils():
             uidList.append(i.uid1)
         return uidList
     
+    def addFeedback(self, user, message):
+        feedback  = Feedback()
+        feedback.user = user
+        feedback.message = message
+        feedback.save()
+        
+    
     def getGlobalLeaderboards(self,quizId):
         ret = {}
         count = 0
@@ -1086,7 +1099,10 @@ class DbUtils():
         if(quizState):
             return quizState.get(0)
         return None
-        
+    
+    def getQuizChats(self):
+        pass
+    
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         uid1 , uid2 = reorderUids(uid1, uid2)
         if(toIndex == -1):
