@@ -133,7 +133,7 @@ class UserFeed(Document):
 
 class Feedback(Document):
     user = ReferenceField('Users')
-    feedback = StringField()
+    message = StringField()
     
 
     
