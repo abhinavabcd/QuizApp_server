@@ -186,7 +186,7 @@ class Users(Document):
     name = StringField()
     status = StringField()
     deviceId = StringField(required = True)
-    emailId = EmailField(required=True)
+    emailId = EmailField()
     pictureUrl = StringField()#cdn link
     coverUrl = StringField()
     birthday = FloatField()
@@ -889,7 +889,7 @@ class DbUtils():
             newFriends = []
             if(user.fbFriends==None):
                 newFriends= fbFriends
-            else:
+            elif(fbFriends):
                 newFriends = list(set(fbFriends) - set(json.loads(user.fbFriends)))
             for i in newFriends:
                 if(i==fbUid): continue
