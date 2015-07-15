@@ -67,7 +67,7 @@ def sendGcmMessages():
             data = json.dumps(data)
             logger.info("GCM:PUSH:")
             logger.info(data)
-            logger.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = GCM_HEADERS).read()) 
+            logger.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = Config.GCM_HEADERS).read()) 
              
 def addGcmToQueue(registrationIds, packetData):
     gcmQueue.append({"registration_ids":registrationIds,"data":packetData })

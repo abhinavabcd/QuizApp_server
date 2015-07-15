@@ -27,3 +27,15 @@ dbServer = DBServer(**{"dbName":"quizApp",
                        "username": "quizapp",
                        "password":"XXXXX"
                        }) #10 => priority to choost/computing power
+
+
+##### other 
+
+GCM_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # # YOUR GCM API KEY HERE
+GCM_HEADERS ={'Content-Type':'application/json',
+              'Authorization':'key='+GCM_API_KEY
+        }
+
+
+
+
