@@ -32,13 +32,7 @@ class RouterServerUtils():
 #         self.webServerMap[sid]=addr
 #         self.updateWebServerMap(self.webServerMap)
 #     
-#     def removeServer(self, sid):
-#         del self.webServerMap[sid]
-#         if(sid=="master"):#fail safe 
-#             master = min(self.webServerMap.keys())
-#             self.webServerMap["master"]  =self.webServerMap[master]
-#         self.updateWebServerMap(self.webServerMap)
-    
+
         
     def updateWebServerMap(self, webServerMap , externalServerMap):
         for i in webServerMap.keys():
@@ -94,4 +88,5 @@ class RouterServerUtils():
 
 
 if __name__=="__main__":
-    m = RouterServerUtils({"master":"192.168.0.1:8084"})
+    pass
+#    m = RouterServerUtils({"master":"192.168.0.1:8084"})

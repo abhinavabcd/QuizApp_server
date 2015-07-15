@@ -19,9 +19,11 @@ ExternalWebServersMap = {
                 # "1":"http://192.168.0.10:8083"
                 }
 
-DBServer= namedtuple("DBServer",["ip","port","createdDate","username","password"],verbose=False, rename=False)
-dbServer = DBServer(ip="10.240.64.162",
-                    port= 27017,
-                    createdDate= datetime.date(2014, 8 , 27) ,
-                    username= "quizapp",
-                    password ="PASSWORD_HERE") #10 => priority to choost/computing power
+DBServer= namedtuple("DBServer",["dbName","ip","port","username","password"],verbose=False, rename=False)
+
+dbServer = DBServer(**{"dbName":"quizApp",
+                       "ip":"XXXXXX",# "db.quizapp.appsandlabs.com",
+                       "port": 27017,
+                       "username": "quizapp",
+                       "password":"XXXXX"
+                       }) #10 => priority to choost/computing power

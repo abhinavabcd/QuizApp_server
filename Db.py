@@ -508,23 +508,17 @@ class DbUtils():
     _users_cached_lru= 0
     _bots = []
     def __init__(self , dbServer, _createBots = True):
-#         dbServerAliases =dbServers.keys()
-#         defaultConn = dbServers[DEFAULT_SERVER_ALIAS] 
-        #print dbServer
-        self.dbConnection = connect('quizApp',host= dbServer.ip, port = dbServer.port, username= dbServer.username, password=dbServer.password)
-            
-#         for i in dbServerAliases:
-#             if(i!=DEFAULT_SERVER_ALIAS):
-#                 db =connect('quizApp', alias=i, host=dbServers[i][0], port = dbServers[i][1])
-
-        self.dbServer = dbServer
+        self._updateDbServer(dbServer)
         if(_createBots):
             from CreateBots import createBots
             self._bots = createBots(self, UserWinsLosses)
         
 #         self.dbServerAliases = dbServers.keys()
 #         self.rrPriorities = datetime.date.today()
-    
+    def _updateDbServer(self, dbServer):
+        self.dbServer = dbServer
+        self.dbConnection = connect(dbServer.dbName,host= dbServer.ip, port = dbServer.port, username= dbServer.username, password=dbServer.password)
+        
     def getUserByUid(self, uid , long = True):
         users =Users.objects(uid=uid)
         if(users):
@@ -852,7 +846,7 @@ class DbUtils():
     def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None , gPlusFriends = None , fbFriends = [], connectUid=None):
         if(connectUid!=None):
             user = Users.objects(uid=connectUid)
-        else:
+        elif(emailId):
             user = Users.objects(emailId=emailId)
 
         if(user or len(user)>0):
