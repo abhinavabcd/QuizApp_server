@@ -843,12 +843,16 @@ class DbUtils():
 #         self.dbServerAliases[self.rrCount]
 #         self.rrCount+=1
     ### this should rather be connect to fb , gplus or refresh users list too not just register User
-    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None , gPlusFriends = None , fbFriends = [], connectUid=None):
+    def registerUser(self, name, deviceId, emailId, pictureUrl, coverUrl , birthday, gender, place, ipAddress,facebookToken=None , gPlusToken=None, isActivated=False, preUidText = "" , fbUid=None, gPlusUid=None , gPlusFriends = [] , fbFriends = [], connectUid=None):
         if(connectUid!=None):
             user = Users.objects(uid=connectUid)
         elif(emailId):
             user = Users.objects(emailId=emailId)
-
+        elif(gPlusUid):
+            user = Users.objects(gPlusUid = gPlusUid)
+        elif(fbUid):
+            user = Users.objects(fbUid=fbUid)
+            
         if(user or len(user)>0):
             user = user.get(0)
         else:

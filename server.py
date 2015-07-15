@@ -40,7 +40,7 @@ tornado.log.access_log = logger = create_timed_rotating_log('quizapp_logs/quizap
 # log end
 
 
-gcmQueue = []
+pushMessagesBuffer = []
 userGcmMessageQueue = []
 GCM_BATCH_COUNT = 10
 def sendGcmMessages():
@@ -54,23 +54,21 @@ def sendGcmMessages():
                 if(user and user.gcmRegId):
                     registrationIds.append(user.gcmRegId)
             if(registrationIds):
-                addGcmToQueue(registrationIds, packetData)            
+                pushMessagesBuffer.append({"registration_ids":registrationIds,"data":packetData })        
         else:
             user =dbUtils.getUserByUid(uids)
             if(user and user.gcmRegId):
-                addGcmToQueue([user.gcmRegId], packetData)            
+                pushMessagesBuffer.append({"registration_ids":[user.gcmRegId],"data":packetData })            
                                           
-    c = len(gcmQueue)
+    c = len(pushMessagesBuffer)
     if(c >0):
         for i in range(min(c , GCM_BATCH_COUNT)):
-            data = gcmQueue.pop()  # { registrationIds:[] , data :{} }
+            data = pushMessagesBuffer.pop()  # { registrationIds:[] , data :{} }
             data = json.dumps(data)
             logger.info("GCM:PUSH:")
             logger.info(data)
             logger.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = Config.GCM_HEADERS).read()) 
              
-def addGcmToQueue(registrationIds, packetData):
-    gcmQueue.append({"registration_ids":registrationIds,"data":packetData })
 
 def addUidToQueue(uid, packetData):
     userGcmMessageQueue.append([uid,packetData])
@@ -110,7 +108,7 @@ def registerWithFacebook(response):
     userAccessToken = user['facebook']
     callback = onRegisterWithFbNetwork(response,user)
     http_client = tornado.httpclient.AsyncHTTPClient() # we initialize our http client instance
-    http_client.fetch("https://graph.facebook.com/me?fields=id,cover,name,email,address,picture,location,gender,birthday,verified,friends&access_token="+userAccessToken,callback) # here we try     
+    http_client.fetch("https://graph.facebook.com/v2.4/me?fields=id,cover,name,email,address,picture,location,gender,birthday,verified,friends&access_token="+userAccessToken,callback) # here we try     
 
 
 def onRegisterWithGPlusNetwork(response, user):
@@ -122,7 +120,6 @@ def onRegisterWithGPlusNetwork(response, user):
         else:
             try:
                 gPlusFriends = user.get('gPlusFriendUids',None) # list of friend uids
-                fbFriends = []
                 userIp = response.request.remote_ip
                 userObject = dbUtils.registerUser( user["name"], 
                                                    user["deviceId"], 
@@ -138,7 +135,6 @@ def onRegisterWithGPlusNetwork(response, user):
                                                    True,
                                                    gPlusUid = temp["user_id"],
                                                    gPlusFriends = gPlusFriends,
-                                                   fbFriends = fbFriends,
                                                    connectUid = user.get("connectUid",None)
                                                    )
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
@@ -148,28 +144,38 @@ def onRegisterWithGPlusNetwork(response, user):
     return newFunc
 
 
+def getByKeyList(d , *keyList):
+    for key in keyList:
+        if(not d):
+            return None
+        d= d.get(key,None)
+    return d
+
 def onRegisterWithFbNetwork(response, user):
     def newFunc(httpResponse):
         data = httpResponse.buffer  
         temp =json.loads(data.read())
         if(not temp or temp.get("error",None)):
             responseFinish(response, {"messageType":NOT_AUTHORIZED})
+            logger.error("error in fetching data")
         else:
+            fbFriends = user.get("fbFriendUids",None) or map(lambda friend: friend["id"]  , getByKeyList(temp , "friends","data"))
             try:
                 userIp = response.request.remote_ip
                 userObject = dbUtils.registerUser( user["name"], 
                                                    user["deviceId"], 
-                                                   user["emailId"], 
-                                                   user.get("pictureUrl",None),
-                                                   user.get("coverUrl",None),
+                                                   temp.get("email",None), 
+                                                   user.get("pictureUrl",None) or getByKeyList(temp,"picture","data","url"),
+                                                   user.get("coverUrl",None) or getByKeyList(temp,"cover","src"),
                                                    user.get("birthday",None),
-                                                   user.get("gender",None),
+                                                   user.get("gender",None) or getByKeyList(temp,"gender"),
                                                    user.get("place",None),
                                                    userIp ,
-                                                   user.get("facebook",None),
-                                                   user.get("googlePlus",None),
-                                                   True,
+                                                   facebookToken= user.get("facebook",None),
+                                                   gPlusToken = user.get("googlePlus",None),
+                                                   isActivated = True,
                                                    fbUid = temp["id"],
+                                                   fbFriends = fbFriends,
                                                    connectUid = user.get("connectUid",None)
                                                )
                 encodedKey = tornado.web.create_signed_value(secret_auth , "key",userObject.uid)
