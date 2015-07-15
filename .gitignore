@@ -1,4 +1,4 @@
 *.pyc
 log
 load_spreadsheet.py
-
+quizapp_logs/*
