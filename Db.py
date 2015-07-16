@@ -426,6 +426,10 @@ class TopicMaxQuestions(Document):
             return c.get(0).max
 
 
+# class Subscribers(Document):
+#     user  = ReferenceField('Users')
+#     user2 = ReferenceField('User')
+
 class Categories(Document):
     categoryId = StringField(unique=True)
     shortDescription = StringField()
@@ -883,7 +887,7 @@ class DbUtils():
             user.loginIndex = 0
         
         
-        subscribersList = []
+        subscribersList = {}
         if(fbUid!=None):
             user.fbUid = fbUid
             newFriends = []
@@ -897,7 +901,7 @@ class DbUtils():
                 if(user2):
                     user2= user2.get(0)
                     # mutual friends
-                    subscribersList.append(user2)
+                    subscribersList[user2.uid] = user2
         if(gPlusUid!=None):
             user.gPlusUid = gPlusUid
             newFriends = []
@@ -910,7 +914,7 @@ class DbUtils():
                 user2 = Users.objects(gPlusUid = i)
                 if(user2):
                     user2= user2.get(0)
-                    subscribersList.append(user2)
+                    subscribersList[user2.uid] = user2
                     # mutual friends
         
         user.newDeviceId = deviceId
@@ -926,7 +930,7 @@ class DbUtils():
         user.googlePlus = gPlusToken if gPlusToken!=None else user.googlePlus
         user.isActivated = isActivated
         user.save()
-        for user2 in subscribersList:
+        for user2 in subscribersList.values():
             self.addsubscriber(user, user2)
             self.addsubscriber(user2, user)
             self.publishFeedToUser(user.uid, user2, FEED_USER_JOINED, user.uid,None)
