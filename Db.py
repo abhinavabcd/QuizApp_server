@@ -538,7 +538,7 @@ class DbUtils():
         return None
     
     def getBotUser(self):
-        return self.getUserByUid(random.choice(self._botUids), long=False)
+        return self.getUserByUid(random.choice(self._botUids))
 
 
     def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, assetPath=None, bgAssetPath=None, titleAssetPath=None,  quizList=None,isDirty=1):
