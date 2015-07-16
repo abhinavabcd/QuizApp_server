@@ -10,8 +10,6 @@ import time
 import Config
 from Constants import *
 import HelperFunctions
-from Config import dbServer
-from server import getUserByUid
 
 
 def reorderUids(uid1, uid2):
