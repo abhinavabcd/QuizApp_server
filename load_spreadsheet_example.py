@@ -92,5 +92,5 @@ IS_NEW_DB = True if (len(sys.argv)>1  and sys.argv[1]=='syncall') else False
 
 if __name__=="__main__":
     import Config
-    dbUtils = DbUtils(["127.0.0.1",27017,datetime.date(2014, 8 , 27) , 10] , _createBots = False) 
+    dbUtils = DbUtils(Config.dbServer) 
     syncSpreadSheets(dbUtils, spreadSheetKey="1fXS6D8crBo9p-xWyFG4keqHI5P8-9qqi230IKlcw5Iw" ,syncSpecific=[] , excludeSheets=["tags"], username="" , password="")

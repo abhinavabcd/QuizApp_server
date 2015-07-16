@@ -1,4 +1,5 @@
 from random import randrange, random, sample
+from Db import BotUids
 
 UserWinsLosses = None
 
@@ -20,6 +21,13 @@ def generateRandomStats(user, quizzes):
                 wl.save()
 
 
+def addToBots(user):
+    try:
+        BotUids(uid = user.uid).save()
+    except:
+        print "error saving bot"
+        pass
+
 def createBots(dbUtils , _UserWinsLosses):
     global UserWinsLosses
     UserWinsLosses = _UserWinsLosses
@@ -32,14 +40,16 @@ def createBots(dbUtils , _UserWinsLosses):
     generateRandomStats(l[-1] , quizzes) 
     l.append(dbUtils.registerUser("Swathi reddy", "123456789", "swathi123@gmail.com", "userb/swathi.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
-    l.append(dbUtils.registerUser("Shanvitha", "123457890", "Shanvitha@gmail.com", "userb/shanvitha.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
+    l.append(dbUtils.registerUser("Venkat", "123457890", "Shanvitha@gmail.com", "https://storage.googleapis.com/quizapp-tollywood/userb/venkat.jpg", None , 0, "male", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
     l.append(dbUtils.registerUser("Shradda", "123456789", "shradda@gmail.com", "userb/shradda.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
-    l.append(dbUtils.registerUser("Tanushri", "123456789", "Tanushri@gmail.com", "userb/tanushree.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
+    l.append(dbUtils.registerUser("Mahesh", "123456789", "Tanushri@gmail.com", "https://storage.googleapis.com/quizapp-tollywood/userb/abhinav_bindra.jpg", None , 0, "male", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
     l.append(dbUtils.registerUser("Nidhi", "123456789", "nidhi@gmail.com", "userb/nidhi.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
-    l.append(dbUtils.registerUser("Nandini chauhan", "123456789", "nandidni@gmail.com", "userb/nandini.jpg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
+    l.append(dbUtils.registerUser("Saket", "123456789", "nandidni@gmail.com", "https://storage.googleapis.com/quizapp-tollywood/userb/saketh.jpeg", None , 0, "female", "", "",facebookToken=None , gPlusToken=None, isActivated=True , preUidText="00"))
     generateRandomStats(l[-1] , quizzes) 
+    for user in l:
+        addToBots(user)
     return l

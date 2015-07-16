@@ -580,10 +580,18 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="display a square of a given number",
                         type=int)
+    
+    parser.add_argument("--createBots", help="display a square of a given number",
+                        type=bool)
+
     args = parser.parse_args()
     if(args.port):
         import Constants
         Constants.HTTP_PORT = args.port
+    if(args.createBots):
+        from CreateBots import createBots
+        bots = createBots(dbUtils, Db.UserWinsLosses)
+        dbUtils.loadBotUids()
           
     main()
 

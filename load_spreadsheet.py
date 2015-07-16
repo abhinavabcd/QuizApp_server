@@ -97,5 +97,5 @@ IS_NEW_DB = True if (len(sys.argv)>1  and sys.argv[1]=='syncall') else False
 
 if __name__=="__main__":
     import Config
-    dbUtils = DbUtils(Config.dbServer , _createBots = False) 
+    dbUtils = DbUtils(Config.dbServer) 
     syncSpreadSheets(dbUtils, syncSpecific=[] , excludeSheets=["tags"])

@@ -11,6 +11,7 @@ import Config
 from Constants import *
 import HelperFunctions
 from Config import dbServer
+from server import getUserByUid
 
 
 def reorderUids(uid1, uid2):
@@ -430,6 +431,10 @@ class TopicMaxQuestions(Document):
 #     user  = ReferenceField('Users')
 #     user2 = ReferenceField('User')
 
+class BotUids(Document):
+    uid = StringField(unique=True)
+
+
 class Categories(Document):
     categoryId = StringField(unique=True)
     shortDescription = StringField()
@@ -510,18 +515,19 @@ class DbUtils():
     rrCount = 0
     rrPriorities = 0
     _users_cached_lru= 0
-    _bots = []
-    def __init__(self , dbServer, _createBots = True):
+    _botUids = []
+    def __init__(self , dbServer):
         self._updateDbServer(dbServer)
-        if(_createBots):
-            from CreateBots import createBots
-            self._bots = createBots(self, UserWinsLosses)
-        
+        self.loadBotUids()
 #         self.dbServerAliases = dbServers.keys()
 #         self.rrPriorities = datetime.date.today()
     def _updateDbServer(self, dbServer):
         self.dbServer = dbServer
         self.dbConnection = connect(dbServer.dbName,host= dbServer.ip, port = dbServer.port, username= dbServer.username, password=dbServer.password)
+    
+    def loadBotUids(self):
+        self._botUids = [x.uid for x in  BotUids.objects()]
+        
         
     def getUserByUid(self, uid , long = True):
         users =Users.objects(uid=uid)
@@ -534,7 +540,7 @@ class DbUtils():
         return None
     
     def getBotUser(self):
-        return random.choice(self._bots)
+        return self.getUserByUid(random.choice(self._botUids), long=False)
 
 
     def addOrModifyCategory(self, categoryId=None, shortDescription=None, description=None, assetPath=None, bgAssetPath=None, titleAssetPath=None,  quizList=None,isDirty=1):
