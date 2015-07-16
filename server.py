@@ -586,8 +586,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if(args.port):
-        import Constants
-        Constants.HTTP_PORT = args.port
+        global HTTP_PORT 
+        HTTP_PORT = args.port
     if(args.createBots):
         from CreateBots import createBots
         bots = createBots(dbUtils, Db.UserWinsLosses)
