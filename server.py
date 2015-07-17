@@ -18,9 +18,11 @@ import HelperFunctions
 import Config 
 import ProgressiveQuizHandler
 from logging.handlers import TimedRotatingFileHandler
+import Utils
 
-
-from Utils import dbUtils , routerServer, logger
+dbUtils = None
+routerServer = None
+logger = None
 
  
 # log start
@@ -612,7 +614,7 @@ def main():
     args = parser.parse_args()
     
         
-    logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
+    Utils.logger = logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
         
     
     
@@ -620,7 +622,7 @@ def main():
     
     logger.info("PROCESS_PID: "+str(os.getpid()))
     logger.info("initializing dbUtils..")
-    dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
+    Utils.dbUtils  = dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
     
 #     if(not args.serverAddr.endswith(str(args.port))):
 #         print "Serveradd should end with port, continue only if you have configured domain-name:port to your serving host"
@@ -633,7 +635,7 @@ def main():
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
         
     logger.info("initialing router utilities")
-    routerServer = RouterServerUtils.RouterServerUtils(dbUtils)
+    Utils.routerServer = routerServer = RouterServerUtils.RouterServerUtils(dbUtils)
     HTTP_PORT = args.port
     if(args.isFirstInit):
         from CreateBots import createBots
