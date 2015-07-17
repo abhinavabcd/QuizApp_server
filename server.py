@@ -581,6 +581,15 @@ class QuizApp(tornado.web.Application):
 
 
 def main():
+    
+    
+    global dbUtils
+    global routerServer
+    global logger
+    global HTTP_PORT 
+
+
+
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="display a square of a given number",
@@ -602,14 +611,11 @@ def main():
     
     args = parser.parse_args()
     
+        
     logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
         
     
     
-    global dbUtils
-    global routerServer
-    global logger
-    global HTTP_PORT 
     Config.SERVER_ID = args.serverId
     
     logger.info("PROCESS_PID: "+str(os.getpid()))
