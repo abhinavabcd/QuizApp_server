@@ -498,8 +498,26 @@ def reloadServerMap(response):
 
 @serverSecretFunc
 def getAllActiveServers(response):
-    responseFinish(response, {"servers": routerServer.servers})
-    
+    responseFinish(response, {"servers": {server.serverId: server.addr for server in routerServer.servers}})
+
+
+@serverSecretFunc
+def resetAllServerMaps(response):
+    secretKey = response.get_argument("secretKey")
+    ret =""
+    for server in routerServer.servers.values():#while starting inform all other local servers to update this map
+        try:
+            ret+="updating ..\n"
+            ret+=(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey)+"\n"
+            ret+=(AndroidUtils.get_data(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey).read())+"\n"
+            ret+="####\n"
+        except:
+            ret+="Error...\n"
+    responseFinish(response, "<pre>"+ret+"</pre>")
+
+
+
+
 
 @serverSecretFunc
 def reloadGcm(response):
