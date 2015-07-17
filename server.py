@@ -499,8 +499,18 @@ def reloadServerMap(response):
 def getAllActiveServers(response):
     responseFinish(response, {"servers": routerServer.servers})
     
-    
 
+@serverSecretFunc
+def reloadGcm(response):
+    reloadGcmConfig()
+    responseFinish(response, {"code":OK})
+    
+def reloadGcmConfig():
+    Config.GCM_API_KEY = dbUtils.config("gcmauth")
+    Config.GCM_HEADERS = {'Content-Type':'application/json',
+              'Authorization':'key='+Config.GCM_API_KEY
+        }
+    
     
 #sample functionality
 serverFunc = {
@@ -527,8 +537,8 @@ serverFunc = {
               "getOfflineChallengeById":getOfflineChallengeById,
               "setStatusMsg":setStatusMsg,
               "sendFeedback":addFeedback,
-              "getAllActiveServers":getAllActiveServers
-              
+              "getAllActiveServers":getAllActiveServers,
+              "reloadGcm":reloadGcm
               
               
               
@@ -569,20 +579,27 @@ class QuizApp(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, **settings)
 
 
+
+
 def main():
-        import argparse
+    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="display a square of a given number",
                         type=int)
     
-    parser.add_argument("--createBots", help="display a square of a given number",
+    parser.add_argument("--isFirstInit", help="display a square of a given number",
                         type=bool)
+    
+    parser.add_argument("--gcmServerAuth", help="gcm key for push notifications",
+                        type=str)
+    
     
     parser.add_argument("--serverId", help="serverId",
                         type=bool, required=True)
     
     parser.add_argument("--serverIp", help="external ip address ",
                         type=str , required=True)
+    
     
     args = parser.parse_args()
     
@@ -603,12 +620,19 @@ def main():
     if(args.port):
         global HTTP_PORT 
         HTTP_PORT = args.port
-    if(args.createBots):
+    if(args.isFirstInit):
         from CreateBots import createBots
         bots = createBots(dbUtils, Db.UserWinsLosses)
         print "creating bots.."
         print bots
         dbUtils.loadBotUids()
+        
+        if(args.gcmServerAuth):
+            dbUtils.config("gcmauth",args.gcmServerAuth)
+    
+    
+    reloadGcmConfig()
+            
     
     if(not args.serverIp.endswith(args.port)):
         print "Serverip should end with port, continue only if you have configured domain-name:port to your serving host"
@@ -618,6 +642,7 @@ def main():
     dbUtils.updateServerMap({args.serverId: args.serverIp })
     ##generate a random key and send an email to help manage
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
+    
 
     http_server = tornado.httpserver.HTTPServer(QuizApp())
     http_server.listen(HTTP_PORT)

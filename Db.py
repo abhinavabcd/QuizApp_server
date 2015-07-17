@@ -440,6 +440,11 @@ class BotUids(Document):
     uid = StringField(unique=True)
 
 
+class Configs(Document):
+    key = StringField(unique=True)
+    value = StringField()
+
+
 class Categories(Document):
     categoryId = StringField(unique=True)
     shortDescription = StringField()
@@ -1159,9 +1164,19 @@ class DbUtils():
         except:
             pass
         
-    
-        
-    
+    def config(self, key , value=None):
+        config = Configs.objects(key=key)
+        if(not config):
+            config = Configs()
+            config.key = key
+            config.value = value
+            config.save()
+        elif(value):
+            config.value = value
+            config.save()
+        return config
+            
+            
 def test_insertInboxMessages(dbUtils , user1, user2):
     dbUtils.insertInboxMessage(user2, user1, "hello 1 ")
     dbUtils.insertInboxMessage(user1, user2, "hello 12 ")
