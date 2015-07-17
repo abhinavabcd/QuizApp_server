@@ -44,28 +44,35 @@ class RouterServerUtils():
     def getQuizWebSocketServer(self,quiz, user):
         
         # move this to db utils
-        quizState = ServerState.objects(quizId = quiz.quizId)
-        if(quizState):
-            quizState = quizState.get(0)
+        retries = 0
+        quizState = None
+        while(retries<5):
+            try:
+                quizState = ServerState.objects(quizId = quiz.quizId)
+                if(quizState):
+                    quizState = quizState.get(0)
+                    
+                if(quizState):
+                    # if server is removed or renew server
+                    if(not self.servers.get(quizState.serverId, None) or quizState.peopleWaiting<=0):
+                        quizState.peopleWaiting = quiz.nPeople*3
+                        #wait on a new server from now randomizing so to reduce the load of perticular quiz in round robin fashion
+                        quizState.serverId = self.getRoundRobinServerId()
+                        quizState.lastWaitingUserId = user.uid
+                else:
+                    quizState = ServerState()
+                    quizState.quizId = quiz.quizId
+                    quizState.peopleWaiting = quiz.nPeople*3
+                    quizState.serverId =  self.getRoundRobinServerId()
+                    quizState.lastWaitingUserId = user.uid
+                    
+                quizState.peopleWaiting-=1
+                quizState.lastUpdatedTimestamp = datetime.datetime.now()
+                quizState.save()
+                break
+            except:
+                retries+=1
             
-        if(quizState):
-            # if server is removed or renew server
-            if(not self.servers.get(quizState.serverId, None) or quizState.peopleWaiting<=0):
-                quizState.peopleWaiting = quiz.nPeople*3
-                #wait on a new server from now randomizing so to reduce the load of perticular quiz in round robin fashion
-                quizState.serverId = self.getRoundRobinServerId()
-                quizState.lastWaitingUserId = user.uid
-        else:
-            quizState = ServerState()
-            quizState.quizId = quiz.quizId
-            quizState.peopleWaiting = quiz.nPeople*3
-            quizState.serverId =  self.getRoundRobinServerId()
-            quizState.lastWaitingUserId = user.uid
-            
-        quizState.peopleWaiting-=1
-        quizState.lastUpdatedTimestamp = datetime.datetime.now()
-        quizState.save()
-                   
         return quizState.serverId , self.servers[quizState.serverId].addr
     
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection

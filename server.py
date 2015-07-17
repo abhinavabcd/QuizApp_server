@@ -69,7 +69,11 @@ def sendGcmMessages():
             data = json.dumps(data)
             logger.info("GCM:PUSH:")
             logger.info(data)
-            logger.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = Config.GCM_HEADERS).read()) 
+            http_client = tornado.httpclient.AsyncHTTPClient()
+            http_client.fetch("https://android.googleapis.com/gcm/send", lambda response: logger.info(response), method='POST', headers=Config.GCM_HEADERS, body=data) #Send it off!
+
+
+#            logger.info(AndroidUtils.get_data('https://android.googleapis.com/gcm/send',post= data,headers = Config.GCM_HEADERS).read()) 
              
 
 def addUidToQueue(uid, packetData):
