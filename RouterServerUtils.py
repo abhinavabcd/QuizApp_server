@@ -24,8 +24,8 @@ class RouterServerUtils():
         secretKey = SecretKeys.objects().get(0).secretKey
         for server in self.servers.values():#while starting inform all other local servers to update this map
             try:
-                print server.ip+"/func?task=reloadServerMap&secretKey="+secretKey
-                print AndroidUtils.get_data(server.ip+"/func?task=reloadServerMap&secretKey="+secretKey).read()
+                print server.addr+"/func?task=reloadServerMap&secretKey="+secretKey
+                print AndroidUtils.get_data(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey).read()
             except:
                 print sys.exc_info()[0]
 
@@ -36,7 +36,7 @@ class RouterServerUtils():
     
     def getRandomWebSocketServer(self):
         id = random.choice(self.servers.keys())
-        addr = self.servers[id].ip
+        addr = self.servers[id].addr
         return id , addr
     
     def getQuizWebSocketServer(self,quiz, user):
@@ -61,8 +61,7 @@ class RouterServerUtils():
             
         quizState.save()
                    
-        return quizState.serverId , self.servers[quizState.serverId].ip
-
+        return quizState.serverId , self.servers[quizState.serverId].addr
     
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
         quizState = self.dbUtils.getQuizState(quizId)

@@ -378,7 +378,7 @@ def getAllUpdates(response, user=None):
             badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
             retObj["payload2"] = "["+",".join(map(lambda x:x.toJson(),badges))+"]"
 
-        retObj["payload6"]=json.dumps({server.serverId : server.ip for server in routerServer.servers.values()})#id:serverIp
+        retObj["payload6"]=json.dumps({server.serverId : server.addr for server in routerServer.servers.values()})#id:serveraddr
      
     if(isFistLogin):
         retObj["payload8"]= json.dumps(dbUtils.getPeopleWithWhomUserConversed(user))
@@ -597,7 +597,7 @@ def main():
     parser.add_argument("--serverId", help="serverId",
                         type=str, required=True)
     
-    parser.add_argument("--serverIp", help="external ip address ",
+    parser.add_argument("--serverAddr", help="external ip address ",
                         type=str , required=True)
     
     
@@ -615,12 +615,13 @@ def main():
     print "initializing dbUtils.."
     dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
     
-    if(not args.serverIp.endswith(str(args.port))):
-        print "Serverip should end with port, continue only if you have configured domain-name:port to your serving host"
-        if(raw_input("(Y/N) ")[0].lower()!="y"):
-            return
+    if(not args.serverAddr.endswith(str(args.port))):
+        print "Serveradd should end with port, continue only if you have configured domain-name:port to your serving host"
+    if(not args.serverAddr.startsswith("http")):
+        print "Serveraddr should shart with http or https"
+        return
     
-    dbUtils.updateServerMap({args.serverId: args.serverIp })
+    dbUtils.updateServerMap({args.serverId: args.serverAddr })
     ##generate a random key and send an email to help manage
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
         

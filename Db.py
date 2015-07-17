@@ -75,7 +75,7 @@ class ServerState(Document):
     
 class Servers(Document):
     serverId = StringField(unique=True)
-    ip = StringField()
+    addr = StringField()
     
 
 
@@ -1148,7 +1148,7 @@ class DbUtils():
                 server = Servers()
                 server.serverId = serverId
                 
-            server.ip = serverMap.get(serverId)
+            server.addr = serverMap.get(serverId)
             server.save()
         return True
     
