@@ -75,7 +75,7 @@ class RouterServerUtils():
     def getRoundRobinServerId(self):
         self.rrCount+=1
         self.rrCount%=len(self.servers)
-        return self.servers.values()[self.rrCount]
+        return self.servers.values()[self.rrCount].addr
 
 
 
