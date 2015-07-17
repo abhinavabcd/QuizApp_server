@@ -657,7 +657,6 @@ def main():
     
 
     http_server = tornado.httpserver.HTTPServer(QuizApp())
-    print HTTP_PORT
     http_server.listen(HTTP_PORT)
     ## this should be moved to seperate queuing service
     tornado.ioloop.PeriodicCallback(sendGcmMessages, 2000).start()
