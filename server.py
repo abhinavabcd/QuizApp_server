@@ -627,8 +627,12 @@ def main():
         print bots
         dbUtils.loadBotUids()
         
-        if(args.gcmServerAuth):
-            dbUtils.config("gcmauth",args.gcmServerAuth)
+        if(not args.gcmServerAuth):
+            print "You must supply a  gcm key on first init"
+            return
+        
+    if(args.gcmServerAuth):
+        dbUtils.config("gcmauth",args.gcmServerAuth)
     
     
     reloadGcmConfig()
