@@ -49,7 +49,6 @@ class RouterServerUtils():
             quizState = quizState.get(0)
             
         if(quizState):
-            quizState.peopleWaiting-=1
             if(quizState.peopleWaiting<=0):
                 quizState.peopleWaiting = quiz.nPeople*3
                 #wait on a new server from now randomizing so to reduce the load of perticular quiz in round robin fashion
@@ -61,13 +60,17 @@ class RouterServerUtils():
             quizState.peopleWaiting = quiz.nPeople*3
             quizState.serverId =  self.getRoundRobinServerId()
             quizState.lastWaitingUserId = user.uid
+            
+        quizState.peopleWaiting-=1
         quizState.lastUpdatedTimestamp = datetime.datetime.now()
         quizState.save()
                    
         return quizState.serverId , self.servers[quizState.serverId].addr
     
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
-        quizState = self.dbUtils.getQuizState(quizId)
+        quizState = ServerState.objects(quizId = quizId)
+        if(quizState):
+            quizState = quizState.get(0)
         if(quizState and quizState.serverId == sid and quizState.lastWaitingUserId == uid):
             quizState.peopleWaiting+=1
             quizState.save()
