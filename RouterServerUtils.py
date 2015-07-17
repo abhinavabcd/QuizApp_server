@@ -69,7 +69,7 @@ class RouterServerUtils():
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
         quizState = self.dbUtils.getQuizState(quizId)
         if(quizState and quizState.serverId == sid and quizState.lastWaitingUserId == uid):
-            quizState.peopleWaiting = 0
+            quizState.peopleWaiting+=1
             quizState.save()
             
     
