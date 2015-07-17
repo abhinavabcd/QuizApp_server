@@ -17,12 +17,11 @@ import logging
 import HelperFunctions
 import Config 
 import ProgressiveQuizHandler
-
-dbUtils = None
-routerServer = None
-logger = None
-
 from logging.handlers import TimedRotatingFileHandler
+
+
+from Utils import dbUtils , routerServer, logger
+
  
 # log start
 def create_timed_rotating_log(path):
@@ -603,6 +602,8 @@ def main():
     
     args = parser.parse_args()
     
+    logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
+        
     
     
     global dbUtils
@@ -611,12 +612,12 @@ def main():
     global HTTP_PORT 
     Config.SERVER_ID = args.serverId
     
-    print "PROCESS_PID: "+str(os.getpid())
-    print "initializing dbUtils.."
+    logger.info("PROCESS_PID: "+str(os.getpid()))
+    logger.info("initializing dbUtils..")
     dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
     
-    if(not args.serverAddr.endswith(str(args.port))):
-        print "Serveradd should end with port, continue only if you have configured domain-name:port to your serving host"
+#     if(not args.serverAddr.endswith(str(args.port))):
+#         print "Serveradd should end with port, continue only if you have configured domain-name:port to your serving host"
     if(not args.serverAddr.startswith("http")):
         print "Serveraddr should shart with http or https"
         return
@@ -625,16 +626,13 @@ def main():
     ##generate a random key and send an email to help manage
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
         
-    print "initialing router utilities"
+    logger.info("initialing router utilities")
     routerServer = RouterServerUtils.RouterServerUtils(dbUtils)
-    print "initializing logging"
-    logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
-        
     HTTP_PORT = args.port
     if(args.isFirstInit):
         from CreateBots import createBots
         bots = createBots(dbUtils, Db.UserWinsLosses)
-        print "creating bots.."
+        logger.info("creating bots..")
         print bots
         dbUtils.loadBotUids()
         
