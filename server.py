@@ -643,7 +643,7 @@ def main():
     reloadGcmConfig()
             
     
-    if(not args.serverIp.endswith(args.port)):
+    if(not args.serverIp.endswith(str(args.port))):
         print "Serverip should end with port, continue only if you have configured domain-name:port to your serving host"
         if(raw_input("Y/N")[0]!="Y"):
             return
