@@ -614,11 +614,17 @@ def main():
     print "PROCESS_PID: "+str(os.getpid())
     print "initializing dbUtils.."
     dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
-    print "initialing router utilities"
-
+    
+    if(not args.serverIp.endswith(str(args.port))):
+        print "Serverip should end with port, continue only if you have configured domain-name:port to your serving host"
+        if(raw_input("(Y/N) ")[0].lower()!="y"):
+            return
+    
+    dbUtils.updateServerMap({args.serverId: args.serverIp })
     ##generate a random key and send an email to help manage
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
-    
+        
+    print "initialing router utilities"
     routerServer = RouterServerUtils.RouterServerUtils(dbUtils)
     print "initializing logging"
     logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
@@ -642,13 +648,6 @@ def main():
     reloadGcmConfig()
             
     
-    if(not args.serverIp.endswith(str(args.port))):
-        print "Serverip should end with port, continue only if you have configured domain-name:port to your serving host"
-        if(raw_input("Y/N")[0]!="Y"):
-            return
-    
-    dbUtils.updateServerMap({args.serverId: args.serverIp })
-
 
     http_server = tornado.httpserver.HTTPServer(QuizApp())
     print HTTP_PORT
