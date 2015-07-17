@@ -498,7 +498,7 @@ def reloadServerMap(response):
 
 @serverSecretFunc
 def getAllActiveServers(response):
-    responseFinish(response, {"servers": {server.serverId: server.addr for server in routerServer.servers}})
+    responseFinish(response, {"servers": {server.serverId: server.addr for server in routerServer.servers.values()}})
 
 
 @serverSecretFunc
