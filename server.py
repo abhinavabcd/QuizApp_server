@@ -505,7 +505,7 @@ def getAllActiveServers(response):
 def resetAllServerMaps(response):
     secretKey = response.get_argument("secretKey")
     ret =""
-    for server in routerServer.servers.values():#while starting inform all other local servers to update this map
+    for server in dbUtils.getAllServers():#while starting inform all other local servers to update this map
         try:
             ret+="updating ..\n"
             ret+=(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey)+"\n"
@@ -557,8 +557,8 @@ serverFunc = {
               "setStatusMsg":setStatusMsg,
               "sendFeedback":addFeedback,
               "getAllActiveServers":getAllActiveServers,
-              "reloadGcm":reloadGcm
-              
+              "reloadGcm":reloadGcm,
+              "resetAllServerMaps":resetAllServerMaps
               
               
              }

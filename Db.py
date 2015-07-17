@@ -852,6 +852,10 @@ class DbUtils():
         user.save()
         return
     
+    def getAllServers(self):
+        return Servers.objects()
+    
+    
     def getQuestionsById(self, questionIds):
         return Questions.objects(questionId__in = questionIds)
 #     
