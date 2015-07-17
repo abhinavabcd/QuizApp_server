@@ -3,6 +3,7 @@ import urllib
 import json
 import sys
 import random
+import datetime
 from Db import ServerState, Servers, SecretKeys
 
 # 
@@ -55,10 +56,11 @@ class RouterServerUtils():
                 quizState.lastWaitingUserId = user.uid
         else:
             quizState = ServerState()
+            quizState.quizId = quiz.quizId
             quizState.peopleWaiting = quiz.nPeople*3
             quizState.serverId =  self.getRoundRobinServerId()
             quizState.lastWaitingUserId = user.uid
-            
+        quizState.lastUpdatedTimestamp = datetime.datetime.now()
         quizState.save()
                    
         return quizState.serverId , self.servers[quizState.serverId].addr

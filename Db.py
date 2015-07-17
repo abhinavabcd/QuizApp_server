@@ -68,10 +68,11 @@ class Uid1Uid2Index(Document):
 
 #very dynamic db
 class ServerState(Document):
-    quizId = StringField()
+    quizId = StringField(unique=True)
     peopleWaiting = IntField()
     serverId = StringField()
     lastWaitingUserId = StringField()
+    lastUpdatedTimestamp = DateTimeField()
     
 class Servers(Document):
     serverId = StringField(unique=True)
