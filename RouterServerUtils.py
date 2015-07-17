@@ -21,7 +21,7 @@ class RouterServerUtils():
         self.dbUtils = dbUtils
         self.reloadServers()
         
-        secretKey = SecretKeys.objects().get(0).secretKey
+        secretKey = SecretKeys.objects()[0].secretKey
         for server in self.servers.values():#while starting inform all other local servers to update this map
             try:
                 print server.addr+"/func?task=reloadServerMap&secretKey="+secretKey
