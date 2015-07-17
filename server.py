@@ -501,19 +501,24 @@ def getAllActiveServers(response):
     responseFinish(response, {"servers": {server.serverId: server.addr for server in routerServer.servers.values()}})
 
 
+@tornado.web.asynchronous 
 @serverSecretFunc
 def resetAllServerMaps(response):
     secretKey = response.get_argument("secretKey")
     ret =""
-    for server in dbUtils.getAllServers():#while starting inform all other local servers to update this map
+    servers = dbUtils.getAllServers()
+    for server in servers:#while starting inform all other local servers to update this map
         try:
-            ret+="updating ..\n"
+            ret+="updating .."+server.serverId+"\n"
             ret+=(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey)+"\n"
             ret+=(AndroidUtils.get_data(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey).read())+"\n"
             ret+="####\n"
         except:
             ret+="Error...\n"
-    responseFinish(response, "<pre>"+ret+"</pre>")
+        response.write(ret)
+        ret=""
+
+    responseFinish(response, {"code":OK})
 
 
 
