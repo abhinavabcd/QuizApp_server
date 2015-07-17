@@ -1172,6 +1172,7 @@ class DbUtils():
             config.value = value
             config.save()
         elif(value):
+            config = config.get(0)
             config.value = value
             config.save()
             
