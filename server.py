@@ -585,7 +585,7 @@ def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="display a square of a given number",
-                        type=int)
+                        type=int, required=True)
     
     parser.add_argument("--isFirstInit", help="display a square of a given number",
                         type=bool)
@@ -608,6 +608,7 @@ def main():
     global dbUtils
     global routerServer
     global logger
+    global HTTP_PORT 
     Config.SERVER_ID = args.serverId
     
     print "PROCESS_PID: "+str(os.getpid())
@@ -622,9 +623,7 @@ def main():
     print "initializing logging"
     logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
         
-    if(args.port):
-        global HTTP_PORT 
-        HTTP_PORT = args.port
+    HTTP_PORT = args.port
     if(args.isFirstInit):
         from CreateBots import createBots
         bots = createBots(dbUtils, Db.UserWinsLosses)
@@ -652,6 +651,7 @@ def main():
 
 
     http_server = tornado.httpserver.HTTPServer(QuizApp())
+    print HTTP_PORT
     http_server.listen(HTTP_PORT)
     ## this should be moved to seperate queuing service
     tornado.ioloop.PeriodicCallback(sendGcmMessages, 2000).start()
