@@ -595,7 +595,7 @@ def main():
     
     
     parser.add_argument("--serverId", help="serverId",
-                        type=bool, required=True)
+                        type=str, required=True)
     
     parser.add_argument("--serverIp", help="external ip address ",
                         type=str , required=True)
