@@ -1,8 +1,8 @@
 #Latest commit:
-Made some improvements to load the project faster, moved to android studio and gradle. I have to admit , this was my 2nd attempt at android app : ) , little buggy on the concepts of controllers and screens. I wanted to have a game and a state machine model when i started the code. I tried it keep the code classified as possible. Just email me if you want some feature or any short modifications.  If you felt something about the project, just drop a Hello email , would make me happy. : )
+Made some improvements to load the project faster, moved to android studio and gradle. I have to admit , this was my 2nd attempt at android app : ) , little buggy on the concepts of controllers and screens. I wanted to have a game and a state machine model when i started the code. I tried it keep the code classified as possible. Just email me if you want some feature or any short modifications.  If you felt something about the project, just drop a Hello email to abhinavabcd@gmail.com , would make me happy. : )
 
 Live Version here:
-https://storage.googleapis.com/quizappassets/files/app-release.apk
+https://storage.googleapis.com/quizapp-tollywood/files/app-release.apk
 
  - controllers manages screens(one or more screens).
  - A screen is just a linearlayout , when you need a screen to be shown, load the controller(by calling quizApp.loadAppController(Controller.class) ) do some logic and create the screen. quizApp.addView(Screen) will animate it.
@@ -54,14 +54,24 @@ You will need QuizApp_tornado_server to launch the app you can clone it from her
 
 
 
-1. Launch mongoDB. there is a one click deploy on google compute, but it will cost you.
+1. Launch mongoDB. there is a one click deploy on google compute, but it will cost you price.
 2. Configure Config.py , change the dbServer address to point to mongoDb.
-3. launch with 
-	- python server.py --port=8085 --serverId=<UNIQUE_SERVER-ID-ANYTHING> ( --serverIp="internalip.yourserver.com:port" )
+3. launch with
+	- nohup sudo python server.py --port=80 --serverId=master --serverAddr=http://quizapp.yourserver.com >/dev/null &
 
-(you may also need the GCM key for the notifications to work , from your cloud project create a public access key for server applications.
-copy that key and place it in Constants.py GCM key.
-)
+# you might want to initialize first the first time launch by
+
+	- nohup sudo python server.py --port=80 --isFirstInit --serverId=master --serverAddr=http://quizapp.yourserver.com >/dev/null &
+
+
+4. The web management Ui is yet to be done.
+5. To remove an server instance you have to delete the entry from Db  from the "servers" collection.(This is a little insecure)
+ 	- get any secret key from the "secret_keys" collection.
+ 	-use to reload web server map in all instances.
+
+
+
+
 
 ##Loading data to server
 5. You will have to download Configure load_spreadsheet.py.
@@ -104,6 +114,3 @@ All contributions and modifications are copylefted.
 Thanks Vinay for contributions to code.
 
 #--
-you may want to add the googleplay services lib by importing from sdk/extras
-
-
