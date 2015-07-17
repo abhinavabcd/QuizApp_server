@@ -49,7 +49,8 @@ class RouterServerUtils():
             quizState = quizState.get(0)
             
         if(quizState):
-            if(quizState.peopleWaiting<=0):
+            # if server is removed or renew server
+            if(not self.servers.get(quizState.serverId, None) or quizState.peopleWaiting<=0):
                 quizState.peopleWaiting = quiz.nPeople*3
                 #wait on a new server from now randomizing so to reduce the load of perticular quiz in round robin fashion
                 quizState.serverId = self.getRoundRobinServerId()
@@ -79,7 +80,7 @@ class RouterServerUtils():
     def getRoundRobinServerId(self):
         self.rrCount+=1
         self.rrCount%=len(self.servers)
-        return self.servers.values()[self.rrCount].addr
+        return self.servers.values()[self.rrCount].serverId
 
 
 
