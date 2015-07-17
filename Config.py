@@ -9,15 +9,7 @@ from collections import namedtuple
 
 SERVER_ID = "master"
 
-WebServersMap = {
-                 "master":"http://10.240.118.190:8085"
-                # "1":"http://192.168.0.10:8083"
-                }
 
-ExternalWebServersMap = {
-                 "master":"http://130.211.241.110:8085"
-                # "1":"http://192.168.0.10:8083"
-                }
 
 DBServer= namedtuple("DBServer",["dbName","ip","port","username","password"],verbose=False, rename=False)
 

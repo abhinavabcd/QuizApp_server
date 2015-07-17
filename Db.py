@@ -66,13 +66,18 @@ class Uid1Uid2Index(Document):
 
         return obj.index
 
-
+#very dynamic db
 class ServerState(Document):
     quizId = StringField()
     peopleWaiting = IntField()
     serverId = StringField()
     lastWaitingUserId = StringField()
     
+class Servers(Document):
+    serverId = StringField(unique=True)
+    ip = StringField()
+    
+
 
 class UserInboxMessages(Document):
     fromUid_toUid_index = StringField()#tag to identify block of messages
@@ -348,6 +353,8 @@ class Badges(Document):
         sonObj["modifiedTimestamp"] = HelperFunctions.toUtcTimestamp(self.modifiedTimestamp)
         return bson.json_util.dumps(sonObj)
 
+
+
 class Questions(Document):
     questionId = StringField(unique=True)
     questionType = IntField(default = 0)
@@ -506,6 +513,9 @@ def getListFromString(s,toLower=False):
             ret.append(t)
     return ret
 
+def SecretKeys(Document):
+    secretKey = StringField(unique=True)
+    
 class DbUtils():
 
     dbServer = []
@@ -1100,14 +1110,7 @@ class DbUtils():
             return True
         return False
 
-    def getQuizState(self, quizId):
-        quizState = ServerState.objects(quizId = quizId)
-        if(quizState):
-            return quizState.get(0)
-        return None
-    
-    def getQuizChats(self):
-        pass
+
     
     def getMessagesBetween(self,uid1, uid2 , toIndex=-1, fromIndex=0):
         uid1 , uid2 = reorderUids(uid1, uid2)
@@ -1130,7 +1133,35 @@ class DbUtils():
                 break 
             
         return messages
-            
+    
+    def updateServerMap(self, serverMap):#{ id: ip:port}
+        for serverId in serverMap:
+            server = Servers.objects(serverId = serverId)
+            if(server):
+                server = server.get(0)
+            else:
+                server = Servers()
+                server.serverId = serverId
+                
+            server.ip = serverMap.get(serverId)
+            server.save()
+        return True
+    
+    
+    def isSecretKey(self, secretKey):
+        return SecretKeys.objects(secretKey=secretKey)!=None
+    
+    def addSecretKey(self, secretKey):
+        try:
+            s = SecretKeys()
+            s.secretKey = secretKey
+            s.save()
+        except:
+            pass
+        
+    
+        
+    
 def test_insertInboxMessages(dbUtils , user1, user2):
     dbUtils.insertInboxMessage(user2, user1, "hello 1 ")
     dbUtils.insertInboxMessage(user1, user2, "hello 12 ")

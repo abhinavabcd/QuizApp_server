@@ -3,8 +3,7 @@ import urllib
 import json
 import sys
 import random
-from Config import ExternalWebServersMap
-from Db import ServerState
+from Db import ServerState, Servers, SecretKeys
 
 # 
 # LI_N_PEOPLE_WAITING = 0
@@ -13,50 +12,45 @@ from Db import ServerState
 
 class RouterServerUtils():
     rrCount = 0
-    webServerMap= {}
-    externalWebServerMap = {}
+    servers = {}
     
-    webServerIds=[]
     dbUtils = None
     
     
-    def __init__(self,dbUtils , webServerMap, externalServerMap):
+    def __init__(self,dbUtils):
         self.dbUtils = dbUtils
-        self.updateWebServerMap(webServerMap, externalServerMap)
-        for i in webServerMap.values():#while starting inform all other local servers to update this map
+        self.reloadServers()
+        
+        secretKey = SecretKeys.objects()[0]
+        for server in self.servers.values():#while starting inform all other local servers to update this map
             try:
-                print AndroidUtils.get_data(i+"/func?task=updateServerMap",urllib.urlencode({"webServerMap":json.dumps(webServerMap) , "externalWebServerMap":json.dumps(ExternalWebServersMap)})).read()
+                print server.ip+"/func?task=reloadServerMap&secretKey="+secretKey
+                print AndroidUtils.get_data(server.ip+"/func?task=reloadServerMap&secretKey="+secretKey).read()
             except:
                 print sys.exc_info()[0]
-#     def addServer(self, sid , addr):
-#         self.webServerMap[sid]=addr
-#         self.updateWebServerMap(self.webServerMap)
-#     
+
 
         
-    def updateWebServerMap(self, webServerMap , externalServerMap):
-        for i in webServerMap.keys():
-                self.webServerMap[i] = webServerMap[i]
-                self.externalWebServerMap[i] = externalServerMap[i]
-        #ExternalWebServersMap = externalServerMap
-        self.webServerIds = webServerMap.keys()
+    def reloadServers(self):# this will reload the map appropirately
+        self.servers = {server.serverId : server for server in Servers.objects()}    
     
-    
-    def getRandomWebSocketServer(self, isExternal=True):
-        id = random.choice(self.webServerIds)
-        if(not isExternal):
-            addr = self.webServerMap[id]
-        else:
-            addr = self.externalWebServerMap[id]
+    def getRandomWebSocketServer(self):
+        id = random.choice(self.servers.keys())
+        addr = self.servers[id].ip
         return id , addr
     
-    def getQuizWebSocketServer(self,quiz, user , isExternal=True):
-        quizState = self.dbUtils.getQuizState(quiz.quizId)
-                 
+    def getQuizWebSocketServer(self,quiz, user):
+        
+        # move this to db utils
+        quizState = ServerState.objects(quizId = quiz.quizId)
+        if(quizState):
+            quizState = quizState.get(0)
+            
         if(quizState):
             quizState.peopleWaiting-=1
             if(quizState.peopleWaiting<=0):
                 quizState.peopleWaiting = quiz.nPeople*3
+                #wait on a new server from now randomizing so to reduce the load of perticular quiz in round robin fashion
                 quizState.serverId = self.getRoundRobinServerId()
                 quizState.lastWaitingUserId = user.uid
         else:
@@ -67,10 +61,7 @@ class RouterServerUtils():
             
         quizState.save()
                    
-        if(not isExternal):
-            return quizState.serverId , self.webServerMap[quizState.serverId]
-        else:
-            return quizState.serverId , self.externalWebServerMap[quizState.serverId]
+        return quizState.serverId , self.servers[quizState.serverId].ip
 
     
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
@@ -82,8 +73,8 @@ class RouterServerUtils():
     
     def getRoundRobinServerId(self):
         self.rrCount+=1
-        self.rrCount%=len(self.webServerIds)
-        return self.webServerIds[self.rrCount]
+        self.rrCount%=len(self.servers)
+        return self.servers.values()[self.rrCount]
 
 
 

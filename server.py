@@ -18,8 +18,9 @@ import HelperFunctions
 import Config 
 import ProgressiveQuizHandler
 
-dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
-routerServer = RouterServerUtils.RouterServerUtils(dbUtils , Config.WebServersMap , Config.ExternalWebServersMap)
+dbUtils = None
+routerServer = None
+logger = None
 
 from logging.handlers import TimedRotatingFileHandler
  
@@ -36,7 +37,7 @@ def create_timed_rotating_log(path):
     logger.addHandler(handler)
     return logger
 
-tornado.log.access_log = logger = create_timed_rotating_log('quizapp_logs/quizapp.log')
+
 # log end
 
 
@@ -76,8 +77,6 @@ def addUidToQueue(uid, packetData):
 def addUidsToQueue(uids, packetData):
     userGcmMessageQueue.append([uids,packetData])
 
-
-_userCache= {}
 
 def userAuthRequired(func):
     def wrapper(response,*args,**kwargs):
@@ -379,8 +378,8 @@ def getAllUpdates(response, user=None):
             badges = dbUtils.getNewBadges(userMaxBadgesTimestamp)
             retObj["payload2"] = "["+",".join(map(lambda x:x.toJson(),badges))+"]"
 
-        retObj["payload6"]=json.dumps(Config.ExternalWebServersMap)
-    
+        retObj["payload6"]=json.dumps({server.serverId : server.ip for server in routerServer.servers.values()})#id:serverIp
+     
     if(isFistLogin):
         retObj["payload8"]= json.dumps(dbUtils.getPeopleWithWhomUserConversed(user))
     
@@ -414,22 +413,6 @@ def getServer(response, user=None):
         sid , serverAddr = routerServer.getRandomWebSocketServer()
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
-        
-# 
-# def addWebServer(response):
-#     serveraddr = response.get_argument("serveraddr")
-#     sid = response.get_argument("sid")
-#     routerServer.addServer(sid, serveraddr)
-#     
-# def removeWebServer(response):
-#     sid = response.get_argument("sid")
-#     routerServer.removeServer(sid)
-    
-# def updateWebServerMap(response):
-#     webServerMap  = json.loads(response.get_argument("webServerMap"))
-#     externalWebServerMap  = json.loads(response.get_argument("externalWebServerMap"))
-#     routerServer.updateWebServerMap(webServerMap, externalWebServerMap)
-
 
 @userAuthRequired
 def getQuestionById(response, user=None):
@@ -497,20 +480,34 @@ def updateUserRating(response , user=None):
 
 
 ###################internal functions##############################
-def updateServerMap(response):
-    webServerMap = json.loads(response.get_argument("webServerMap"))
-    externalWebServerMap = json.loads(response.get_argument("externalWebServerMap"))
-    routerServer.updateWebServerMap(webServerMap, externalWebServerMap)
-    response.finish("OK")
+def serverSecretFunc(func):
+    def wrapper(response,*args,**kwargs):
+        server_auth_key = response.get_argument("secretKey")
+        if(dbUtils.isSecretKey(server_auth_key)):
+            return func(response,*args,**kwargs)
+        response.finish({"code":"error"})
+        
+    return wrapper
 
+    
+@serverSecretFunc
+def reloadServerMap(response):
+    routerServer.reloadServers()
+    responseFinish(response, {"code":OK})
 
+@serverSecretFunc
+def getAllActiveServers(response):
+    responseFinish(response, {"servers": routerServer.servers})
+    
+    
 
+    
 #sample functionality
 serverFunc = {
               "registerWithGoogle":registerWithGoogle,
               "registerWithFacebook":registerWithFacebook,
               "getAllUpdates":getAllUpdates,
-              "updateServerMap":updateServerMap,
+              "reloadServerMap":reloadServerMap,
               "getServer":getServer,
               "activatingBotPQuiz":activatingBotPQuiz,
               "getPreviousMessages":getPreviousMessages,
@@ -530,6 +527,10 @@ serverFunc = {
               "getOfflineChallengeById":getOfflineChallengeById,
               "setStatusMsg":setStatusMsg,
               "sendFeedback":addFeedback,
+              "getAllActiveServers":getAllActiveServers
+              
+              
+              
               
              }
 
@@ -569,30 +570,62 @@ class QuizApp(tornado.web.Application):
 
 
 def main():
-    print "PROCESS_PID: "+str(os.getpid())
-    http_server = tornado.httpserver.HTTPServer(QuizApp())
-    http_server.listen(HTTP_PORT)
-    tornado.ioloop.PeriodicCallback(sendGcmMessages, 2000).start()
-    tornado.ioloop.IOLoop.instance().start()
-    
-if __name__ == "__main__":
-    import argparse
+        import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="display a square of a given number",
                         type=int)
     
     parser.add_argument("--createBots", help="display a square of a given number",
                         type=bool)
-
+    
+    parser.add_argument("--serverId", help="serverId",
+                        type=bool, required=True)
+    
+    parser.add_argument("--serverIp", help="external ip address ",
+                        type=str , required=True)
+    
     args = parser.parse_args()
+    
+    
+    
+    global dbUtils
+    global routerServer
+    global logger
+    
+    print "PROCESS_PID: "+str(os.getpid())
+    print "initializing dbUtils.."
+    dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
+    print "initialing router utilities"
+    routerServer = RouterServerUtils.RouterServerUtils(dbUtils)
+    print "initializing logging"
+    logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
+        
     if(args.port):
         global HTTP_PORT 
         HTTP_PORT = args.port
     if(args.createBots):
         from CreateBots import createBots
         bots = createBots(dbUtils, Db.UserWinsLosses)
+        print "creating bots.."
+        print bots
         dbUtils.loadBotUids()
-          
-    main()
+    
+    if(not args.serverIp.endswith(args.port)):
+        print "Serverip should end with port, continue only if you have configured domain-name:port to your serving host"
+        if(raw_input("Y/N")[0]!="Y"):
+            return
+    
+    dbUtils.updateServerMap({args.serverId: args.serverIp })
+    ##generate a random key and send an email to help manage
+    dbUtils.addSecretKey(HelperFunctions.generateKey(10))
 
+    http_server = tornado.httpserver.HTTPServer(QuizApp())
+    http_server.listen(HTTP_PORT)
+    ## this should be moved to seperate queuing service
+    tornado.ioloop.PeriodicCallback(sendGcmMessages, 2000).start()
+    tornado.ioloop.IOLoop.instance().start()
+    
+if __name__ == "__main__":
+    main()
+    
     #testCases

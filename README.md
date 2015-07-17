@@ -54,10 +54,11 @@ You will need QuizApp_tornado_server to launch the app you can clone it from her
 
 
 
-1. Launch mongoDB. there is a one click deploy on google compute, but it will cost you price.
+1. Launch mongoDB. there is a one click deploy on google compute, but it will cost you.
 2. Configure Config.py , change the dbServer address to point to mongoDb.
-3. Change the WebServerMap and ExternalWebServerMap to point which are internal and external ip's for your server instances.
-4. when you want to launch or change the existing webservers update Config.py and relaunch it, this will propapage to existing servers.
+3. launch with 
+	- python server.py --port=8085 --serverId=<UNIQUE_SERVER-ID-ANYTHING> ( --serverIp="internalip.yourserver.com:port" )
+
 (you may also need the GCM key for the notifications to work , from your cloud project create a public access key for server applications.
 copy that key and place it in Constants.py GCM key.
 )
