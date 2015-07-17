@@ -614,6 +614,10 @@ def main():
     print "initializing dbUtils.."
     dbUtils = Db.DbUtils(Config.dbServer)#initialize Db
     print "initialing router utilities"
+
+    ##generate a random key and send an email to help manage
+    dbUtils.addSecretKey(HelperFunctions.generateKey(10))
+    
     routerServer = RouterServerUtils.RouterServerUtils(dbUtils)
     print "initializing logging"
     logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
@@ -645,9 +649,7 @@ def main():
             return
     
     dbUtils.updateServerMap({args.serverId: args.serverIp })
-    ##generate a random key and send an email to help manage
-    dbUtils.addSecretKey(HelperFunctions.generateKey(10))
-    
+
 
     http_server = tornado.httpserver.HTTPServer(QuizApp())
     http_server.listen(HTTP_PORT)
