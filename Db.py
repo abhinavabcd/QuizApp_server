@@ -1171,11 +1171,12 @@ class DbUtils():
             config.key = key
             config.value = value
             config.save()
-        elif(value):
+        else:
             config = config.get(0)
-            config.value = value
-            config.save()
-            
+            if(value):
+                config.value = value
+                config.save()
+        
         return config.value
             
             
