@@ -1174,7 +1174,8 @@ class DbUtils():
         elif(value):
             config.value = value
             config.save()
-        return config
+            
+        return config.value
             
             
 def test_insertInboxMessages(dbUtils , user1, user2):
