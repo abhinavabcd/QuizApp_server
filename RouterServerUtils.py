@@ -5,9 +5,8 @@ import sys
 import random
 import datetime
 from Db import ServerState, Servers, SecretKeys
+import Utils
 
-
-from Utils import dbUtils, logger
 # 
 # LI_N_PEOPLE_WAITING = 0
 # LI_USERS_WAITING_SERVERID =1
@@ -27,10 +26,10 @@ class RouterServerUtils():
         secretKey = SecretKeys.objects()[0].secretKey
         for server in self.servers.values():#while starting inform all other local servers to update this map
             try:
-                logger.info(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey)
-                logger.info(AndroidUtils.get_data(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey).read())
+                Utils.logger.info(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey)
+                Utils.logger.info(AndroidUtils.get_data(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey).read())
             except:
-                logger.error(sys.exc_info()[0])
+                Utils.logger.error(sys.exc_info()[0])
 
 
         
