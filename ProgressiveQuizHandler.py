@@ -7,7 +7,7 @@ import tornado
 from Constants import *
 import HelperFunctions
 import json
-from Config import SERVER_ID
+import Config
 
 quizWaitingConnectionsPool = {}#based on type_of quiz we have the waiting pool
 runningQuizes = {} # all currently running quizes in this server
@@ -109,7 +109,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                    addToGcmQueue(self.isChallenge, {"fromUser":self.uid,
                                 "fromUserName":self.user.name,
                                 "quizPoolWaitId":self.quizPoolWaitId,   
-                                "serverId":SERVER_ID,
+                                "serverId":Config.SERVER_ID,
                                 "quizId": quiz.quizId,
                                 "quizName":quiz.name,
                                 "messageType":NOTIFICATION_GCM_CHALLENGE_NOTIFICATION,  

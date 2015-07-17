@@ -608,9 +608,7 @@ def main():
     global dbUtils
     global routerServer
     global logger
-    global SERVER_ID
-    SERVER_ID = args.serverId
-    
+    Config.SERVER_ID = args.serverId
     
     print "PROCESS_PID: "+str(os.getpid())
     print "initializing dbUtils.."
