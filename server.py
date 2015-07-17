@@ -226,7 +226,7 @@ def unSubscribeTo(response, user=None):
 def onOfflineChallengeCompleted(response, user=None):
     offlineChallengeId = response.get_argument("offlineChallengeId")
     challengeData = response.get_argument("challengeData")
-    if(dbUtils.onUserCompletedChallenge(user,offlineChallengeId, challengeData)!=None):
+    if(dbUtils.onUserCompletedChallenge(user,offlineChallengeId, challengeData)):
         responseFinish(response,{"messageType":OK})
     else:
         responseFinish(response,{"messageType":FAILED})

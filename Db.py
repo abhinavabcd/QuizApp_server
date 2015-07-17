@@ -719,7 +719,7 @@ class DbUtils():
             offlineChallenge.offlineChallengeId = offlineChallengeId
         else:
             offlineChallenge.offlineChallengeId = HelperFunctions.generateKey(10)
-        offlineChallenge.fromUid_userChallengeIndex = fromUser.uid+"_"+str(fromUser.userChallengesIndex.index) # yeah , its a little bit funny too
+        offlineChallenge.fromUid_userChallengeIndex = fromUser.uid+"_"+str(fromUser.userChallengesIndex.index) # yeah , its a little bit funny too # fuck you , i was not funny , that was over optimization for an unreleased app !!!
         offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.getAndIncrement(toUser).index)
         offlineChallenge.challengeData = challengeData
         offlineChallenge.save()
@@ -731,32 +731,35 @@ class DbUtils():
         fromUser = self.getUserByUid(offlineChallenge.fromUid_userChallengeIndex.split("_")[0])
         
         if(offlineChallenge.challengeType==0):
-            challengeData1= json.loads(offlineChallenge.challengeData)
-            challengeData2= json.loads(offlineChallenge.challengeData2)
-            quizId = challengeData1["quizId"]
-            a = challengeData1["userAnswers"][-1][WHAT_USER_HAS_GOT]
-            b = challengeData2["userAnswers"][-1][WHAT_USER_HAS_GOT]
-            won , lost , tie = 0, 0, 0 
-            winStatus = -2
-            if(a==b):
-                offlineChallenge.whoWon = ""
-                winStatus  = 0
-                won , lost,tie = 0 ,0 ,1
-            elif(a>b):
-                offlineChallenge.whoWon = offlineChallenge.fromUid_userChallengeIndex
-                won , lost , tie = 0 ,1 ,0 
-                winStatus = -1
-            else:
-                offlineChallenge.whoWon = offlineChallenge.toUid_userChallengeIndex
-                won , lost ,tie = 1 , 0 ,0
-                winStatus = 1
-            
-            
-            offlineChallenge.save()
-            self.updateQuizWinStatus(user, quizId, a+20*won, winStatus,fromUser.uid, None, None)
-            self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId , None )
-            self.updateQuizWinStatus(fromUser, quizId, b+20*lost, -winStatus, user.uid , None, None)
-            return True
+            try:
+                challengeData1= json.loads(offlineChallenge.challengeData)
+                challengeData2= json.loads(offlineChallenge.challengeData2)
+                quizId = challengeData1["quizId"]
+                a = challengeData1["userAnswers"][-1][WHAT_USER_HAS_GOT]
+                b = challengeData2["userAnswers"][-1][WHAT_USER_HAS_GOT]
+                won , lost , tie = 0, 0, 0 
+                winStatus = -2
+                if(a==b):
+                    offlineChallenge.whoWon = ""
+                    winStatus  = 0
+                    won , lost,tie = 0 ,0 ,1
+                elif(a>b):
+                    offlineChallenge.whoWon = offlineChallenge.fromUid_userChallengeIndex
+                    won , lost , tie = 0 ,1 ,0 
+                    winStatus = -1
+                else:
+                    offlineChallenge.whoWon = offlineChallenge.toUid_userChallengeIndex
+                    won , lost ,tie = 1 , 0 ,0
+                    winStatus = 1
+                
+                
+                offlineChallenge.save()
+                self.updateQuizWinStatus(user, quizId, a+20*won, winStatus,fromUser.uid, None, None)
+                self.publishFeedToUser(user.uid, fromUser, FEED_CHALLENGE, challengeId , None )
+                self.updateQuizWinStatus(fromUser, quizId, b+20*lost, -winStatus, user.uid , None, None)
+                return True
+            except:
+                return False
         return True
     def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
         limit =20
