@@ -518,7 +518,7 @@ def getListFromString(s,toLower=False):
             ret.append(t)
     return ret
 
-def SecretKeys(Document):
+class SecretKeys(Document):
     secretKey = StringField(unique=True)
     
 class DbUtils():
