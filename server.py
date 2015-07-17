@@ -617,7 +617,7 @@ def main():
     
     if(not args.serverAddr.endswith(str(args.port))):
         print "Serveradd should end with port, continue only if you have configured domain-name:port to your serving host"
-    if(not args.serverAddr.startsswith("http")):
+    if(not args.serverAddr.startswith("http")):
         print "Serveraddr should shart with http or https"
         return
     
