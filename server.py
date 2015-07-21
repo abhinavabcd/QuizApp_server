@@ -646,7 +646,7 @@ def main():
     
 
     Config.serverGroup = args.serverGroup if args.serverGroup else Config.serverGroup
-    Config.serverId = Config.serverGroup+"_"+args.serverId
+    Config.serverId = args.serverId
         
     Utils.logger = logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+Config.serverId+'.log')
         
