@@ -664,7 +664,7 @@ def main():
         return
     
     if(dbUtils.isServerIdExists(Config.serverId, Config.serverGroup)):
-        print "there is already a server entry with the same serverId %s in this group %s clear , if there is no such such server running you can continue"% Config.serverId, Config.serverGroup
+        print "there is already a server entry with the same serverId %s in this group %s clear , if there is no such such server running you can continue"% (Config.serverId, Config.serverGroup)
         if(raw_input("y/n : ").lower()=="n"):
             return
     
