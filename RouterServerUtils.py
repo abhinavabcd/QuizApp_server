@@ -46,8 +46,9 @@ class RouterServerUtils():
         # move this to db utils
         retries = 0
         quizState = None
-        while(retries<5):
-            try:
+#         while(retries<5):
+#             try:
+        if(True):
                 quizState = ServerState.objects(quizId = quiz.quizId)
                 if(quizState):
                     quizState = quizState.get(0)
@@ -69,9 +70,9 @@ class RouterServerUtils():
                 quizState.peopleWaiting-=1
                 quizState.lastUpdatedTimestamp = datetime.datetime.now()
                 quizState.save()
-                break
-            except:
-                retries+=1
+                #break
+#             except:
+#                 retries+=1
             
         return quizState.serverId , self.servers[quizState.serverId].addr
     
