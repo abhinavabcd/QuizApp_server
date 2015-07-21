@@ -649,8 +649,8 @@ def main():
         
     
     
-    Config.serverId = args.serverId
     Config.serverGroup = args.serverGroup if args.serverGroup else Config.serverGroup
+    Config.serverId = Config.serverGroup+"_"+args.serverId
     
     logger.info("PROCESS_PID: "+str(os.getpid()))
     logger.info("initializing dbUtils..")
