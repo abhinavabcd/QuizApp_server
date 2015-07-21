@@ -662,7 +662,7 @@ def main():
         print "Serveraddr should shart with http or https"
         return
     
-    dbUtils.updateServerMap({args.serverId: args.serverAddr })
+    dbUtils.updateServerMap({args.serverId: args.serverAddr }, Config.serverGroup)
     ##generate a random key and send an email to help manage
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
         
