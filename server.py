@@ -644,13 +644,14 @@ def main():
     
     args = parser.parse_args()
     
-        
-    Utils.logger = logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+args.serverId+'.log')
-        
-    
-    
+
     Config.serverGroup = args.serverGroup if args.serverGroup else Config.serverGroup
     Config.serverId = Config.serverGroup+"_"+args.serverId
+        
+    Utils.logger = logger = create_timed_rotating_log('quizapp_logs/quizapp'+"_"+Config.serverId+'.log')
+        
+    
+    
     
     logger.info("PROCESS_PID: "+str(os.getpid()))
     logger.info("initializing dbUtils..")
@@ -662,7 +663,7 @@ def main():
         print "Serveraddr should shart with http or https"
         return
     
-    dbUtils.updateServerMap({args.serverId: args.serverAddr }, Config.serverGroup)
+    dbUtils.updateServerMap({Config.serverId: args.serverAddr }, Config.serverGroup)
     ##generate a random key and send an email to help manage
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
         
