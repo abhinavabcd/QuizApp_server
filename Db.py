@@ -1168,6 +1168,9 @@ class DbUtils():
             server.save()
         return True
     
+    def isServerIdExists(self, serverId , group):
+        server = Servers.objects(serverId = serverId , group=group)
+        return server!=None    
     
     def isSecretKey(self, secretKey):
         return SecretKeys.objects(secretKey=secretKey)!=None

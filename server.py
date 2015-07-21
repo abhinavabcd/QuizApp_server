@@ -663,6 +663,11 @@ def main():
         print "Serveraddr should shart with http or https"
         return
     
+    if(dbUtils.isServerIdExists(Config.serverId, Config.serverGroup)):
+        print "there is already a server entry with the same serverId %s in this group %s clear , if there is no such such server running you can continue"% Config.serverId, Config.serverGroup
+        if(raw_input("y/n : ").lower()=="n"):
+            return
+    
     dbUtils.updateServerMap({Config.serverId: args.serverAddr }, Config.serverGroup)
     ##generate a random key and send an email to help manage
     dbUtils.addSecretKey(HelperFunctions.generateKey(10))
