@@ -1170,7 +1170,7 @@ class DbUtils():
     
     def isServerIdExists(self, serverId , group):
         server = Servers.objects(serverId = serverId , group=group)
-        return server
+        return True if server else False
     
     def isSecretKey(self, secretKey):
         return SecretKeys.objects(secretKey=secretKey)!=None
