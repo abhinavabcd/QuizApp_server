@@ -13,7 +13,7 @@ all_letters = string.ascii_uppercase + string.digits
 
 def generateKey(N=8):
     #may be later use dattime
-    return Config.SERVER_ID + ''.join(random.choice(all_letters) for x in range(N))
+    return Config.serverId + ''.join(random.choice(all_letters) for x in range(N))
 
 def timedelta_to_int(td):
     return (td.seconds + td.days * 86400)

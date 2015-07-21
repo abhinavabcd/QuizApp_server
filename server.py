@@ -219,7 +219,7 @@ def subscribeTo(response, user=None):
 @userAuthRequired
 def unSubscribeTo(response, user=None):
     uid2 = response.get_argument("uid2")
-    dbUtils.removeSubScriber(dbUtils.getUserByUid(uid2), user)
+    dbUtils.removeSubscriber(dbUtils.getUserByUid(uid2), user)
     responseFinish(response, {"messageType":OK})
 
 @userAuthRequired
@@ -359,11 +359,11 @@ def searchByUserName(response, user=None):
 def getAllUpdates(response, user=None):
     isLogin = response.get_argument("isLogin",False)
     isFistLogin =  response.get_argument("isFirstLogin",False)
-    lastChallengeIndex = int(response.get_argument("lastOfflineChallengeIndex",0));
+    lastOfflineChallengeIndex = int(response.get_argument("lastOfflineChallengeIndex",0));
     retObj = {"messageType":OK_UPDATES,
                                "payload7":user.toJson(),
                                "payload3":"["+','.join(map(lambda x:x.to_json(),dbUtils.getRecentUserFeed(user)))+"]",
-                               "payload5":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user , fromIndex=lastChallengeIndex)))+"]"
+                               "payload5":"["+','.join(map(lambda x:x.to_json(),dbUtils.getUserChallenges(user , fromIndex=lastOfflineChallengeIndex)))+"]"
                                }
     if(isLogin):
         quizzes = None
@@ -399,6 +399,7 @@ def getAllUpdates(response, user=None):
     retObj["payload10"] = json.dumps({"serverTime":HelperFunctions.toUtcTimestamp(datetime.datetime.now())})
     responseFinish(response, retObj)
     if(isLogin):
+        #every time user logs in lets increment the index
         dbUtils.incrementLoginIndex(user)
 
 # TYPE for requests to getServerDetails
@@ -509,7 +510,7 @@ def getAllActiveServers(response):
 def resetAllServerMaps(response):
     secretKey = response.get_argument("secretKey")
     ret =""
-    servers = dbUtils.getAllServers()
+    servers = dbUtils.getAllServers(Config.serverGroup)
     http_client = tornado.httpclient.AsyncHTTPClient()
             
     for server in servers:#while starting inform all other local servers to update this map
@@ -638,6 +639,8 @@ def main():
     parser.add_argument("--serverAddr", help="external ip address ",
                         type=str , required=True)
     
+    parser.add_argument("--serverGroup", help="unique to identify group , like main , development-1 etc",
+                        type=str)
     
     args = parser.parse_args()
     
@@ -646,7 +649,8 @@ def main():
         
     
     
-    Config.SERVER_ID = args.serverId
+    Config.serverId = args.serverId
+    Config.serverGroup = args.serverGroup if args.serverGroup else Config.serverGroup
     
     logger.info("PROCESS_PID: "+str(os.getpid()))
     logger.info("initializing dbUtils..")

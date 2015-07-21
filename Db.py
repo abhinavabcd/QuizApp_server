@@ -76,6 +76,7 @@ class ServerState(Document):
     
 class Servers(Document):
     serverId = StringField(unique=True)
+    group = StringField()
     addr = StringField()
     
 
@@ -855,8 +856,8 @@ class DbUtils():
         user.save()
         return
     
-    def getAllServers(self):
-        return Servers.objects()
+    def getAllServers(self, group):
+        return Servers.objects(group=group)
     
     
     def getQuestionsById(self, questionIds):
@@ -1147,13 +1148,14 @@ class DbUtils():
             
         return messages
     
-    def updateServerMap(self, serverMap):#{ id: ip:port}
+    def updateServerMap(self, serverMap, group):#{ id: ip:port}
         for serverId in serverMap:
-            server = Servers.objects(serverId = serverId)
+            server = Servers.objects(serverId = serverId , group=group)
             if(server):
                 server = server.get(0)
             else:
                 server = Servers()
+                server.group = group
                 server.serverId = serverId
                 
             server.addr = serverMap.get(serverId)

@@ -6,7 +6,7 @@ import random
 import datetime
 from Db import ServerState, Servers, SecretKeys
 import Utils
-
+import Config
 # 
 # LI_N_PEOPLE_WAITING = 0
 # LI_USERS_WAITING_SERVERID =1
@@ -34,7 +34,7 @@ class RouterServerUtils():
 
         
     def reloadServers(self):# this will reload the map appropirately
-        self.servers = {server.serverId : server for server in Servers.objects()}    
+        self.servers = {server.serverId : server for server in Servers.objects(group=Config.serverGroup)}    
     
     def getRandomWebSocketServer(self):
         id = random.choice(self.servers.keys())

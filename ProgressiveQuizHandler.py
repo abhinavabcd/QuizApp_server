@@ -109,7 +109,7 @@ def GenerateProgressiveQuizClass(dbUtils, responseFinish , userAuthRequired , ad
                    addToGcmQueue(self.isChallenge, {"fromUser":self.uid,
                                 "fromUserName":self.user.name,
                                 "quizPoolWaitId":self.quizPoolWaitId,   
-                                "serverId":Config.SERVER_ID,
+                                "serverId":Config.serverId,
                                 "quizId": quiz.quizId,
                                 "quizName":quiz.name,
                                 "messageType":NOTIFICATION_GCM_CHALLENGE_NOTIFICATION,  
