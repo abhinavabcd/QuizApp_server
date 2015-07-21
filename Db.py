@@ -75,10 +75,16 @@ class ServerState(Document):
     lastUpdatedTimestamp = DateTimeField()
     
 class Servers(Document):
-    serverId = StringField(unique=True)
+    serverId = StringField()
     group = StringField()
     addr = StringField()
     
+    meta = {
+    'indexes': [
+           ('serverId','group'),
+           "group"
+           ]
+    }
 
 
 class UserInboxMessages(Document):
