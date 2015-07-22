@@ -116,6 +116,7 @@ class UserActivityStep(Document):
     def getAndIncrement(self, user):
         if(self.userLoginIndex!= user.loginIndex):
             self.index+=1
+            self.userLoginIndex = user.loginIndex
             self.save()
         return self
         
