@@ -45,43 +45,43 @@ class RouterServerUtils():
         
         # move this to db utils
         retries = 0
-        quizState = None
+        gameServer = None
         while(retries<5):
             try:
-                quizState = ServerState.objects(quizId = quiz.quizId)
-                if(quizState):
-                    quizState = quizState.get(0)
+                gameServer = GameServer.objects(quizId = quiz.quizId)
+                if(gameServer):
+                    gameServer = gameServer.get(0)
                     
-                if(quizState):
+                if(gameServer):
                     # if server is removed or renew server
-                    if(not self.servers.get(quizState.serverId, None) or quizState.peopleWaiting<=0):
-                        quizState.peopleWaiting = quiz.nPeople*3
+                    if(not self.servers.get(gameServer.serverId, None) or gameServer.peopleWaiting<=0):
+                        gameServer.peopleWaiting = quiz.nPeople*3
                         #wait on a new server from now randomizing so to reduce the load of perticular quiz in round robin fashion
-                        quizState.serverId = self.getRoundRobinServerId()
-                        quizState.lastWaitingUserId = user.uid
+                        gameServer.serverId = self.getRoundRobinServerId()
+                        gameServer.lastWaitingUserId = user.uid
                 else:
-                    quizState = ServerState()
-                    quizState.quizId = quiz.quizId
-                    quizState.peopleWaiting = quiz.nPeople*3
-                    quizState.serverId =  self.getRoundRobinServerId()
-                    quizState.lastWaitingUserId = user.uid
+                    gameServer = GameServer()
+                    gameServer.quizId = quiz.quizId
+                    gameServer.peopleWaiting = quiz.nPeople*3
+                    gameServer.serverId =  self.getRoundRobinServerId()
+                    gameServer.lastWaitingUserId = user.uid
                     
-                quizState.peopleWaiting-=1
-                quizState.lastUpdatedTimestamp = datetime.datetime.now()
-                quizState.save()
+                gameServer.peopleWaiting-=1
+                gameServer.lastUpdatedTimestamp = datetime.datetime.now()
+                gameServer.save()
                 break
             except:
                 retries+=1
             
-        return quizState.serverId , self.servers[quizState.serverId].addr
+        return gameServer.serverId , self.servers[gameServer.serverId].addr
     
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
-        quizState = ServerState.objects(quizId = quizId)
-        if(quizState):
-            quizState = quizState.get(0)
-        if(quizState and quizState.serverId == sid and quizState.lastWaitingUserId == uid):
-            quizState.peopleWaiting+=1
-            quizState.save()
+        gameServer = GameServer.objects(quizId = quizId)
+        if(gameServer):
+            gameServer = gameServer.get(0)
+        if(gameServer and gameServer.serverId == sid and gameServer.lastWaitingUserId == uid):
+            gameServer.peopleWaiting+=1
+            gameServer.save()
             
     
     def getRoundRobinServerId(self):
