@@ -7,7 +7,7 @@ class Configs(Document):
     value = StringField()
     
     @staticmethod
-    def getConfig(key , defValue=None):
+    def getKey(key , defValue=None):
         config = Configs.objects(key=key)
         if(not config):
             return defValue
@@ -16,7 +16,7 @@ class Configs(Document):
             return config.value
     
     @staticmethod  
-    def setConfig(key , value):
+    def setkey(key , value):
         config = Configs.objects(key=key)
         if(not config):
             config = Configs()
@@ -33,7 +33,20 @@ class Configs(Document):
 
 class SecretKeys(Document):
     secretKey = StringField(unique=True)
-    
+   
+    @staticmethod
+    def isSecretKey(secretKey):
+        return SecretKeys.objects(secretKey=secretKey) != None
+    @staticmethod
+    def addSecretKey(secretKey):
+        try:
+            s = SecretKeys()
+            s.secretKey = secretKey
+            s.save()
+        except:
+            pass
+        
+        
 #very dynamic db
 class GameServer(Document):
     quizId = StringField(unique=True)
@@ -60,7 +73,25 @@ class Servers(Document):
     def getAllServers(group):
         return Servers.objects(group=group)
     
+    @staticmethod
+    def updateServerMap(serverMap, group):  # { id: ip:port}
+        for serverId in serverMap:
+            server = Servers.objects(serverId=serverId , group=group)
+            if(server):
+                server = server.get(0)
+            else:
+                server = Servers()
+                server.group = group
+                server.serverId = serverId
+                
+            server.addr = serverMap.get(serverId)
+            server.save()
+        return True
     
+    @staticmethod
+    def isServerIdExists(serverId , group):
+        server = Servers.objects(serverId=serverId , group=group)
+        return True if server else False
     
     
 class BotUids(Document):

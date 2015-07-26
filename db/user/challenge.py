@@ -90,22 +90,6 @@ class OfflineChallenge(Document):
             except:
                 return False
         return True
-    def getUserChallenges(self, user , toIndex =-1 , fromIndex = 0):
-        limit =20
-        if(fromIndex!=0):
-            limit = 1000000
-        index = toIndex
-        if(toIndex==-1):
-            index = user.userChallengesIndex.index
-        userChallenges = []
-        count =0
-        while(index>fromIndex):
-            for i in OfflineChallenge.objects(toUid_userChallengeIndex = user.uid+"_"+str(index)):
-                userChallenges.append(i)#getting from reference field
-                count+=1
-            if(count>limit):
-                break
-            index-=1
-        return userChallenges
+
 
             

@@ -1,4 +1,5 @@
 from db.admin.server import BotUids
+from server import configuration
 __author__ = "abhinav"
 
 
@@ -11,7 +12,6 @@ import random
 import string
 import time
 
-import Config
 from Constants import *
 import HelperFunctions
 
@@ -22,22 +22,16 @@ import HelperFunctions
 
 
 
-class DbUtils():
+dbServer = []
+dbConnection = None
 
-    dbServer = []
-    dbConnection = None
-    rrCount = 0
-    rrPriorities = 0
-    _users_cached_lru = 0
-    _botUids = []
-    def __init__(self , dbServer):
-        self._updateDbServer(dbServer)
-        self.loadBotUids()
-#         self.dbServerAliases = dbServers.keys()
-#         self.rrPriorities = datetime.date.today()
-    def _updateDbServer(self, dbServer):
-        self.dbServer = dbServer
-        self.dbConnection = connect(dbServer.dbName, host=dbServer.ip, port=dbServer.port, username=dbServer.username, password=dbServer.password)
-    
+def updateDbServer(self, dbServer):
+    global dbServer , dbConnection
+    dbServer = dbServer
+    dbConnection = connect(dbServer.dbName, host=dbServer.ip, port=dbServer.port, username=dbServer.username, password=dbServer.password)
+
+def init():
+    BotUids.loadBotUids()
+    updateDbServer(configuration.dbServer)
 
 

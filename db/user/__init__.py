@@ -1,8 +1,12 @@
 import HelperFunctions
 from datetime import datetime
-from Constants import FEED_USER_JOINED, FEED_USER_WON_BADGES
 from db.badges import Badges
-from db.user.feeds import UserFeed, Feed
+from db.user.feeds import UserFeed, GameEvent
+from server.constants import FEED_USER_WON_BADGES, FEED_USER_JOINED
+from db.user.challenge import OfflineChallenge
+from db.user.chats import UserChatMessages
+from db.admin.server import Feedback
+from db.user.games import UserGamesHistory
 __author__ = "abhinav"
 
 
@@ -282,11 +286,25 @@ class Users(Document):
         user.update(add_to_set__subscribedTo=self.uid)
         
     def removeSubscriber(self , user):
-        self.update(pull__subscribers=user.uid)
-        user.update(pull__subscribedTo=self.uid)
+        self.update(pull__subscribedTo=user.uid)
+        user.update(pull__subscribers=self.uid)
+        
+    
+    def addGameEvent(self, type , message, message2, message3):
+        gameEvent = GameEvent()
+        gameEvent.fromUid = self.uid
+        gameEvent.type = type
+        gameEvent.message = message
+        if(message2!=None):
+            gameEvent.message2 = message2
+        gameEvent.save()
+        
+        ### TODO: decide on sending a feed to subscribers based on type
+        return gameEvent
     
     
-    def publishFeedToSubscribers(self, _type ,  message, message2=None):
+    ###TODO: remove this to do it automatically from addGameEvent
+    def publishFeedToSubscribers(self, _type ,  message, message2 , message3):
         f = Feed()
         f.fromUid = self.uid
         f.message = message
@@ -303,6 +321,41 @@ class Users(Document):
             userFeed.feedMessage = f
             userFeed.save()
     
+    def getRecentUserFeed(self, toIndex=-1, fromIndex=0):
+        ind = toIndex if toIndex>0 else self.userFeedIndex.index
+        cnt =50
+        userFeedMessages = []
+        while(ind>fromIndex):
+            for i in UserFeed.objects(uidFeedIndex = self.uid+"_"+str(ind)):
+                userFeedMessages.append(i.feedMessage)#getting from reference field
+                cnt-=1
+            if(cnt<=0):
+                break
+            ind-=1
+        return userFeedMessages
+    
+    
+    def getUserChallenges(self,  toIndex =-1 , fromIndex = 0):
+        limit =20
+        if(fromIndex!=0):
+            limit = 1000000
+        index = toIndex
+        if(toIndex==-1):
+            index = self.userChallengesIndex.index
+        userChallenges = []
+        count =0
+        while(index>fromIndex):
+            for i in OfflineChallenge.objects(toUid_userChallengeIndex = self.uid+"_"+str(index)):
+                userChallenges.append(i)#getting from reference field
+                count+=1
+            if(count>limit):
+                break
+            index-=1
+        return userChallenges
+    
+    def getRecentMessagesIfAny(self, afterTimestamp):
+        messagesAfterTimestamp = UserChatMessages.objects(toUid_LoginIndex=self.uid + "_" + str(self.loginIndex) , timestamp__gt=afterTimestamp)
+        return messagesAfterTimestamp
     
     def toJsonShort(self):
         return json.dumps({"uid":self.uid,
@@ -350,6 +403,38 @@ class Users(Document):
             for i in badges:
                 self.update(add_to_set__badges=i.badgeId)
                 badgeIds.append(i.badgeId)
-            self.publishFeedToSubscribers(FEED_USER_WON_BADGES , json.dumps(badgeIds) , None)
+            self.addGameEvent(FEED_USER_WON_BADGES , json.dumps(badgeIds) , None , None)
             return True
         return False
+    
+    def addFeedback(self,  message):
+        feedback  = Feedback()
+        feedback.user = self
+        feedback.message = message
+        feedback.save()
+        
+        
+        
+        '''
+    this is called by both users after the quiz ends
+    '''    
+    def updateQuizWinStatus(self, quizId , xpGain , winStatus, uid2 , userAnswers1 , userAnswers2 , gameType=RANDOM_USER_TYPE):
+        if(self.uid > uid2 or uid2[:2]=="00"): #or uid2 is bot or # with greater user id updates the table
+            s = UserGamesHistory()
+            s.uid = self.uid
+            s.uid2 = uid2
+            s.uid_uid2 = self.uid+"_"+uid2
+            s.solvedId = self.uid+"_"+uid2+"_"+quizId
+            #s.type = WIN_TYPE #WIN , LOSE , CHALLENGE , 
+            s.gameStatus = winStatus
+            s.points = xpGain
+            s.gameType = gameType
+            s.userAnswers1 = userAnswers1
+            s.userAnswers2 = userAnswers2
+            s.timestamp = datetime.datetime.now()
+            
+        #TODO : addEvent
+
+        self.updateStats(quizId, xpGain)
+        self.updateWinsLosses(quizId, winStatus = winStatus)
+    

@@ -65,6 +65,9 @@ class Categories(Document):
         c.save()
 
     
+    @staticmethod
+    def getAllCategories(modifiedTimestamp):
+        return Categories.objects(modifiedTimestamp__gt = modifiedTimestamp)    
     
     def toJson(self):
         sonObj = self.to_mongo()
@@ -112,10 +115,7 @@ class Quiz(Document):
         q.save()
         return q
 
-    @staticmethod
-    def getAllCategories(modifiedTimestamp):
-        return Categories.objects(modifiedTimestamp__gt = modifiedTimestamp)    
-    
+
     @staticmethod
     def getAllQuizzes(self,modifiedTimestamp):
         return Quiz.objects(modifiedTimestamp__gte = modifiedTimestamp)

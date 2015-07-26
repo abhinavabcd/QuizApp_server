@@ -44,10 +44,7 @@ class UserChatMessages(Document):
         # if user is logged in , send him some notification
         
         # experimental only
-    @staticmethod
-    def getRecentMessagesIfAny(user , afterTimestamp):
-        messagesAfterTimestamp = UserChatMessages.objects(toUid_LoginIndex=user.uid + "_" + str(user.loginIndex) , timestamp__gt=afterTimestamp)
-        return messagesAfterTimestamp
+
         
     @staticmethod
     def getMessagesBetween(uid1, uid2 , toIndex=-1, fromIndex=0):

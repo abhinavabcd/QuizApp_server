@@ -4,37 +4,35 @@ import json
 import sys
 import random
 import datetime
-from Db import ServerState, Servers, SecretKeys
-import Utils
-import Config
+from db.admin.server import GameServer, SecretKeys, Servers
+from server.logging import logger
+from server import configuration
 # 
 # LI_N_PEOPLE_WAITING = 0
 # LI_USERS_WAITING_SERVERID =1
 # LI_LAST_WAITING_UID =2
 
 class RouterServerUtils():
-    rrCount = 0
-    servers = {}
+    rrCount = 0#static variables
+    servers = {}#static variables
+  
+#     dbUtils = None
     
-    dbUtils = None
     
-    
-    def __init__(self,dbUtils):
-        self.dbUtils = dbUtils
+    def __init__(self):
         self.reloadServers()
         
         secretKey = SecretKeys.objects()[0].secretKey
         for server in self.servers.values():#while starting inform all other local servers to update this map
             try:
-                Utils.logger.info(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey)
-                Utils.logger.info(AndroidUtils.get_data(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey).read())
+                logger.info(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey)
+                logger.info(AndroidUtils.get_data(server.addr+"/func?task=reloadServerMap&secretKey="+secretKey).read())
             except:
-                Utils.logger.error(sys.exc_info()[0])
+                logger.error(sys.exc_info()[0])
 
 
-        
     def reloadServers(self):# this will reload the map appropirately
-        self.servers = {server.serverId : server for server in Servers.objects(group=Config.serverGroup)}    
+        self.servers = {server.serverId : server for server in Servers.objects(group=configuration.serverGroup)}    
     
     def getRandomWebSocketServer(self):
         id = random.choice(self.servers.keys())
@@ -42,7 +40,6 @@ class RouterServerUtils():
         return id , addr
     
     def getQuizWebSocketServer(self,quiz, user):
-        
         # move this to db utils
         retries = 0
         gameServer = None
@@ -75,6 +72,7 @@ class RouterServerUtils():
             
         return gameServer.serverId , self.servers[gameServer.serverId].addr
     
+    
     def waitingUserBotOrCancelled(self, quizId, sid ,uid):#corection
         gameServer = GameServer.objects(quizId = quizId)
         if(gameServer):
@@ -83,14 +81,17 @@ class RouterServerUtils():
             gameServer.peopleWaiting+=1
             gameServer.save()
             
-    
     def getRoundRobinServerId(self):
         self.rrCount+=1
-        self.rrCount%=len(self.servers)
+        self.rrCount%=len(self)
         return self.servers.values()[self.rrCount].serverId
 
 
 
-if __name__=="__main__":
-    pass
+
+
+
+
+
+routerServer = RouterServerUtils()
 #    m = RouterServerUtils({"master":"192.168.0.1:8084"})

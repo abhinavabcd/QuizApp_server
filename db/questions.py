@@ -229,6 +229,11 @@ class TopicMaxQuestions(Document):
     def getTopicMaxCount(fullTag):
         return TopicMaxQuestions.getMax(fullTag)
 
+
+
+    @staticmethod
+    def getQuestionsById(self, questionIds):
+        return Questions.objects(questionId__in = questionIds)
 # class Subscribers(Document):
 #     user  = ReferenceField('Users')
 #     user2 = ReferenceField('User')
