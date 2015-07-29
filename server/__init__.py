@@ -11,56 +11,73 @@ from db.create_bots import createBots
 from server.gcm_utils import reloadGcmConfig, sendGcmMessages
 from server.progressive_quiz_handler import ProgressiveQuizHandler
 from server.user.registration import registerWithGoogle, registerWithFacebook
-from server.user.profile import getAllUpdates
+from server.user.profile import getAllUpdates, getAllUpdatesV2,\
+    getUserGameEvents
 from server.user.chats import getChatMessages, sendChatMessages
 from server.admin import reloadServerMap, getAllActiveServers,\
     resetAllServerMaps
 from server.quiz import getQuizServer, activatingBotPQuiz, getLeaderboards
 from server.user import getUsersInfo, getUserByUid, searchByUserName,\
     setGCMRegistrationId, addFeedback
-from server.user.games import updateQuizWinStatus
+from server.user.games import updateQuizWinStatus, getUserGameById,\
+    getUserClashStats, getUserClashGames
 from server.user.badges import addBadges, setStatusMsg
 from server.user.friends import subscribeTo, unSubscribeTo
 from server.user.challenges import addOfflineChallenge,\
     onOfflineChallengeCompleted, getOfflineChallengeById
 from server.questions import loadQuestionsInOrder
+from server.user.feed import getPreviousFeed, getFeedV2
 
 #sample functionality
 serverFunc = {
-              "registerWithGoogle":registerWithGoogle,
-              "registerWithFacebook":registerWithFacebook,
-              "getAllUpdates":getAllUpdates,
-              "reloadServerMap":reloadServerMap,
               "getServer":getQuizServer,#old code
-              
-              "getQuizServer":getQuizServer,
-              
-              "activatingBotPQuiz":activatingBotPQuiz,
               "getPreviousMessages":getChatMessages, # old 
-              "getChatMessages":getChatMessages,              
               "sendInboxMessages":sendChatMessages, # old
               
-              "sendChatMessages":sendChatMessages,
-              "getUsersInfo":getUsersInfo,
-              "getLeaderboards":getLeaderboards,
-              "updateQuizWinStatus":updateQuizWinStatus,
-              "getUserByUid":getUserByUid,
+               #new code
+              "registerWithGoogle":registerWithGoogle,
+              "registerWithFacebook":registerWithFacebook,
+              "getAllUpdates":getAllUpdates,  #old
+              "getAllUpdatesV2":getAllUpdatesV2,              
+              
+              
+              "setGCMRegistrationId":setGCMRegistrationId,
               "addBadges":addBadges,
               "searchByUserName":searchByUserName,
-              "subscribeTo":subscribeTo,
-              "unSubscribeTo":unSubscribeTo,
+              "setStatusMsg":setStatusMsg,
+              
+              "getQuizServer":getQuizServer,
+              "activatingBotPQuiz":activatingBotPQuiz,
               "addOfflineChallenge":addOfflineChallenge,
-              "setGCMRegistrationId":setGCMRegistrationId,
-              "loadQuestionsInOrder":loadQuestionsInOrder,
               "onOfflineChallengeCompleted":onOfflineChallengeCompleted,
               "getOfflineChallengeById":getOfflineChallengeById,
-              "setStatusMsg":setStatusMsg,
+              "updateQuizWinStatus":updateQuizWinStatus,
+              "loadQuestionsInOrder":loadQuestionsInOrder,
+              "getLeaderboards":getLeaderboards,              
+              ##v2
+              "getUserGameById":getUserGameById,
+              "getUserClashStats":getUserClashStats,
+              "getUserClashGames":getUserClashGames,
+              
+              
+              
+              "getUserByUid":getUserByUid,
+              "getUsersInfo":getUsersInfo,
+              "subscribeTo":subscribeTo,
+              "unSubscribeTo":unSubscribeTo,
+              
+              "getChatMessages":getChatMessages,            
+              "sendChatMessages":sendChatMessages,
+              #v2
+              "getfeed": getFeedV2,# given feed index
+              "getUserGameEvents": getUserGameEvents,  # order by time stamp and gameEvent index
+              
+              "reloadServerMap":reloadServerMap,
               "sendFeedback":addFeedback,
               "getAllActiveServers":getAllActiveServers,
               "reloadGcm":reloadGcmConfig,
               "resetAllServerMaps":resetAllServerMaps
-              
-              
+
              }
 
 #server web request commands with json

@@ -10,14 +10,6 @@ from db.admin.server import Feedback
 import json
 
 
-@userAuthRequired
-def getUserByUid(response, user=None):
-    uid = response.get_argument("uid")
-    user = Users.getUserByUid(uid)
-    responseFinish(response, {"messageType":OK_USER_INFO,
-                              "payload":user.toJson(),
-                            }
-                  )
 
 
 @userAuthRequired
@@ -27,23 +19,9 @@ def addFeedback(response, user=None):
     responseFinish(response, {"messageType":OK})
 
 
-
-'''
-to retrieve short info 
-'''
-@userAuthRequired
-def getUsersInfo(response , user=None):
-    uidList = json.loads(response.get_argument("uidList"))
-    responseFinish(response, {"messageType": OK_USERS_INFO, 
-                                "payload": "["+','.join(map(lambda x:Users.getUserByUid(x,long=False).toJsonShort() , uidList))+"]"
-                              })
-
-
-
 @userAuthRequired
 def getUserInfo(response, user =None):
     responseFinish(response,{"messageType": OK_USER_INFO, "payload":user.to_json()})
-
     
 
 def searchByUserName(response, user=None):

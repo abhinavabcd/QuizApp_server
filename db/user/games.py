@@ -1,7 +1,8 @@
 
-from mongoengine import Document , StringField, EmailField, BooleanField, FloatField , ListField , DateTimeField , IntField , ReferenceField
-from Constants import WIN_TYPE, RANDOM_USER_TYPE
+from mongoengine import Document , StringField,  DateTimeField , IntField
 import datetime
+import HelperFunctions
+import bson
 
 
 
@@ -17,7 +18,7 @@ class UserClashHistory(Document):
                     ('uid1_uid2' , 'quizId')
         ]
     }
-    
+
 
 ##### contains all quiz history of all games , offline online
 class UserGamesHistory(Document):
@@ -25,8 +26,8 @@ class UserGamesHistory(Document):
     uid2 = StringField()
     uid_uid2 = StringField()
     type = StringField() #NORMAL , CHALLENGE , 
-    gameType = IntField()
-    solvedId= StringField() # to indentify exactly what type of quiz between what users
+    gameType = IntField()# to indentify exactly what type of quiz between what users
+    solvedId= StringField() 
     points = IntField()
     userAnswers1 = StringField()
     userAnswers2 = StringField()
@@ -39,6 +40,16 @@ class UserGamesHistory(Document):
         }
     
 
+
+    def to_json(self , isLong=True):
+        son = self.to_mongo()
+        if(not isLong):
+            del son["userAnswers1"]
+            del son["userAnswers2"]
+        son["timestamp"] = HelperFunctions.toUtcTimestamp(self.timestamp)
+        return bson.json_util.dumps(son)
+        
+
     @staticmethod
     def getGamesBetweenUsers(uid1 , uid2 , quizId , fromIndex=0):
         c= ""
@@ -47,15 +58,14 @@ class UserGamesHistory(Document):
         else:
             c = uid2+"_"+uid1
         if(quizId):
-            return UserGamesHistory.objects(solvedId = c+"_"+quizId)[fromIndex:fromIndex+50]
+            return UserGamesHistory.objects(solvedId = c+"_"+quizId)[fromIndex:fromIndex+10]
         else:
-            UserGamesHistory.objects(uid_uid2 = c)[fromIndex:fromIndex+50]
-
+            UserGamesHistory.objects(uid_uid2 = c)[fromIndex:fromIndex+10]
     
     @staticmethod
-    def getWinsLossesBetweenUsers(uid1 , uid2, quizId, fromIndex=0):
+    def getWinsLossesBetweenUsers(uid1 , uid2, quizId):
         c= ""
-        wins_lossed = [0,0,0]
+        wins_losses = [0,0,0]
         reversed = False
         if(uid1 > uid1 or uid2[:2]=='00'):
             c = uid1+"_"+uid2

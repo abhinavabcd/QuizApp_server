@@ -4,8 +4,8 @@ Created on Jul 26, 2015
 @author: abhinav
 '''
 from server.utils import userAuthRequired, responseFinish
-from server.constants import OK_SCORE_BOARD, RANDOM_USER_TYPE, OK_SERVER_DETAILS,\
-    CHALLENGE_QUIZ_TYPE, OK
+from server.constants import OK_SCORE_BOARD,OK_SERVER_DETAILS,\
+    OK, GameTypes
 import json
 from db.quizzes import Quiz
 from server.router_server import routerServer
@@ -34,15 +34,15 @@ def activatingBotPQuiz(response, user=None):
 
 @userAuthRequired
 def getQuizServer(response, user=None):
-    _type = int(response.get_argument("quizType",RANDOM_USER_TYPE))
-    if(_type==RANDOM_USER_TYPE): 
+    _type = int(response.get_argument("quizType",GameTypes.RANDOM_USER_TYPE))
+    if(_type==GameTypes.RANDOM_USER_TYPE): 
         quizId = response.get_argument("quizId")
         quiz = Quiz.getQuizDetails(quizId)
         sid , serverAddr = routerServer.getQuizWebSocketServer(quiz, user)
         responseFinish(response, {"messageType":OK_SERVER_DETAILS,   "payload1": sid , "payload2":serverAddr})
         return
     
-    elif(_type==CHALLENGE_QUIZ_TYPE):
+    elif(_type==GameTypes.CHALLENGE_QUIZ_TYPE):
         quizId = response.get_argument("quizId")
         quiz = Quiz.getQuizDetails(quizId)
         sid , serverAddr = routerServer.getRandomWebSocketServer()

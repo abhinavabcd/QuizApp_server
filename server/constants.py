@@ -8,6 +8,7 @@ import datetime
 
 ####################config variables 
 HTTP_PORT=8085
+
 # status codes for web requests  , from server to user
 NOT_ACTIVATED = 104
 ACTIVATED = 105
@@ -29,6 +30,12 @@ OK_USER_INFO =215
 OK_NAME=216
 NO_NAME_FOUND = 217
 RATING_OK = 220;
+OK_CLASH_INFO = 221
+OK_CLASH_GAMES = 222
+OK_QUIZ_GAME_INFO = 223
+
+
+
 
 OK_DETAILS = 501
 NOT_FOUND=404   
@@ -45,7 +52,7 @@ NO_REPLY_FROM_OTHER_USERS=512
 OK_SEND_MESSAGE = 513
 OK_USERS_INFO = 514
 OK_SCORE_BOARD = 515
-
+OK_GAME_EVENTS = 516
 ################################# dict values/commands for payload type definition , from user to server
 USER_ANSWERED_QUESTION = 1
 GET_NEXT_QUESTION = 2
@@ -82,9 +89,10 @@ N_CURRENT_USERS_READY='14'
 
 #preference strigns
 PREF_IMMUTABLES_COUNT = "immutables_count"
-###########Notification types
-CHALLENGE_QUIZ_TYPE = 2;
-RANDOM_USER_TYPE = 1; 
+
+class GameTypes:
+    CHALLENGE_QUIZ_TYPE = 2;
+    RANDOM_USER_TYPE = 1; 
 #############################33
 WIN_TYPE="w"
 LOOSE_TYPE="l"
@@ -92,6 +100,7 @@ CHALLENGE_TYPE = "c"
 
 
 ##########################33333
+###########Notification types
 DONT_KNOW = 0
 NOTIFICATION_USER_CHALLENGED_YOU = 1
 NOTIFICATION_USER_PRIVATE_MESSAGE = 2
@@ -112,18 +121,22 @@ FEED_CHALLENGE = 5
 FEED_USER_JOINED = 6
 
 
-SOMETHING_ELSE = -1
-UNLOCKED_BADGE = 0
-WON_QUIZ = 1
-LOST_QUIZ = 2 
-LEVEL_UP = 3 
-USER_JOINED = 4
-SHARED_WITH_FB = 5
-SHARED_WITH_GOOGLE = 6
-SERVER_ERROR_QUIZ = 7
-TIE_QUIZ = 8
-CHALLENGE_COMPLETED = 9
-USER_ADDED_FRIEND = 10 
+
+class GameEventType:
+    SOMETHING_ELSE = -1
+    UNLOCKED_BADGE = 0
+    WON_QUIZ = 1
+    LOST_QUIZ = 2 
+    LEVEL_UP = 3 
+    USER_JOINED = 4
+    SHARED_WITH_FB = 5
+    SHARED_WITH_GOOGLE = 6
+    SERVER_ERROR_QUIZ = 7
+    TIE_QUIZ = 8
+    CHALLENGE_COMPLETED = 9
+    USER_ADDED_FRIEND = 10 
+    PLAYED_A_QUIZ = 11
+
 
 ####################################
  

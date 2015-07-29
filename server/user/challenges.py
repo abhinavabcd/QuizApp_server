@@ -16,7 +16,7 @@ from db.quizzes import Quiz
 def onOfflineChallengeCompleted(response, user=None):
     offlineChallengeId = response.get_argument("offlineChallengeId")
     challengeData = response.get_argument("challengeData")
-    if(OfflineChallenge.onUserCompletedChallenge(user,offlineChallengeId, challengeData)):
+    if(user.onChallengeComplete(offlineChallengeId, challengeData)):
         responseFinish(response,{"messageType":OK})
     else:
         responseFinish(response,{"messageType":FAILED})
@@ -39,7 +39,7 @@ def addOfflineChallenge(response, user=None):
     uid2 = response.get_argument("uid2")
     offlineChallengeId = response.get_argument("offlineChallengeId",None)
     challengeData = response.get_argument("challengeData")
-    offlineChallenge = OfflineChallenge.addOfflineChallenge(user, uid2, challengeData, offlineChallengeId);
+    offlineChallenge = user.postOfflineChallenge(uid2, challengeData, offlineChallengeId);
     if(offlineChallenge):
         challengeData = json.loads(challengeData)
         ## send notification

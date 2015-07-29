@@ -3,14 +3,8 @@ Created on Jul 24, 2015
 
 @author: abhinav
 '''
-from mongoengine import Document , StringField, EmailField, BooleanField, FloatField , ListField , DateTimeField , IntField , ReferenceField
+from mongoengine import Document , StringField, IntField
 import bson
-from db.user import Users
-import HelperFunctions
-import json
-from Constants import WHAT_USER_HAS_GOT, FEED_CHALLENGE
-from db.user.feeds import UserFeed
-from db.user.games import UserGamesHistory
 
 class OfflineChallenge(Document):
     offlineChallengeId = StringField(unique=True)
@@ -38,58 +32,8 @@ class OfflineChallenge(Document):
             return offlineChallenge
         return None
     
-    @staticmethod
-    def addOfflineChallenge(fromUser, toUid , challengeData, offlineChallengeId=None):
-        toUser = Users.getUserByUid(toUid)
-        
-        offlineChallenge = OfflineChallenge()
-        if(offlineChallengeId!=None):
-            offlineChallenge.offlineChallengeId = offlineChallengeId
-        else:
-            offlineChallenge.offlineChallengeId = HelperFunctions.generateKey(10)
-        offlineChallenge.fromUid_userChallengeIndex = fromUser.uid+"_"+str(fromUser.userChallengesIndex.index) # yeah , its a little bit funny too # fuck you , i was not funny , that was over optimization for an unreleased app !!!
-        offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.getAndIncrement(toUser).index)
-        offlineChallenge.challengeData = challengeData
-        offlineChallenge.save()
-        return offlineChallenge
-        
-    @staticmethod
-    def onUserCompletedChallenge(user ,challengeId,challengeData2):
-        offlineChallenge = OfflineChallenge.objects(offlineChallengeId=challengeId).get(0)
-        offlineChallenge.challengeData2 = challengeData2
-        fromUser = Users.getUserByUid(offlineChallenge.fromUid_userChallengeIndex.split("_")[0])
-        
-        if(offlineChallenge.challengeType==0):
-            try:
-                challengeData1= json.loads(offlineChallenge.challengeData)
-                challengeData2= json.loads(offlineChallenge.challengeData2)
-                quizId = challengeData1["quizId"]
-                a = challengeData1["userAnswers"][-1][WHAT_USER_HAS_GOT]
-                b = challengeData2["userAnswers"][-1][WHAT_USER_HAS_GOT]
-                won , lost , tie = 0, 0, 0 
-                winStatus = -2
-                if(a==b):
-                    offlineChallenge.whoWon = ""
-                    winStatus  = 0
-                    won , lost,tie = 0 ,0 ,1
-                elif(a>b):
-                    offlineChallenge.whoWon = offlineChallenge.fromUid_userChallengeIndex
-                    won , lost , tie = 0 ,1 ,0 
-                    winStatus = -1
-                else:
-                    offlineChallenge.whoWon = offlineChallenge.toUid_userChallengeIndex
-                    won , lost ,tie = 1 , 0 ,0
-                    winStatus = 1
-                
-                
-                offlineChallenge.save()
-                UserGamesHistory.updateQuizWinStatus(user, quizId, a+20*won, winStatus,fromUser.uid, None, None)
-                UserFeed.publishFeedToUser(user, fromUser, FEED_CHALLENGE, challengeId , None )
-                UserGamesHistory.updateQuizWinStatus(fromUser, quizId, b+20*lost, -winStatus, user.uid , None, None)
-                return True
-            except:
-                return False
-        return True
 
+        
+   
 
             

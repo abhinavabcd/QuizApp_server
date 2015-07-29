@@ -8,14 +8,29 @@ that means between logins  the useractivity step remains same index
 class UserActivityStep(Document):
     uid = StringField()
     index = IntField(default = 0)
+    subIndex = IntField(default=0)
     userLoginIndex = IntField()
     def getAndIncrement(self, user):
-        if(self.userLoginIndex!= user.loginIndex):
+        if(self.userLoginIndex!= user.loginIndex or self.subIndex>50): #increments for every 50 changes
             self.index+=1
+            self.subIndex = 0
             self.userLoginIndex = user.loginIndex
+            self.save()
+        else:
+            self.subIndex+=1
             self.save()
         return self
     
+    @staticmethod
+    def create(user, name):
+        ret = UserActivityStep()
+        ret.uid = user.uid + "_" + name
+        ret.index = 0
+        ret.userLoginIndex = 0
+        ret.save()
+        return ret
+        
+            
 
 def reorderUids(uid1, uid2):
     if(uid1 < uid2):#swap maintain same order always

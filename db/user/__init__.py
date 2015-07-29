@@ -1,12 +1,15 @@
 import HelperFunctions
 from datetime import datetime
 from db.badges import Badges
-from db.user.feeds import UserFeed, GameEvent
-from server.constants import FEED_USER_WON_BADGES, FEED_USER_JOINED
+from db.user.feeds import UserFeedV2, UserFeed 
+from server.constants import FEED_USER_WON_BADGES, FEED_USER_JOINED,\
+    WHAT_USER_HAS_GOT, FEED_CHALLENGE, GameEventType,\
+    GameTypes
 from db.user.challenge import OfflineChallenge
 from db.user.chats import UserChatMessages
 from db.admin.server import Feedback
 from db.user.games import UserGamesHistory
+import bson
 __author__ = "abhinav"
 
 
@@ -14,6 +17,31 @@ from mongoengine import Document , StringField, EmailField, BooleanField, FloatF
 from db.user.utils import UserActivityStep, Uid1Uid2Index
 import json
 
+
+    
+class GameEvent(Document):
+    uid = StringField()# belongs to user
+    uidGameEventIndex = StringField()
+    type = IntField(default = 0)
+    message = StringField()
+    message2= StringField()
+    message3 = StringField()
+    timestamp = DateTimeField()
+    meta = {
+        'indexes': [
+                    'uid'
+                    ('uid','-timestamp')
+                ]
+        }
+    
+    @classmethod
+    def pre_save(cls, sender, document, **kwargs):
+        document.timestamp = datetime.datetime.now()
+
+    def toJson(self):
+        sonObj = self.to_mongo()
+        sonObj["timestamp"] = HelperFunctions.toUtcTimestamp(self.modifiedTimestamp)
+        return bson.json_util.dumps(sonObj)
 
 
 class UserStats(Document):
@@ -74,8 +102,10 @@ class Users(Document):
     createdAt = DateTimeField()
     subscribers = ListField(StringField())
     subscribedTo = ListField(StringField())
-    userFeedIndex = ReferenceField(UserActivityStep)
+    userFeedIndex = ReferenceField(UserActivityStep)#old , remove eventually
+    userFeedV2Index = ReferenceField(UserActivityStep)
     userChallengesIndex = ReferenceField(UserActivityStep)
+    gameEventsIndex = ReferenceField(UserActivityStep)
     userType = IntField(default=0)
     gPlusFriends = StringField()
     fbFriends = StringField()
@@ -202,31 +232,29 @@ class Users(Document):
         else:
             user = Users()
             user.uid = preUidText + HelperFunctions.generateKey(10)
-            user.stats = {}
-            user.winsLosses = {}
-            user.activationKey = ""
-            user.badges = []
-            user.offlineChallenges = []
-            # user feed index , # few changes to the way lets see s
-            user.userFeedIndex = userFeedIndex = UserActivityStep()
-            userFeedIndex.uid = user.uid + "_feed"
-            userFeedIndex.index = 0
-            userFeedIndex.userLoginIndex = 0
-            userFeedIndex.save()
-            # ##
-            user.userChallengesIndex = userChallengesIndex = UserActivityStep()
-            userChallengesIndex.uid = user.uid + "_challenges"
-            userChallengesIndex.index = 0
-            userChallengesIndex.userLoginIndex = 0
-            userChallengesIndex.save()
-            # ##
+
+            
             user.subscribers = []
             user.subscribedTo = []
             user.emailId = emailId
             user.createdAt = datetime.datetime.now()
             user.loginIndex = 0
         
+        user.stats = user.stats or {}
+        user.winsLosses =user.winsLosses or {}
+        user.activationKey = ""
+        user.badges = user.badges or []
+        user.offlineChallenges = user.offlineChallenges or []
+        # user feed index , # few changes to the way lets see 
+        user.userFeedIndex = user.userFeedIndex or UserActivityStep.create(user, "feed")
+                
+        user.userFeedV2Index = user.userFeedV2Index or UserActivityStep.create(user, "feed_V2")
+        # ##
+        user.userChallengesIndex = user.userChallengesIndex or UserActivityStep.create(user, "challenges")        
+        # ##
+        user.gameEventsIndex = user.gameEventsIndex or UserActivityStep.create(user, "gameEvents")
         
+
         subscribersList = {}
         if(fbUid != None):
             user.fbUid = fbUid
@@ -270,10 +298,12 @@ class Users(Document):
         user.googlePlus = gPlusToken if gPlusToken != None else user.googlePlus
         user.isActivated = isActivated
         user.save()
+        
+        gameEvent = user.createGameEvent(GameEventType.USER_JOINED, user.uid, None, None , postFeed=False)
         for user2 in subscribersList.values():
             user.addsubscriber(user2)
             user2.addsubscriber(user)
-            UserFeed.publishFeedToUser(user, user2, FEED_USER_JOINED, user.uid, None)
+            user2.publishToUserFeed(gameEvent) # post that a new user joined
             
         return user
     
@@ -289,44 +319,91 @@ class Users(Document):
         self.update(pull__subscribedTo=user.uid)
         user.update(pull__subscribers=self.uid)
         
-    
-    def addGameEvent(self, type , message, message2, message3):
+    '''
+     user2 is just additional data to use in the function , especially when posting to feed
+    '''
+    def createGameEvent(self, gameEventType, message, message2, message3 , postFeed=True ,user2 = None):
         gameEvent = GameEvent()
-        gameEvent.fromUid = self.uid
-        gameEvent.type = type
+        gameEvent.uid = self.uid
+        gameEvent.uid_index = self.gameEventsIndex.getAndIncrement(self).index
+        gameEvent.type = gameEventType
         gameEvent.message = message
         if(message2!=None):
             gameEvent.message2 = message2
+        if(message3!=None):
+            gameEvent.message3 = message3
         gameEvent.save()
-        
+        if(not postFeed):
+            return gameEvent
         ### TODO: decide on sending a feed to subscribers based on type
+        #delay this process TODO: important!
+        if(gameEventType == GameEventType.UNLOCKED_BADGE):
+            self.postFeedToSubscribers(gameEvent)
+        
+        if(gameEventType == GameEventType.PLAYED_A_QUIZ):
+            self.postFeedToSubscribers(gameEvent)
+        
+        if(gameEventType == GameEventType.CHALLENGE_COMPLETED):
+            #add it to completed user and post to feed for the challenging user which is message2
+            # add gcm notification #TODO:
+            if(user2):
+                user2.publishToUserFeed(gameEvent)
+            
         return gameEvent
     
+    def publishToUserFeed(self, gameEvent):
+        userFeed = UserFeedV2()
+        userFeed.uidFeedIndex= self.uid+"_"+str(self.userFeedV2Index.getAndIncrement(self).index)
+        userFeed.gameEvent = gameEvent
+        userFeed.save()
+        pass
     
     ###TODO: remove this to do it automatically from addGameEvent
-    def publishFeedToSubscribers(self, _type ,  message, message2 , message3):
-        f = Feed()
-        f.fromUid = self.uid
-        f.message = message
-        f.type = _type
-        if(message2!=None):
-            f.message2 = message2
-        f.timestamp = HelperFunctions.toUtcTimestamp(datetime.datetime.now())
-        f.save()
+    def postFeedToSubscribers(self, gameEvent):
+
         #### move to tasks other server if possible
         for uid in self.subscribers:
             user = Users.getUserByUid(uid)
-            userFeed = UserFeed()
-            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedIndex.getAndIncrement(user).index)
-            userFeed.feedMessage = f
+            userFeed = UserFeedV2()
+            userFeed.uidFeedIndex = uid+"_"+str(user.userFeedV2Index.getAndIncrement(user).index)
+            userFeed.gameEvent = gameEvent
             userFeed.save()
     
-    def getRecentUserFeed(self, toIndex=-1, fromIndex=0):
-        ind = toIndex if toIndex>0 else self.userFeedIndex.index
+    def getRecentUserFeedV2(self, toIndex=-1, fromIndex=0):
+        ind = toIndex if toIndex>0 else self.userFeedV2Index.index
         cnt =50
         userFeedMessages = []
         while(ind>fromIndex):
-            for i in UserFeed.objects(uidFeedIndex = self.uid+"_"+str(ind)):
+            for i in UserFeedV2.objects(uidFeedIndex = self.uid+"_"+str(ind)):
+                userFeedMessages.append(i.gameEvent)#getting from reference field
+                cnt-=1
+            if(cnt<=0):
+                break
+            ind-=1
+        return userFeedMessages
+    
+    
+    def getGameEvents(self, toIndex=-1, fromIndex=0):
+        ind = toIndex if toIndex>0 else self.userGameEventsIndex.index
+        cnt =50
+        userGameEvents = []
+        while(ind>fromIndex):
+            for i in GameEvent.objects(uidGameEventIndex = self.uid+"_"+str(ind)):
+                userGameEvents.append(i.gameEvent)#getting from reference field
+                cnt-=1
+            if(cnt<=0):
+                break
+            ind-=1
+        return userGameEvents
+    
+    
+    ## OLD:
+    def getRecentUserFeed(self, user, toIndex=-1, fromIndex=0):
+        ind = toIndex if toIndex>0 else user.userFeedIndex.index
+        cnt =50
+        userFeedMessages = []
+        while(ind>fromIndex):
+            for i in UserFeed.objects(uidFeedIndex = user.uid+"_"+str(ind)):
                 userFeedMessages.append(i.feedMessage)#getting from reference field
                 cnt-=1
             if(cnt<=0):
@@ -403,7 +480,7 @@ class Users(Document):
             for i in badges:
                 self.update(add_to_set__badges=i.badgeId)
                 badgeIds.append(i.badgeId)
-            self.addGameEvent(FEED_USER_WON_BADGES , json.dumps(badgeIds) , None , None)
+            self.createGameEvent(GameEventType.UNLOCKED_BADGE , json.dumps(badgeIds) , None , None)
             return True
         return False
     
@@ -417,8 +494,8 @@ class Users(Document):
         
         '''
     this is called by both users after the quiz ends
-    '''    
-    def updateQuizWinStatus(self, quizId , xpGain , winStatus, uid2 , userAnswers1 , userAnswers2 , gameType=RANDOM_USER_TYPE):
+    '''
+    def updateQuizWinStatus(self, quizId , xpGain , relativeXpGain , winStatus, uid2 , userAnswers1 , userAnswers2 , gameType=GameTypes.RANDOM_USER_TYPE):
         if(self.uid > uid2 or uid2[:2]=="00"): #or uid2 is bot or # with greater user id updates the table
             s = UserGamesHistory()
             s.uid = self.uid
@@ -434,7 +511,74 @@ class Users(Document):
             s.timestamp = datetime.datetime.now()
             
         #TODO : addEvent
-
+        # played a quiz with uid2 in quizId with relativeXpGain(this indicated win loset or tie too) 
+        if(gameType==GameTypes.RANDOM_USER_TYPE):
+            self.createGameEvent(GameEventType.PLAYED_A_QUIZ, uid2, quizId , str(relativeXpGain))
         self.updateStats(quizId, xpGain)
         self.updateWinsLosses(quizId, winStatus = winStatus)
     
+
+    def postOfflineChallenge(self, toUid , challengeData, offlineChallengeId=None):
+        toUser = Users.getUserByUid(toUid)
+        
+        offlineChallenge = OfflineChallenge()
+        if(offlineChallengeId!=None):
+            offlineChallenge.offlineChallengeId = offlineChallengeId
+        else:
+            offlineChallenge.offlineChallengeId = HelperFunctions.generateKey(10)
+        offlineChallenge.fromUid_userChallengeIndex = self.uid+"_"+str(self.userChallengesIndex.index) # yeah , its a little bit funny too # fuck you , i was not funny , that was over optimization for an unreleased app !!!
+        offlineChallenge.toUid_userChallengeIndex = toUid+"_"+str(toUser.userChallengesIndex.getAndIncrement(toUser).index)
+        offlineChallenge.challengeData = challengeData
+        offlineChallenge.save()
+        return offlineChallenge
+    
+    
+    
+    def onChallengeComplete(self, challengeId , challengeData2):# user does the challenge
+        offlineChallenge = OfflineChallenge.objects(offlineChallengeId=challengeId).get(0) 
+        offlineChallenge.challengeData2 = challengeData2
+        fromUser = Users.getUserByUid(offlineChallenge.fromUid_userChallengeIndex.split("_")[0])
+        
+        if(offlineChallenge.challengeType==0):
+            try:
+                challengeData1= json.loads(offlineChallenge.challengeData)
+                challengeData2= json.loads(offlineChallenge.challengeData2)
+                quizId = challengeData1["quizId"]
+                a = challengeData1["userAnswers"][-1][WHAT_USER_HAS_GOT] # this belongs to first user who challenged
+                b = challengeData2["userAnswers"][-1][WHAT_USER_HAS_GOT] # this belongs to current User
+                relativeXpGain = b-a
+                
+                won , lost , tie = 0, 0, 0 
+                winStatus = -2
+                if(a==b):
+                    offlineChallenge.whoWon = ""
+                    winStatus  = 0
+                    won , lost,tie = 0 ,0 ,1
+                elif(a>b):
+                    offlineChallenge.whoWon = offlineChallenge.fromUid_userChallengeIndex
+                    won , lost , tie = 0 ,1 ,0 
+                    winStatus = -1
+                else:
+                    offlineChallenge.whoWon = offlineChallenge.toUid_userChallengeIndex
+                    won , lost ,tie = 1 , 0 ,0
+                    winStatus = 1
+                
+                
+                offlineChallenge.save()
+                
+                
+                userAnswers1_str = json.loads(challengeData1["userAnswers"])# current user
+                userAnswers2_str = json.loads(challengeData2["userAnswers"])
+                
+                self.updateQuizWinStatus(quizId, a+20*won, relativeXpGain,  winStatus,fromUser.uid, userAnswers2_str , userAnswers1_str , GameTypes.CHALLENGE_QUIZ_TYPE)
+                fromUser.updateQuizWinStatus(quizId, b+20*lost, -relativeXpGain ,  -winStatus, self.uid , userAnswers1_str, userAnswers2_str, GameTypes.CHALLENGE_QUIZ_TYPE)
+                # game event
+                self.createGameEvent(GameEventType.CHALLENGE_COMPLETED, challengeId, fromUser.uid, str(relativeXpGain) , user2 = fromUser)
+                #UserFeed.publishFeedToUser(user, fromUser, FEED_CHALLENGE, challengeId , None )
+                
+                return True
+            except:
+                return False
+        return True
+
+
